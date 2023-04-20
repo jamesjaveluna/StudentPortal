@@ -7,7 +7,7 @@ All requests to the API must be authenticated using a valid access token. To obt
 
 #### Get all items
 
-```json
+```html
 POST /api/auth/token HTTP/1.1
 Host: example.com
 Content-Type: application/json
