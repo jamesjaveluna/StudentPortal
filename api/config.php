@@ -14,4 +14,4 @@ define('SITE_ICON', '../../../app-assets/images/ico/favicon.ico');
 
 // API Security
 define('API_SECRET_KEY', 'my-secret-key'); // your secret key
-define('API_TOKEN_DURATION', 3600); // token expiration time in seconds (1 hour)
+define('API_TOKEN_DURATION', 86400); // token expiration time in seconds (1 day)

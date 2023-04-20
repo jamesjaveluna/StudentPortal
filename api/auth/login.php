@@ -1,23 +1,35 @@
 <?php
-// Include jwt.php file
-require_once('jwt.php');
+// Include jwt.php and database.php files
+require_once('../jwt.php');
+require_once('../database.php');
 
-// Mock login credentials
-$username = 'johndoe';
-$password = 'password';
+// Get the POST data
+$username = $_POST['username'];
+$password = $_POST['password'];
 
 header('Content-Type: application/json');
 
 // Check if username and password are correct
-if ($username === 'johndoe' && $password === 'password') {
-  // Generate JWT token with user ID
-  $token = generateToken(123);
+$user = getUserByUsernameAndPassword($username, $password);
 
-  // Return token as response
-  echo json_encode(array('token' => $token));
+// Get user by username and password
+$user = getUserByUsernameAndPassword($username, $password);
+
+if ($user) {
+    // Password is correct
+    // Generate JWT token with user ID
+    $token = generateToken($user['id']);
+
+    $response = array(
+        'token' => $token,
+        'message' => 'Login Successful'
+    );
+
+    // Return token as response
+    echo json_encode($response);
 } else {
-  // Return error message
-  http_response_code(401);
-  echo json_encode(array('message' => 'Invalid username or password'));
+    // Return error message
+    http_response_code(401);
+    echo json_encode(array('message' => 'Invalid username or password'));
 }
 ?>
