@@ -11,19 +11,17 @@ The Cecilian Student Portal comes with a wide range of features that make it a p
 - Calendar: A calendar that displays important dates and deadlines for each course, as well as upcoming activities and events at the college.
 - Services: A section where students can view all the services that the college offers, including student support services, health services, and more.
 
-## The Research Team
+## Research Team
 
-The Cecilian Student Portal was developed by a team of talented researchers who are passionate about creating innovative solutions that improve the lives of students. Our team includes:
+- [James Javeluna](https://github.com/mistisakana)
+- Jessa Camara
+- Terence Sellon
+- Aldorie Barellano Georsua
+- Jhennymae Canonigo
+- Elgrace
 
-- James Javeluna (Project Manager & Developer)
-- Jessa Camara (Quality Assurance Engineer & Technical Writer/Documenter)
-- Terence Sellon (Technical Writer/Documenter)
-- Aldorie Barellano Georsua (Technical Writer/Documenter)
-- Jhennymae Canonigo (Technical Writer/Documenter)
-- Elgrace (Technical Writer/Documenter)
 
-We are proud to have created the Cecilian Student Portal and are committed to providing the best possible experience for our users. If you have any questions or feedback, please don't hesitate to contact us.
+## Support
 
-## Sponsorship and Donations
+We are open to sponsorships or donations that will help us improve and maintain the Cecilian Student Portal. Your support will enable us to continue developing new features, fixing bugs, and providing excellent support to our users. If you are interested in sponsoring or donating, please contact us at javelunajames255@gmail.com. We appreciate any support you can give. Thank you!
 
-We are open to sponsorships or donations that will help us improve and maintain the Cecilian Student Portal. Your support will enable us to continue developing new features, fixing bugs, and providing excellent support to our users. If you are interested in sponsoring or donating, please contact us at [insert email address]. We appreciate any support you can give. Thank you!
