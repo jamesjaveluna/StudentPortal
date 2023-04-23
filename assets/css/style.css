@@ -372,7 +372,7 @@ h6 {
 .logo span {
   font-size: 26px;
   font-weight: 700;
-  color: #012970;
+  color: #ffffff;
   font-family: "Nunito", sans-serif;
 }
 
@@ -381,7 +381,7 @@ h6 {
   z-index: 997;
   height: 60px;
   box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
-  background-color: #fff;
+  background-color: #871616;
   padding-left: 20px;
   /* Toggle Sidebar Button */
   /* Search Bar */
@@ -391,7 +391,7 @@ h6 {
   font-size: 32px;
   padding-left: 10px;
   cursor: pointer;
-  color: #012970;
+  color: #ffffff;
 }
 
 .header .search-bar {
@@ -468,13 +468,13 @@ h6 {
 
 .header-nav .nav-icon {
   font-size: 22px;
-  color: #012970;
+  color: #ffffff;
   margin-right: 25px;
   position: relative;
 }
 
 .header-nav .nav-profile {
-  color: #012970;
+  color: #ffffff;
 }
 
 .header-nav .nav-profile img {
@@ -610,7 +610,7 @@ h6 {
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-  background-color: #fff;
+  background-color: #580a0a;
 }
 
 @media (max-width: 1199px) {
@@ -674,7 +674,7 @@ h6 {
 .sidebar-nav .nav-heading {
   font-size: 11px;
   text-transform: uppercase;
-  color: #899bbd;
+  color: #cf7878;
   font-weight: 600;
   margin: 10px 0 5px 15px;
 }
@@ -684,9 +684,9 @@ h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #4154f1;
+  color: #ffffff;
   transition: 0.3;
-  background: #f6f9ff;
+  background: #b12020;
   padding: 10px 15px;
   border-radius: 4px;
 }
@@ -694,25 +694,25 @@ h6 {
 .sidebar-nav .nav-link i {
   font-size: 16px;
   margin-right: 10px;
-  color: #4154f1;
+  color: #ffffff;
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #012970;
-  background: #fff;
+  color: #ffffff;
+  background: #ac1f1f00;
 }
 
 .sidebar-nav .nav-link.collapsed i {
-  color: #899bbd;
+  color: #ffffff;
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #4154f1;
-  background: #f6f9ff;
+  color: #ffffff;
+  background: #ac1f1f2e;
 }
 
 .sidebar-nav .nav-link:hover i {
-  color: #4154f1;
+  color: #ffffff;
 }
 
 .sidebar-nav .nav-link .bi-chevron-down {
@@ -763,7 +763,7 @@ h6 {
 /* Filter dropdown */
 .dashboard .filter {
   position: absolute;
-  right: 0px;
+  right: 10px;
   top: 15px;
 }
 
@@ -914,6 +914,73 @@ h6 {
   color: #777777;
   margin-left: 95px;
 }
+
+/* Newsfeed */
+.newsfeed .author {
+  padding: 20px 0 15px 0;
+  color: #012970;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.newsfeed .author img {
+  max-height: 46px;
+}
+
+.newsfeed .author .info {
+  text-align: left;
+  margin-left: 10px;
+}
+
+.newsfeed .author h5 {
+  margin-bottom: 0;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.newsfeed .author p {
+  margin-top: 0;
+  font-size: 15px;
+  color: gray;
+}
+
+.newsfeed .post-meta {
+  margin-left: auto;
+  font-size: 14px;
+  color: #808080;
+  margin-top: 25px;
+}
+
+/* Task */
+.task-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  background-color: #4a05050a;
+  padding: 10px;
+}
+
+.task-container .view-btn {
+  margin-right: 10px;
+  background-color: var(--bs-btn-hover-bg);
+}
+
+.task-container .title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.task-container .description {
+  font-size: 14px;
+  margin: 5px 0 0 0;
+}
+
+
+
+
+
 
 /* Recent Sales */
 .dashboard .recent-sales {
