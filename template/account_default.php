@@ -4,6 +4,7 @@
 <?php
 
 require_once('./../assets/function.php');
+require_once('./../class/config/config.php');
 
 ?>
 
@@ -31,6 +32,7 @@ require_once('./../assets/function.php');
   <link href="../assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="../assets/vendor/simple-datatables/style.css" rel="stylesheet">
+ 
 
 
   <!-- Template Main CSS File -->
@@ -71,7 +73,19 @@ require_once('./../assets/function.php');
   if($page == "register.php"){
     echo '<script src="../assets/js/register.js"></script>';
   }
+
+   if($page == "verify.php" || $page == "changepass.php"){
+    echo '<script src="../assets/js/verify.js"></script>';
+  }
+
   ?>
+
+  <?php
+  if(RECAPTCHA_ENABLED === true){
+    echo '<script src="https://www.google.com/recaptcha/api.js"></script>';
+  }
+  ?>
+
 
 </body>
 

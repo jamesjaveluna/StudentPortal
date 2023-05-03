@@ -18,6 +18,23 @@
                 }
             });
         });
+
+        $('.switchPanels').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: './ajax/switch.php?op=process',
+                success: function (data) {
+                    //setTimeout(function () {
+                        window.location.href = './blank.php';
+                    //}, 2000);
+                },
+                error: function (xhr, status, error) {
+                    // handle error response here
+                }
+            });
+        });
+
+
     });
 
 })();

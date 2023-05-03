@@ -977,6 +977,12 @@ h6 {
   margin: 5px 0 0 0;
 }
 
+/* Force Button */
+
+.btn-danger-force {
+  margin-right: 10px;
+  background-color: var(--bs-btn-hover-bg);
+}
 
 
 

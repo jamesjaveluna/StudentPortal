@@ -14,10 +14,57 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
 		if($login)
 			echo $login;
 	}
+
+	if($action == 'verify'){
+		$response = $crud->verify();
+		if($response)
+			echo $response;
+	}
+
+	if($action == 'register'){
+		$register = $crud->register();
+		if($register)
+			echo $register;
+	}
 	
 	if($action == 'logout'){
 		header('Content-Type: application/json'); 
 		$logout = $crud->logout();
+		if($logout)
+			echo $logout;
+	}
+
+	if($action == 'admin_resend'){
+		header('Content-Type: application/json'); 
+		$logout = $crud->admin_resendVerification();
+		if($logout)
+			echo $logout;
+	}
+
+	if($action == 'admin_delete'){
+		header('Content-Type: application/json'); 
+		$logout = $crud->admin_delete();
+		if($logout)
+			echo $logout;
+	}
+
+	if($action == 'admin_edit'){
+		header('Content-Type: application/json'); 
+		$logout = $crud->admin_update();
+		if($logout)
+			echo $logout;
+	}
+
+	if($action == 'admin_nameid_query'){
+		header('Content-Type: application/json'); 
+		$logout = $crud->admin_nameid_query();
+		if($logout)
+			echo $logout;
+	}
+
+	if($action == 'admin_create'){
+		header('Content-Type: application/json'); 
+		$logout = $crud->admin_create();
 		if($logout)
 			echo $logout;
 	}

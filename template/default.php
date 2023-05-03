@@ -5,7 +5,7 @@
 
 require_once('./assets/function.php');
 
-$current_file = basename($_SERVER['PHP_SELF']);
+$page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <head>
@@ -34,7 +34,12 @@ $current_file = basename($_SERVER['PHP_SELF']);
   <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
-  <link href="../assets/vendor/schedule/style.css" rel="stylesheet">
+  <?php 
+
+  if($page == "schedule.php"){
+    echo '<link href="../assets/vendor/schedule/style.css" rel="stylesheet">';
+  }
+  ?>
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
@@ -51,7 +56,11 @@ $current_file = basename($_SERVER['PHP_SELF']);
 
   <!-- ======= Sidebar ======= -->
   <?php
+      if($_SESSION['user']['panel'] === 'admin'){
+        include __DIR__ . "./../assets/inc/sidebar-admin.php";
+      } else {
         include __DIR__ . "./../assets/inc/sidebar.php";
+      }
   ?>
   <!-- End Sidebar-->
 
@@ -86,7 +95,15 @@ $current_file = basename($_SERVER['PHP_SELF']);
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/app.js"></script>
-  <script src="assets/js/schedule.js"></script>
+  <?php
+    if($page == "schedule.php"){
+        echo '<script src="assets/js/schedule.js"></script>';
+    }
+
+    if($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['type'] === 'moderator' || $_SESSION['user']['type'] === 'officer'){
+        echo '<script src="assets/js/admin.js"></script>';
+    }
+  ?>
 
 </body>
 

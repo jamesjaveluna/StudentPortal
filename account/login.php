@@ -10,6 +10,8 @@ $page_title = "Login";
 
 ob_start();
 
+require_once './../class/config/config.php';
+
 ?>
 
 <div class="container">
@@ -22,7 +24,7 @@ ob_start();
               <div class="d-flex justify-content-center py-4">
                 <a href="../" class="logo d-flex align-items-center w-auto">
                   <img src="../assets/img/SCC.png" alt="">
-                  <span class="d-none d-lg-block">Student Portal</span>
+                  <span class="d-none d-lg-block text-danger">Student Portal</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -52,6 +54,20 @@ ob_start();
                       <div class="invalid-feedback">Please enter your password!</div>
                     </div>
 
+                    <?php
+                    if(RECAPTCHA_ENABLED === true){
+                        echo '<div class="col-12">
+                          <label for="yourPassword" class="form-label">Recaptcha</label>
+                          <div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_SECRET_KEY_HTML.'"></div>
+                        </div>';
+                    } else {
+                        echo '
+                          <div id="g-recaptcha" class="g-recaptcha hidden" data-sitekey="NULL"></div>';
+                    }
+
+                    ?>
+                    
+
                     <div class="col-12">
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
@@ -60,8 +76,11 @@ ob_start();
                     </div>
 
 
+
+
+
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit" disabled>Login</button>
+                      <button class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
                     <div class="col-12">
                       <p class="small mb-0">Don't have account? <a href="register.php">Create an account</a></p>

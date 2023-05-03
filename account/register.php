@@ -4,6 +4,8 @@ $page_title = "Login";
 
 ob_start();
 
+require_once './../class/config/config.php';
+
 ?>
 
 <div class="container">
@@ -16,7 +18,7 @@ ob_start();
               <div class="d-flex justify-content-center py-4">
                 <a href="../" class="logo d-flex align-items-center w-auto">
                   <img src="../assets/img/SCC.png" alt="">
-                  <span class="d-none d-lg-block">Cecilian Portal</span>
+                  <span class="d-none d-lg-block text-danger">Cecilian Portal</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -29,24 +31,45 @@ ob_start();
                     <p class="text-center small">Enter your personal details to create account</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+                  <div id="response">
+                    
+                  </div>
+                  <form id="register" class="row g-3 needs-validation" novalidate>
                     <div class="col-12">
-                      <label for="yourName" class="form-label">Student ID</label>
-                      <input type="text" name="name" class="form-control" id="yourName" required>
-                      <div class="invalid-feedback">Please, enter your name!</div>
+                      <label for="studentID" class="form-label">Student ID</label>
+                      <input type="text" name="studentID" class="form-control" id="studentID" value="SCC-" required>
+                      <div id="studentID-error" class="invalid-feedback">Please enter a valid Student ID.</div>
                     </div>
 
                     <div class="col-12">
-                      <label for="yourEmail" class="form-label">Email Address</label>
-                      <input type="email" name="email" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                      <label for="username" class="form-label">Username</label>
+                      <input type="text" name="username" class="form-control" id="username" required>
+                      <div id="username-error" class="invalid-feedback">Please enter a valid username.</div>
                     </div>
 
                     <div class="col-12">
-                      <label for="yourEmail" class="form-label">Birthdate</label>
-                      <input type="email" name="email" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                      <label for="email" class="form-label">Email Address</label>
+                      <input type="email" name="email" class="form-control" id="email" required>
+                      <div id="email-error" class="invalid-feedback">Please enter a valid Email adddress.</div>
                     </div>
+
+                    <div class="col-12">
+                      <label for="birthdate" class="form-label">Birthdate</label>
+                      <input type="date" name="birthdate" class="form-control" id="birthdate" required>
+                      <div id="birthdate-error" class="invalid-feedback">Please enter a valid Birthdate!</div>
+                    </div>
+
+                    <?php
+                    if(RECAPTCHA_ENABLED === true){
+                        echo '<div class="col-12">
+                          <label for="yourPassword" class="form-label">Recaptcha</label>
+                          <div id="g-recaptcha" class="g-recaptcha" data-sitekey="'.RECAPTCHA_SECRET_KEY_HTML.'"></div>
+                        </div>';
+                    } else {
+                        echo '
+                          <div id="g-recaptcha" class="g-recaptcha hidden" data-sitekey="NULL"></div>';
+                    }
+                    ?>
 
                     <div class="col-12">
                       <div class="form-check">

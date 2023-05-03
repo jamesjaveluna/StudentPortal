@@ -1,10 +1,18 @@
 <?php
 
 $page_title = "Schedule";
+$return_url = $_SERVER['REQUEST_URI'];
 
 ob_start();
 
 session_start();
+
+// Check if session token is empty
+if (empty($_SESSION['user']['token'])) {
+  // Redirect to login page
+  header("Location: ./account/login.php?return_url=" . urlencode($return_url));
+  exit();
+}
 
 ?>
 

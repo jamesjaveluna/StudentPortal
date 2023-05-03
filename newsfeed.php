@@ -1,10 +1,18 @@
 <?php
 
 $page_title = "Newsfeed";
+$return_url = $_SERVER['REQUEST_URI'];
 
 ob_start();
 
 session_start();
+
+// Check if session token is empty
+if (empty($_SESSION['user']['token'])) {
+  // Redirect to login page
+  header("Location: ./account/login.php?return_url=" . urlencode($return_url));
+  exit();
+}
 
 ?>
 
@@ -41,37 +49,33 @@ session_start();
 
                    <div class="card-body">
                        <div class="author">
-                           <img src="assets/img/profile/james.jpg" style="max-height: 46px;" alt="Profile" class="rounded-circle">
+                           <img src="assets/img/post/logo/SCO.png" style="max-height: 46px;" alt="Profile" class="rounded-circle">
                            <div class="info">
-                             <h5>James Javeluna</h5>
-                             <p>BSIT 3A</p>
+                             <h5>Supreme Student Council</h5>
+                             <p>College Department</p>
                            </div>
                            <div class="post-meta">
                              <span>2 hours ago</span>
                            </div>
                        </div>
-                     <p>This is a sample newsfeed in Portal.</p>
-                     <img src="../assets/img/post/test.jpg" class="card-img-bottom" alt="...">
+                     <p><b>HAPPY LABOR DAY!</b><br><br>
+                        Today, we come together to celebrate and honor hardworking individuals across the globe. On this special occasion, we recognize the dedication, perseverance, and contributions of workers from all walks of life.<br><br>
+                        Labor Day serves as a reminder of the immense value and impact of labor in shaping our communities and driving progress. It's a day to appreciate the efforts of everyone who works tirelessly to make a difference, regardless of their profession or industry.<br><br>
+                        Whether you're a teacher, healthcare professional, office worker, entrepreneur, construction worker, artist, or part of any other profession, your hard work and dedication are vital to our society's growth and development.<br><br>
+                        Today, we express our gratitude to every individual who contributes their skills, passion, and time to their respective fields. Your unwavering commitment plays a crucial role in building a better future for all.<br><br>
+                        On this Labor Day, let us pause and reflect on the achievements and challenges faced by workers worldwide. It's a day to honor the collective spirit of labor and acknowledge the immense impact each worker makes.<br><br>
+                        To all the hardworking individuals out there, we applaud your dedication, perseverance, and the positive influence you bring to the world. Happy Labor Day!</p>
+                     <img src="../assets/img/post/344267143_1178168036086823_257712452172620523_n.jpg" class="card-img-bottom" alt="...">
                    </div>
 
                    <div class="card-footer">
-                    
-                       <button type="button" class="btn btn-danger rounded-pill">
-                          <i class="bi bi-heart-fill text-danger"></i>
-                          <span class="badge text-danger">Loved</span>
-                          <span class="badge bg text-black-50">4</span>
-                       </button>
-                       <button type="button" class="btn btn-danger rounded-pill">
-                          <i class="bi bi-chat-square-dots text-danger"></i>
-                          <span class="badge text-black-50">Comments</span>
-                          <span class="badge bg-light text-black-50">90+</span>
-                       </button>
+                    <div class="d-grid gap-2 mt-3">
+                      <button class="btn btn-primary" type="button"><i class="bi bi-facebook me-1"></i> View Post</button>
+                    </div>
                    </div>
             </div>
          </div>
-         <!-- End Newsfeed Card -->
 
-         <!-- Newsfeed Card -->
          <div class="col-xxl-12 col-xl-12">
             <div class="card newsfeed">
                    <div class="filter">
@@ -87,34 +91,70 @@ session_start();
 
                    <div class="card-body">
                        <div class="author">
-                           <img src="assets/img/profile/james.jpg" style="max-height: 46px;" alt="Profile" class="rounded-circle">
+                           <img src="assets/img/post/logo/SCC.gif" style="max-height: 46px;" alt="Profile" class="rounded-circle">
                            <div class="info">
-                             <h5>John Doe</h5>
-                             <p>Position</p>
+                             <h5>St. Cecilia's College - Cebu, Inc.</h5>
+                             <p>School</p>
                            </div>
                            <div class="post-meta">
                              <span>2 hours ago</span>
                            </div>
                        </div>
-                     This is a sample post design. Yuh yuh yuh.
-                     <img src="../assets/img/card.jpg" class="card-img-bottom" alt="...">
+                     <p>"The story of our country's progress is written by the hands of our workers"<br><br>
+                        Today, we salute you and recognize your contributions to our society. Your dedication and commitment are indeed the backbone of our nation, and we are grateful for everything you do!<br><br>
+                        MABUHAY ANG MGA MANGGAGAWANG PILIPINO!</p>
+                     <img src="../assets/img/post/344391327_781245487010895_3617784451846556249_n.jpg" class="card-img-bottom" alt="...">
                    </div>
 
                    <div class="card-footer">
-                    
-                       <button type="button" class="btn btn-danger rounded-pill">
-                          <i class="bi bi-heart-fill text-danger"></i>
-                          <span class="badge text-danger">Loved</span>
-                          <span class="badge bg text-black-50">4</span>
-                       </button>
-                       <button type="button" class="btn btn-danger rounded-pill">
-                          <i class="bi bi-chat-square-dots text-danger"></i>
-                          <span class="badge text-black-50">Comments</span>
-                          <span class="badge bg-light text-black-50">90+</span>
-                       </button>
+                    <div class="d-grid gap-2 mt-3">
+                      <button class="btn btn-primary" type="button"><i class="bi bi-facebook me-1"></i> View Post</button>
+                    </div>
                    </div>
-               </div>
             </div>
+         </div>
+
+         <div class="col-xxl-12 col-xl-12">
+            <div class="card newsfeed">
+                   <div class="filter">
+                     <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                       <li class="dropdown-header text-start">
+                         <h6>Action:</h6>
+                       </li>
+
+                       <li><a class="dropdown-item" href="#">Report</a></li>
+                     </ul>
+                   </div>
+
+                   <div class="card-body">
+                       <div class="author">
+                           <img src="assets/img/post/logo/itech.jpg" style="max-height: 46px;" alt="Profile" class="rounded-circle">
+                           <div class="info">
+                             <h5>SCC-ITech Society</h5>
+                             <p>BSIT Department</p>
+                           </div>
+                           <div class="post-meta">
+                             <span>2 hours ago</span>
+                           </div>
+                       </div>
+                     <p>Someone got lost yesterday on our IT DAYS 2023 !<br><br>
+                        Updates for photos and champions of the successful event yesterday will soon be posted. Stay tuned.<br><br>
+                        Simplifying Complexity with Technology</p>
+                     <img src="../assets/img/post/344352861_795691718790712_5309463931876884503_n.jpg" class="card-img-bottom" alt="...">
+                   </div>
+
+                   <div class="card-footer">
+                    <div class="d-grid gap-2 mt-3">
+                      <button class="btn btn-primary" type="button"><i class="bi bi-facebook me-1"></i> View Post</button>
+                    </div>
+                   </div>
+            </div>
+         </div>
+         <!-- End Newsfeed Card -->
+
+         
+         
 
        </div>
      </div><!-- End Left side columns -->
@@ -123,268 +163,40 @@ session_start();
      <div class="col-lg-4">
 
        <!-- Recent Activity -->
-       <div class="card">
-         <div class="filter">
-           <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-             <li class="dropdown-header text-start">
-               <h6>Filter</h6>
-             </li>
-
-             <li><a class="dropdown-item" href="#">Today</a></li>
-             <li><a class="dropdown-item" href="#">This Month</a></li>
-             <li><a class="dropdown-item" href="#">This Year</a></li>
-           </ul>
-         </div>
-
+        <div class="card">
+         
          <div class="card-body">
-           <h5 class="card-title">Recent Activity <span>| Today</span></h5>
-
-           <div class="activity">
-
-             <div class="activity-item d-flex">
-               <div class="activite-label">32 min</div>
-               <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-               <div class="activity-content">
-                 <a href="#" class="fw-bold text-dark">Jiezel Ann Javeluna</a> reacted on your post.
-               </div>
-             </div><!-- End activity item-->
-
-             <div class="activity-item d-flex">
-               <div class="activite-label">56 min</div>
-               <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-               <div class="activity-content">
-                 <a href="#" class="fw-bold text-dark">Jiezel Ann Javeluna</a> commented on your post.
-               </div>
-             </div><!-- End activity item-->
-
-             <div class="activity-item d-flex">
-               <div class="activite-label">1 hr</div>
-               <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
-               <div class="activity-content">
-                 <a href="#" class="fw-bold text-dark">James Javeluna</a> edited his post.
-               </div>
-             </div><!-- End activity item-->
-
-             <div class="activity-item d-flex">
-               <div class="activite-label">2 hrs</div>
-               <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
-               <div class="activity-content">
-                 <a href="#" class="fw-bold text-dark">Jiezel Ann Javeluna</a> reported your post.
-               </div>
-             </div><!-- End activity item-->
-
-             
+           <h5 class="card-title">Cecilian Research</h5>
+           <div class="task-container">
+             <button type="button" class="btn btn-danger text-white view-btn">View</button>
+             <div class="task-info">
+               <h3 class="title">Impact of COVID-19 on Mental Health</h3>
+               <p class="description">Study the impact of the COVID-19 pandemic on mental health...</p>
+               <p class="description"> Researchers: <b>Nurse Office</b></p>
+             </div>
            </div>
+           <div class="task-container">
+             <button type="button" class="btn btn-danger text-white view-btn">View</button>
+             <div class="task-info">
+               <h3 class="title">Sustainable Tourism in Cebu</h3>
+               <p class="description"> Investigate the impact of social media on the mental health...</p>
+               <p class="description"> Researchers: <b>HTM 1A (Group 1)</b></p>
+             </div>
+           </div>
+           <div class="task-container">
+             <button type="button" class="btn btn-danger text-white view-btn">View</button>
+             <div class="task-info">
+               <h3 class="title">Cyberbullying Among Adolescents</h3>
+               <p class="description">Study the prevalence and impact of cyberbullying among...</p>
+               <p class="description"> Researchers: <b>EDUC (Group 5)</b></p>
+             </div>
+           </div>
+
 
          </div>
        </div><!-- End Recent Activity -->
 
-       <!-- Budget Report -->
-       <div class="card">
-         <div class="filter">
-           <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-             <li class="dropdown-header text-start">
-               <h6>Filter</h6>
-             </li>
-
-             <li><a class="dropdown-item" href="#">Today</a></li>
-             <li><a class="dropdown-item" href="#">This Month</a></li>
-             <li><a class="dropdown-item" href="#">This Year</a></li>
-           </ul>
-         </div>
-
-         <div class="card-body pb-0">
-           <h5 class="card-title">Budget Report <span>| This Month</span></h5>
-
-           <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
-
-           <script>
-             document.addEventListener("DOMContentLoaded", () => {
-               var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
-                 legend: {
-                   data: ['Allocated Budget', 'Actual Spending']
-                 },
-                 radar: {
-                   // shape: 'circle',
-                   indicator: [{
-                       name: 'Sales',
-                       max: 6500
-                     },
-                     {
-                       name: 'Administration',
-                       max: 16000
-                     },
-                     {
-                       name: 'Information Technology',
-                       max: 30000
-                     },
-                     {
-                       name: 'Customer Support',
-                       max: 38000
-                     },
-                     {
-                       name: 'Development',
-                       max: 52000
-                     },
-                     {
-                       name: 'Marketing',
-                       max: 25000
-                     }
-                   ]
-                 },
-                 series: [{
-                   name: 'Budget vs spending',
-                   type: 'radar',
-                   data: [{
-                       value: [4200, 3000, 20000, 35000, 50000, 18000],
-                       name: 'Allocated Budget'
-                     },
-                     {
-                       value: [5000, 14000, 28000, 26000, 42000, 21000],
-                       name: 'Actual Spending'
-                     }
-                   ]
-                 }]
-               });
-             });
-           </script>
-
-         </div>
-       </div><!-- End Budget Report -->
-
-       <!-- Website Traffic -->
-       <div class="card">
-         <div class="filter">
-           <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-             <li class="dropdown-header text-start">
-               <h6>Filter</h6>
-             </li>
-
-             <li><a class="dropdown-item" href="#">Today</a></li>
-             <li><a class="dropdown-item" href="#">This Month</a></li>
-             <li><a class="dropdown-item" href="#">This Year</a></li>
-           </ul>
-         </div>
-
-         <div class="card-body pb-0">
-           <h5 class="card-title">Website Traffic <span>| Today</span></h5>
-
-           <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
-
-           <script>
-             document.addEventListener("DOMContentLoaded", () => {
-               echarts.init(document.querySelector("#trafficChart")).setOption({
-                 tooltip: {
-                   trigger: 'item'
-                 },
-                 legend: {
-                   top: '5%',
-                   left: 'center'
-                 },
-                 series: [{
-                   name: 'Access From',
-                   type: 'pie',
-                   radius: ['40%', '70%'],
-                   avoidLabelOverlap: false,
-                   label: {
-                     show: false,
-                     position: 'center'
-                   },
-                   emphasis: {
-                     label: {
-                       show: true,
-                       fontSize: '18',
-                       fontWeight: 'bold'
-                     }
-                   },
-                   labelLine: {
-                     show: false
-                   },
-                   data: [{
-                       value: 1048,
-                       name: 'Search Engine'
-                     },
-                     {
-                       value: 735,
-                       name: 'Direct'
-                     },
-                     {
-                       value: 580,
-                       name: 'Email'
-                     },
-                     {
-                       value: 484,
-                       name: 'Union Ads'
-                     },
-                     {
-                       value: 300,
-                       name: 'Video Ads'
-                     }
-                   ]
-                 }]
-               });
-             });
-           </script>
-
-         </div>
-       </div><!-- End Website Traffic -->
-
-       <!-- News & Updates Traffic -->
-       <div class="card">
-         <div class="filter">
-           <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-             <li class="dropdown-header text-start">
-               <h6>Filter</h6>
-             </li>
-
-             <li><a class="dropdown-item" href="#">Today</a></li>
-             <li><a class="dropdown-item" href="#">This Month</a></li>
-             <li><a class="dropdown-item" href="#">This Year</a></li>
-           </ul>
-         </div>
-
-         <div class="card-body pb-0">
-           <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
-
-           <div class="news">
-             <div class="post-item clearfix">
-               <img src="assets/img/news-1.jpg" alt="">
-               <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
-               <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...</p>
-             </div>
-
-             <div class="post-item clearfix">
-               <img src="assets/img/news-2.jpg" alt="">
-               <h4><a href="#">Quidem autem et impedit</a></h4>
-               <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona nande...</p>
-             </div>
-
-             <div class="post-item clearfix">
-               <img src="assets/img/news-3.jpg" alt="">
-               <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
-               <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et totam...</p>
-             </div>
-
-             <div class="post-item clearfix">
-               <img src="assets/img/news-4.jpg" alt="">
-               <h4><a href="#">Laborum corporis quo dara net para</a></h4>
-               <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel rerum cuder...</p>
-             </div>
-
-             <div class="post-item clearfix">
-               <img src="assets/img/news-5.jpg" alt="">
-               <h4><a href="#">Et dolores corrupti quae illo quod dolor</a></h4>
-               <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae dignissimos eius...</p>
-             </div>
-
-           </div><!-- End sidebar recent posts-->
-
-         </div>
-       </div><!-- End News & Updates -->
+       
 
      </div><!-- End Right side columns -->
 

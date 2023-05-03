@@ -1,7 +1,21 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 
+    
+    
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="
+      
+      <?php 
+    
+    $panel = $_SESSION['user']['panel'];
+
+    if($panel === 'admin'){
+        echo '../students.php';
+    } else {
+        echo '../';
+    }
+    
+    ?>" class="logo d-flex align-items-center">
         <img src="assets/img/SCC.png" alt="">
         <span class="d-none d-lg-block">Cecilian Portal</span>
       </a>
@@ -182,7 +196,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="myprofile.php">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -191,8 +205,9 @@
               <hr class="dropdown-divider">
             </li>
 
+
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="#">
                 <i class="bi bi-gear"></i>
                 <span>Account Settings</span>
               </a>
@@ -202,7 +217,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+              <a class="dropdown-item d-flex align-items-center" href="#">
                 <i class="bi bi-question-circle"></i>
                 <span>Need Help?</span>
               </a>
@@ -210,6 +225,36 @@
             <li>
               <hr class="dropdown-divider">
             </li>
+
+            
+            <?php
+
+            if($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['type'] === 'moderator' || $_SESSION['user']['type'] === 'officer'){
+                if($_SESSION['user']['panel'] === 'admin'){
+                    echo '<li class="switchPanels">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
+                        <i class="bi bi-toggle-on text-danger"></i>
+                        <span>Admin Panel</span>
+                      </a>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>';
+                } else {
+                    echo '<li class="switchPanels">
+                      <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
+                        <i class="bi bi-toggle-off"></i>
+                        <span>Admin Panel</span>
+                      </a>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>';
+                }
+                
+            }
+
+            ?>
 
             <li>
               <a id="logout" class="dropdown-item d-flex align-items-center" href="javascript:void(0);">

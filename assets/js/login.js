@@ -3,11 +3,42 @@
 
     // Wait for the DOM to be ready
     $(function () {
+
+        function getReturnUrlFromLink() {
+            // Get the URL of the current page
+            var currentUrl = window.location.href;
+
+            // Split the URL into an array of its parts
+            var urlParts = currentUrl.split("?");
+
+            // If the URL contains a query string
+            if (urlParts.length > 1) {
+                // Get the query string and split it into an array of key-value pairs
+                var queryString = urlParts[1];
+                var queryParams = queryString.split("&");
+
+                // Loop through the key-value pairs and look for the 'return_url' parameter
+                for (var i = 0; i < queryParams.length; i++) {
+                    var param = queryParams[i].split("=");
+                    if (param[0] == "return_url") {
+                        // If the 'return_url' parameter is found, return its value
+                        return decodeURIComponent(param[1]);
+                    }
+                }
+            }
+
+            // If the 'return_url' parameter is not found, return null
+            return '';
+        }
+
+        var returnUrl = getReturnUrlFromLink();
+        console.log(returnUrl);
+
         // Check if user is already logged in
         var token = localStorage.getItem('token');
         if (token) {
             // User is already logged in, redirect to home page
-            window.location.href = '/';
+            window.location.href = './..' + returnUrl;
         }
 
         // Get the email and submit button elements
@@ -23,68 +54,51 @@
             var email = emailInput.val();
             var password = $('#password').val();
 
-            // Check if the email input is valid
-            if (emailInput[0].checkValidity()) {
-                // Disable the submit button while the AJAX request is being performed
-                submitButton.prop('disabled', true);
-
-                // Perform an AJAX request to the login endpoint
-                $.ajax({
-                    url: '../ajax/login.php?op=process',
-                    method: 'POST',
-                    data: {
-                        email: email,
-                        password: password
-                    },
-                    success: function (response) {
-                        // Store the token in local storage
-                        localStorage.setItem('token', response.token);
-
-                        // If the login was successful, redirect to the home page
-                        window.location.href = '/';
-                    },
-                    error: function (xhr) {
-                        // If there was an error, display an error message
-                        console.log(xhr);
-                        var errorMessage = xhr.responseJSON.message;
-                        var alertHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-                            '<i class="bi bi-exclamation-octagon me-1"></i>' + errorMessage +
-                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-                            '</div>';
-                        $('#response').html(alertHtml);
-
-                        // Enable the submit button again
-                        submitButton.prop('disabled', false);
-                    }
-                });
+            // Get the reCAPTCHA response only if the site key is defined
+            if ($('#g-recaptcha').data('sitekey') != 'NULL') {
+                var recaptchaResponse = grecaptcha.getResponse();
+                // Process the reCAPTCHA response here
             } else {
-                // Show the validation feedback message for the email input
-                emailInput.addClass('is-invalid');
-                emailInput.removeClass('is-valid');
+                var recaptchaResponse = null;
             }
-        });
 
-        // Listen for changes to the email input value
-        emailInput.on('input', function () {
-            // Check if the email input is valid
-            if (emailInput[0].checkValidity()) {
-                // Show the validation feedback message for the email input
-                emailInput.removeClass('is-invalid');
-                emailInput.addClass('is-valid');
 
-                // Enable the submit button if all inputs are valid
-                if ($('#login')[0].checkValidity()) {
-                    submitButton.prop('disabled', false);
+            // Perform an AJAX request to the login endpoint
+            $.ajax({
+                url: '../ajax/login.php?op=process',
+                method: 'POST',
+                data: {
+                    email: email,
+                    password: password,
+                    recaptcha_response: recaptchaResponse
+                },
+                success: function (response) {
+                    // Store the token in local storage
+                    localStorage.setItem('token', response.token);
+
+                    // If the login was successful, redirect to the home page
+                    window.location.href = './..' + returnUrl;
+                },
+                error: function (xhr) {
+                    // If there was an error, display an error message
+                    console.log(xhr);
+                    var errorMessage = xhr.responseJSON.message;
+                    var alertHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                        '<i class="bi bi-exclamation-octagon me-1"></i>' + errorMessage +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                        '</div>';
+                    $('#response').html(alertHtml);
+
+                    // Enable the submit button again
+                    //submitButton.prop('disabled', false);
                 }
-            } else {
-                // Show the validation feedback message for the email input
-                emailInput.addClass('is-invalid');
-                emailInput.removeClass('is-valid');
+            });
 
-                // Disable the submit button if any input is invalid
-                submitButton.prop('disabled', true);
-            }
+            
         });
+
+        
+      
     });
 
 })();

@@ -1,10 +1,25 @@
 <?php
 
 $page_title = "Dashboard";
+$return_url = $_SERVER['REQUEST_URI'];
 
 ob_start();
 
 session_start();
+
+// Check if session token is empty
+if (empty($_SESSION['user']['token'])) {
+  // Redirect to login page
+  header("Location: ./account/login.php?return_url=" . urlencode($return_url));
+  exit();
+}
+
+// Switch to admin panel
+if($_SESSION['user']['panel'] === 'admin'){
+  header("Location: ./blank.php");
+  exit();
+}
+
 
 ?>
 
