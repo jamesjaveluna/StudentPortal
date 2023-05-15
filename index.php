@@ -20,6 +20,15 @@ if($_SESSION['user']['panel'] === 'admin'){
   exit();
 }
 
+require_once 'class/Schedule.php';
+$crud = new Schedule();
+
+$schedule_raw = json_decode($crud->getScheduleToday(), true);
+
+// Fetch subject today.
+if($schedule_raw['code'] === 10000){
+    $schedule_data = $schedule_raw['data'];
+} 
 
 ?>
 
@@ -46,13 +55,44 @@ if($_SESSION['user']['panel'] === 'admin'){
                 <!-- Sales Card -->
                 <div class="col-lg-6">
                     <div class="card info-card sales-card">
-
-
                       <div class="card-body">
                         <h5 class="card-title">Class <span>| Today</span></h5>
-                        <h6>GE9</h6>
-                        <span class="text-muted small pt-2">10:00 AM - 12:30 NN</span><br>
-                        <span class="text-danger small pt-1 fw-bold">COMLAB 1</span>
+                        <?php
+                        
+                        // Class
+                        if($schedule_raw['code'] === 10000){
+                            echo '<h6>'.$schedule_raw['data']['code'].'</h6>' .
+                                 '<span class="text-muted small pt-2">'.$schedule_raw['data']['time'].'</span><br>' .
+                                 '<span class="text-danger small pt-1 fw-bold">'.$schedule_raw['data']['room_name'].'</span>';
+                        } 
+
+                        // No Class
+                        if($schedule_raw['code'] === 10001){
+                            echo '<h6 class="text-danger">'.$schedule_raw['message'].'</h6>'.
+                                 '<span class="text-muted small pt-2">No Schedule found.</span><br>';
+                        } 
+
+                        // Vacant
+                        if($schedule_raw['code'] == 10002){
+                            echo '<h6 class="text-success">'.$schedule_raw['message'].'</h6>'.
+                                 '<span class="text-muted small pt-2">Next Subject: <b>'.$schedule_raw['data']['code'].'</b></span><br>' .
+                                 '<span class="text-secondary small pt-1 fw-bold">'.$schedule_raw['data']['time'].' - '.$schedule_raw['data']['room_name'].'</span>';
+                        } 
+
+                        // Complete
+                        if($schedule_raw['code'] === 10003){
+                            echo '<h6 class="text-success">'.$schedule_raw['message'].'</h6>'.
+                                 '<span class="text-muted small pt-2">All classes is done</span><br>';
+                        } 
+
+                        // Unavailable
+                        if($schedule_raw['code'] === 10004){
+                            echo '<h6 class="text-warning">'.$schedule_raw['message'].'</h6>'.
+                                 '<span class="text-muted small pt-2">No schedule found.</span><br>';
+                        } 
+                        
+                        ?>
+                        
                       </div>
                     </div>
                 </div><!-- End Sales Card -->

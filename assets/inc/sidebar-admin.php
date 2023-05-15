@@ -10,28 +10,35 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'users.php') echo 'collapsed'; ?>" href="users.php">
+        <a class="nav-link <?php if($page != 'users.php') echo 'collapsed'; ?>" href="./../users.php">
           <i class="bi bi-people"></i>
           <span>Users</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'students.php') echo 'collapsed'; ?>" href="students.php">
+        <a class="nav-link <?php if($page != 'students.php') echo 'collapsed'; ?>" href="./../students.php">
           <i class="bx bxs-user-detail"></i>
           <span>Students</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'working.php') echo 'collapsed'; ?>" href="working.php">
+        <a class="nav-link <?php if($page != 'activity.php') echo 'collapsed'; ?>" href="./../activity.php">
+          <i class="bx bxs-user-detail"></i>
+          <span>Calendar of Activity</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link <?php if($page != 'working.php') echo 'collapsed'; ?>" href="./../working.php">
           <i class="bx ri-facebook-fill"></i>
           <span>Facebook Pages</span>
         </a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'newsfeed.php') echo 'collapsed'; ?>" href="newsfeed.php">
+        <a class="nav-link <?php if($page != 'newsfeed.php') echo 'collapsed'; ?>" href="./../newsfeed.php">
           <i class="bx bx-news"></i>
           <span>Content Posts</span>
         </a>

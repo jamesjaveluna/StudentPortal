@@ -3652,23 +3652,23 @@ mark {
 }
 
 :root {
-    --cd-color-event-1: hsl(199, 25%, 46%);
+    --cd-color-event-1: hsl(0deg 100% 25.52%);
     --cd-color-event-1-h: 199;
     --cd-color-event-1-s: 25%;
     --cd-color-event-1-l: 46%;
-    --cd-color-event-2: hsl(271, 23%, 26%);
+    --cd-color-event-2: hsl(271deg 60.68% 22.11%);
     --cd-color-event-2-h: 271;
     --cd-color-event-2-s: 23%;
     --cd-color-event-2-l: 26%;
-    --cd-color-event-3: hsl(162, 14%, 68%);
+    --cd-color-event-3: hsl(162deg 64.68% 28.75%);
     --cd-color-event-3-h: 162;
     --cd-color-event-3-s: 14%;
     --cd-color-event-3-l: 68%;
-    --cd-color-event-4: hsl(31, 89%, 68%);
+    --cd-color-event-4: hsl(31deg 65.85% 29.49%);
     --cd-color-event-4-h: 31;
     --cd-color-event-4-s: 89%;
     --cd-color-event-4-l: 68%;
-    --cd-color-event-5: hsl(220, 90%, 76%);
+    --cd-color-event-5: hsl(220deg 68.87% 25.24%);
     --cd-color-event-5-h: 31;
     --cd-color-event-5-s: 89%;
     --cd-color-event-5-l: 68%;
@@ -3676,14 +3676,62 @@ mark {
     --cd-color-event-6-h: 31;
     --cd-color-event-6-s: 89%;
     --cd-color-event-6-l: 68%;
-    --cd-color-event-7: hsl(356, 84%, 26%);
+    --cd-color-event-7: hsl(326.12deg 51.72% 52.42%);
     --cd-color-event-7-h: 31;
     --cd-color-event-7-s: 89%;
     --cd-color-event-7-l: 68%;
-    --cd-color-event-8: hsl(110, 70%, 67%);
+    --cd-color-event-8: hsl(165.5deg 87.27% 15.91%);
     --cd-color-event-8-h: 31;
     --cd-color-event-8-s: 89%;
     --cd-color-event-8-l: 68%;
+    --cd-color-event-9: hsl(60.27deg 70% 67%);
+    --cd-color-event-9-h: 31;
+    --cd-color-event-9-s: 89%;
+    --cd-color-event-9-l: 68%;
+    --cd-color-event-10: hsl(110, 70%, 67%);
+    --cd-color-event-10-h: 31;
+    --cd-color-event-10-s: 89%;
+    --cd-color-event-10-l: 68%;
+    --cd-color-event-11: hsl(31.46deg 70% 67%);
+    --cd-color-event-11-h: 31;
+    --cd-color-event-11-s: 89%;
+    --cd-color-event-11-l: 68%;
+    --cd-color-event-12: hsl(64.69deg 70% 67%);
+    --cd-color-event-12-h: 31;
+    --cd-color-event-12-s: 89%;
+    --cd-color-event-12-l: 68%;
+    --cd-color-event-13: hsl(23.15deg 75.52% 41.9%);
+    --cd-color-event-13-h: 31;
+    --cd-color-event-13-s: 89%;
+    --cd-color-event-13-l: 68%;
+    --cd-color-event-14: hsl(172.69deg 44.39% 34.02%);
+    --cd-color-event-14-h: 31;
+    --cd-color-event-14-s: 89%;
+    --cd-color-event-14-l: 68%;
+    --cd-color-event-15: hsl(225.3deg 52.45% 41.52%);
+    --cd-color-event-15-h: 31;
+    --cd-color-event-15-s: 89%;
+    --cd-color-event-15-l: 68%;
+    --cd-color-event-16: hsl(297.3deg 64.33% 37.56%);
+    --cd-color-event-16-h: 31;
+    --cd-color-event-16-s: 89%;
+    --cd-color-event-16-l: 68%;
+    --cd-color-event-17: hsl(322.23deg 55% 34.97%);
+    --cd-color-event-17-h: 31;
+    --cd-color-event-17-s: 89%;
+    --cd-color-event-17-l: 68%;
+    --cd-color-event-18: hsl(110deg 49.02% 26.86%);
+    --cd-color-event-18-h: 31;
+    --cd-color-event-18-s: 89%;
+    --cd-color-event-18-l: 68%;
+    --cd-color-event-19: hsl(352.69deg 71.62% 45.8%);
+    --cd-color-event-19-h: 31;
+    --cd-color-event-19-s: 89%;
+    --cd-color-event-19-l: 68%;
+    --cd-color-event-20: hsl(110deg 76.86% 38.66%);
+    --cd-color-event-20-h: 31;
+    --cd-color-event-20-s: 89%;
+    --cd-color-event-20-l: 68%;
     --cd-color-text: hsl(0, 0%, 13%);
     --cd-color-text-h: 0;
     --cd-color-text-s: 0%;
@@ -4012,31 +4060,31 @@ a {
 
 .cd-schedule__event [data-event="event-1"],
 .cd-schedule-modal[data-event="event-1"] .cd-schedule-modal__header-bg {
-    background: hsl(199, 25%, 46%);
+    background: hsl(0deg 100% 25.52%);
     background: var(--cd-color-event-1)
 }
 
 .cd-schedule__event [data-event="event-2"],
 .cd-schedule-modal[data-event="event-2"] .cd-schedule-modal__header-bg {
-    background: hsl(271, 23%, 26%);
+    background: hsl(271deg 60.68% 22.11%);
     background: var(--cd-color-event-2)
 }
 
 .cd-schedule__event [data-event="event-3"],
 .cd-schedule-modal[data-event="event-3"] .cd-schedule-modal__header-bg {
-    background: hsl(162, 14%, 68%);
+    background: hsl(162deg 64.68% 28.75%);
     background: var(--cd-color-event-3)
 }
 
 .cd-schedule__event [data-event="event-4"],
 .cd-schedule-modal[data-event="event-4"] .cd-schedule-modal__header-bg {
-    background: hsl(31, 89%, 68%);
+    background: hsl(31deg 65.85% 29.49%);
     background: var(--cd-color-event-4)
 }
 
 .cd-schedule__event [data-event="event-5"],
 .cd-schedule-modal[data-event="event-5"] .cd-schedule-modal__header-bg {
-    background: hsl(220, 90%, 76%);
+    background: hsl(220deg 68.87% 25.24%);
     background: var(--cd-color-event-5)
 }
 
@@ -4048,14 +4096,86 @@ a {
 
 .cd-schedule__event [data-event="event-7"],
 .cd-schedule-modal[data-event="event-7"] .cd-schedule-modal__header-bg {
-    background: hsl(356, 84%, 26%);
+    background: hsl(326.12deg 51.72% 52.42%);
     background: var(--cd-color-event-7)
 }
 
 .cd-schedule__event [data-event="event-8"],
 .cd-schedule-modal[data-event="event-8"] .cd-schedule-modal__header-bg {
-    background: hsl(110, 70%, 67%);
+    background: hsl(165.5deg 87.27% 15.91%);
     background: var(--cd-color-event-8)
+}
+
+.cd-schedule__event [data-event="event-9"],
+.cd-schedule-modal[data-event="event-9"] .cd-schedule-modal__header-bg {
+    background: hsl(60.27deg 92.72% 27.1%);
+    background: var(--cd-color-event-9)
+}
+
+.cd-schedule__event [data-event="event-10"],
+.cd-schedule-modal[data-event="event-10"] .cd-schedule-modal__header-bg {
+    background: hsl(110, 70%, 67%);
+    background: var(--cd-color-event-10)
+}
+
+.cd-schedule__event [data-event="event-11"],
+.cd-schedule-modal[data-event="event-11"] .cd-schedule-modal__header-bg {
+    background: hsl(31.46deg 70% 67%);
+    background: var(--cd-color-event-11)
+}
+
+.cd-schedule__event [data-event="event-12"],
+.cd-schedule-modal[data-event="event-12"] .cd-schedule-modal__header-bg {
+    background: hsl(64.69deg 70% 67%);
+    background: var(--cd-color-event-12)
+}
+
+.cd-schedule__event [data-event="event-13"],
+.cd-schedule-modal[data-event="event-13"] .cd-schedule-modal__header-bg {
+    background: hsl(23.15deg 75.52% 41.9%);
+    background: var(--cd-color-event-13)
+}
+
+.cd-schedule__event [data-event="event-14"],
+.cd-schedule-modal[data-event="event-14"] .cd-schedule-modal__header-bg {
+    background: hsl(172.69deg 44.39% 34.02%);
+    background: var(--cd-color-event-14)
+}
+
+.cd-schedule__event [data-event="event-15"],
+.cd-schedule-modal[data-event="event-15"] .cd-schedule-modal__header-bg {
+    background: hsl(225.3deg 52.45% 41.52%);
+    background: var(--cd-color-event-15)
+}
+
+.cd-schedule__event [data-event="event-16"],
+.cd-schedule-modal[data-event="event-16"] .cd-schedule-modal__header-bg {
+    background: hsl(297.3deg 64.33% 37.56%);
+    background: var(--cd-color-event-16)
+}
+
+.cd-schedule__event [data-event="event-17"],
+.cd-schedule-modal[data-event="event-17"] .cd-schedule-modal__header-bg {
+    background: hsl(322.23deg 55% 34.97%);
+    background: var(--cd-color-event-17)
+}
+
+.cd-schedule__event [data-event="event-18"],
+.cd-schedule-modal[data-event="event-18"] .cd-schedule-modal__header-bg {
+    background: hsl(110deg 49.02% 26.86%);
+    background: var(--cd-color-event-18)
+}
+
+.cd-schedule__event [data-event="event-19"],
+.cd-schedule-modal[data-event="event-19"] .cd-schedule-modal__header-bg {
+    background: hsl(352.69deg 71.62% 45.8%);
+    background: var(--cd-color-event-19)
+}
+
+.cd-schedule__event [data-event="event-20"],
+.cd-schedule-modal[data-event="event-20"] .cd-schedule-modal__header-bg {
+    background: hsl(110deg 76.86% 38.66%);
+    background: var(--cd-color-event-20)
 }
 
 .cd-schedule-modal {

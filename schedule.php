@@ -14,7 +14,20 @@ if (empty($_SESSION['user']['token'])) {
   exit();
 }
 
+require_once 'class/Schedule.php';
+$crud = new Schedule();
+
+$schedule_raw = json_decode($crud->getSchedule(), true);
+
+if($schedule_raw['code'] === 10000){
+    $schedule_data = $schedule_raw['data'];
+} else {
+    include 'no-record.php';
+    exit();
+}
+
 ?>
+
 
 <div class="pagetitle">
   <h1>Schedule</h1>
@@ -26,12 +39,13 @@ if (empty($_SESSION['user']['token'])) {
   </nav>
 </div>
 
+
 <section class="section dashboard">
     <!-- Calendar Card -->
         
            <div class="card info-card customers-card">
              <div class="card-body">
-                  <h5 class="card-title"><span>Status: <b>Irregular Student</b></span></h5>
+                  <h5 class="card-title"><span>Last Updated: <b><?php echo $schedule_raw['last_update_display']; ?></b></span></h5>
                   <div class="cd-schedule cd-schedule--loading margin-bottom-lg js-cd-schedule" style="width: calc(100% - 1.25em) !important;">
                      <div class="cd-schedule__timeline">
                        <ul>
@@ -47,22 +61,22 @@ if (empty($_SESSION['user']['token'])) {
                          <li><span>11:30</span></li>
                          <li><span>12:00</span></li>
                          <li><span>12:30</span></li>
-                         <li><span>13:00</span></li>
-                         <li><span>13:30</span></li>
-                         <li><span>14:00</span></li>
-                         <li><span>14:30</span></li>
-                         <li><span>15:00</span></li>
-                         <li><span>15:30</span></li>
-                         <li><span>16:00</span></li>
-                         <li><span>16:30</span></li>
-                         <li><span>17:00</span></li>
-                         <li><span>17:30</span></li>
-                         <li><span>18:00</span></li>
-                         <li><span>18:30</span></li>
-                         <li><span>19:00</span></li>
-                         <li><span>19:30</span></li>
-                         <li><span>20:00</span></li>
-                         <li><span>20:30</span></li>
+                         <li><span>01:00</span></li>
+                         <li><span>01:30</span></li>
+                         <li><span>02:00</span></li>
+                         <li><span>02:30</span></li>
+                         <li><span>03:00</span></li>
+                         <li><span>03:30</span></li>
+                         <li><span>04:00</span></li>
+                         <li><span>04:30</span></li>
+                         <li><span>05:00</span></li>
+                         <li><span>05:30</span></li>
+                         <li><span>06:00</span></li>
+                         <li><span>06:30</span></li>
+                         <li><span>07:00</span></li>
+                         <li><span>07:30</span></li>
+                         <li><span>08:00</span></li>
+                         <li><span>08:30</span></li>
                        </ul>
                      </div> <!-- .cd-schedule__timeline -->
                    
@@ -72,18 +86,19 @@ if (empty($_SESSION['user']['token'])) {
                            <div class="cd-schedule__top-info"><span>Monday</span></div>
                    
                            <ul>
-                             <li class="cd-schedule__event">
-                               <a data-start="10:00" data-end="12:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
-                                 <em class="cd-schedule__name">SIA312</em>
-                               </a>
-                             </li>
-                   
-                             <li class="cd-schedule__event">
-                               <a data-start="15:30" data-end="17:00" data-content="event-rowing-workout" data-event="event-2" href="#0">
-                                 <em class="cd-schedule__name">MS309</em>
-                               </a>
-                             </li>
-                   
+                           <?php
+
+                           if(isset($schedule_data['MONDAY'])){
+                                foreach($schedule_data['MONDAY'] as $schedule){
+                                      echo ' <li class="cd-schedule__event">
+                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
+                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
+                                          </a>
+                                        </li>';
+                                }
+                           }
+
+                           ?>
                            </ul>
                          </li>
                    
@@ -91,18 +106,19 @@ if (empty($_SESSION['user']['token'])) {
                            <div class="cd-schedule__top-info"><span>Tuesday</span></div>
                    
                            <ul>
-                             <li class="cd-schedule__event">
-                               <a data-start="13:00" data-end="14:30"  data-content="event-rowing-workout" data-event="event-3" href="#0">
-                                 <em class="cd-schedule__name">SIA312</em>
-                               </a>
-                             </li>
-                   
-                   
-                             <li class="cd-schedule__event">
-                               <a data-start="15:30" data-end="17:00" data-content="event-abs-circuit" data-event="event-4" href="#0">
-                                 <em class="cd-schedule__name">IAS311</em>
-                               </a>
-                             </li>
+                             <?php
+                                
+                                if(isset($schedule_data['TUESDAY'])){
+                                    foreach($schedule_data['TUESDAY'] as $schedule){
+                                          echo ' <li class="cd-schedule__event">
+                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
+                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
+                                          </a>
+                                        </li>';
+                                    }
+                                }
+
+                             ?>
                    
                            </ul>
                          </li>
@@ -111,17 +127,17 @@ if (empty($_SESSION['user']['token'])) {
                            <div class="cd-schedule__top-info"><span>Wednesday</span></div>
                    
                            <ul>
-                             <li class="cd-schedule__event">
-                               <a data-start="10:00" data-end="12:30" data-content="event-restorative-yoga" data-event="event-1" href="#0">
-                                 <em class="cd-schedule__name">GE9</em>
-                               </a>
-                             </li>
-                   
-                             <li class="cd-schedule__event">
-                               <a data-start="15:30" data-end="17:00" data-content="event-rowing-workout" data-event="event-2" href="#0">
-                                 <em class="cd-schedule__name">MS309</em>
-                               </a>
-                             </li>
+                           <?php
+                                if(isset($schedule_data['WEDNESDAY'])){
+                                    foreach($schedule_data['WEDNESDAY'] as $schedule){
+                                          echo ' <li class="cd-schedule__event">
+                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
+                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
+                                          </a>
+                                        </li>';
+                                    }
+                                }
+                           ?>
                            </ul>
                          </li>
                    
@@ -129,25 +145,17 @@ if (empty($_SESSION['user']['token'])) {
                            <div class="cd-schedule__top-info"><span>Thursday</span></div>
                    
                            <ul>
-                             <li class="cd-schedule__event">
-                               <a data-start="13:00" data-end="14:30"  data-content="event-rowing-workout" data-event="event-3" href="#0">
-                                 <em class="cd-schedule__name">SIA312</em>
-                               </a>
-                             </li>
-                   
-                             <li class="cd-schedule__event">
-                               <a data-start="15:30" data-end="17:00"  data-content="event-rowing-workout" data-event="event-4" href="#0">
-                                 <em class="cd-schedule__name">IAS311</em>
-                               </a>
-                             </li>
-
-                             <li class="cd-schedule__event">
-                               <a data-start="17:00" data-end="20:00"  data-content="event-rowing-workout" data-event="event-5" href="#0">
-                                 <em class="cd-schedule__name">PT206</em>
-                               </a>
-                             </li>
-                   
-                   
+                           <?php
+                                if(isset($schedule_data['THURSDAY'])){
+                                    foreach($schedule_data['THURSDAY'] as $schedule){
+                                          echo ' <li class="cd-schedule__event">
+                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
+                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
+                                          </a>
+                                        </li>';
+                                    }
+                                }
+                           ?>
                            </ul>
                          </li>
                    
@@ -155,54 +163,60 @@ if (empty($_SESSION['user']['token'])) {
                            <div class="cd-schedule__top-info"><span>Friday</span></div>
                    
                            <ul>
-                             <li class="cd-schedule__event">
-                               <a data-start="10:00" data-end="12:30"  data-content="event-rowing-workout" data-event="event-6" href="#0">
-                                 <em class="cd-schedule__name">WS310</em>
-                               </a>
-                             </li>
-                   
-                             <li class="cd-schedule__event">
-                               <a data-start="12:30" data-end="15:30" data-content="event-abs-circuit" data-event="event-6" href="#0">
-                                 <em class="cd-schedule__name">WS310</em>
-                               </a>
-                             </li>
-                   
-                             <li class="cd-schedule__event">
-                               <a data-start="15:30" data-end="17:00"  data-content="event-yoga-1" data-event="event-4" href="#0">
-                                 <em class="cd-schedule__name">IAS310</em>
-                               </a>
-                             </li>
-
-                             <li class="cd-schedule__event">
-                               <a data-start="17:00" data-end="19:00"  data-content="event-rowing-workout" data-event="event-7" href="#0">
-                                 <em class="cd-schedule__name">NATSCI</em>
-                               </a>
-                             </li>
+                           <?php
+                                if(isset($schedule_data['FRIDAY'])){
+                                    foreach($schedule_data['FRIDAY'] as $schedule){
+                                          echo ' <li class="cd-schedule__event">
+                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
+                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
+                                          </a>
+                                        </li>';
+                                    }
+                                }
+                           ?>
                            </ul>
                          </li>
 
-                         <li class="cd-schedule__group">
-                           <div class="cd-schedule__top-info"><span>Saturday</span></div>
+                        
+                           <?php
+                              if(isset($schedule_data['SATURDAY'])){
+                                echo ' <li class="cd-schedule__group">
+                                    <div class="cd-schedule__top-info"><span>Saturday</span></div>
                    
-                           <ul>
-                             <li class="cd-schedule__event">
-                               <a data-start="07:30" data-end="12:30"  data-content="event-rowing-workout" data-event="event-8" href="#0">
-                                 <em class="cd-schedule__name">SAD</em>
-                               </a>
-                             </li>
-                   
-                             
-                           </ul>
-                         </li>
+                                    <ul>';
+                                    foreach($schedule_data['SATURDAY'] as $schedule){
+                                          echo ' <li class="cd-schedule__event">
+                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
+                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
+                                          </a>
+                                        </li>';
+                                    }
+                                echo '
+                                   </ul>
+                                 </li>';
+                              }
+                           ?>
 
-                         <li class="cd-schedule__group">
-                           <div class="cd-schedule__top-info"><span>Sunday</span></div>
-                   
-                           <ul>
+                         
+                             <?php
                              
-                             
-                           </ul>
-                         </li>
+                                if(isset($schedule_data['SUNDAY'])){
+                                echo '<li class="cd-schedule__group">
+                                      <div class="cd-schedule__top-info"><span>Sunday</span></div>
+                                      
+                                      <ul>';
+                                        foreach($schedule_data['SUNDAY'] as $schedule){
+                                         echo ' <li class="cd-schedule__event">
+                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
+                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
+                                          </a>
+                                        </li>';
+                                        }
+                                echo '</ul>
+                                    </li>';
+                                }
+                                
+                           ?>
                        </ul>
                      </div>
                    

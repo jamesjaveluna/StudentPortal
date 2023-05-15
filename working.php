@@ -5,7 +5,9 @@ $return_url = $_SERVER['REQUEST_URI'];
 
 ob_start();
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Check if session token is empty
 if (empty($_SESSION['user']['token'])) {
@@ -32,7 +34,7 @@ if (empty($_SESSION['user']['token'])) {
       <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
         <h1 class="text-danger">503</h1>
         <h2 class="">The page is under maintenance.</h2>
-        <a class="btn" href="index.html">Back to home</a>
+        <a class="btn" href="blank.php">Back to home</a>
         <img src="../assets/img/maintenance.svg" class="img-fluid py-5" alt="Page Not Found">
       </section>
 

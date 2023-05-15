@@ -27,13 +27,20 @@
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        //console.log(response);
+                        var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">')
+                            .text(response.message)
+                            .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                        $('#importModal #response').empty().append(alertDiv);
                     },
                     error: function (xhr, status, error) {
-                        //console.log(xhr.responseText);
+                        var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">')
+                            .text(xhr.responseJSON.message)
+                            .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                        $('#importModal #response').empty().append(alertDiv);
                     },
                     complete: function () {
-                        // Re-enable the file input and hide the spinner
                         $('#fileInput').prop('disabled', false);
                         $('#cancelButton').prop('disabled', false);
                         $('#closeButton').prop('disabled', false);
@@ -41,27 +48,36 @@
                     }
                 });
             } else {
-                console.log('Please select a file.');
+                var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">')
+                    .text("Cannot process an empty file.")
+                    .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                $('#importModal #response').empty().append(alertDiv);
+
+                $('#fileInput').prop('disabled', false);
+                $('#cancelButton').prop('disabled', false);
+                $('#closeButton').prop('disabled', false);
+                $('#importButton').html('Import');
             }
         });
 
-        $('.resendEmail').click(function () {
+        $(document).on('click', '.resendEmail', function () {
             // Get the data-id value from the button's data attribute
             var dataId = $(this).data('id');
-
+        
             // Disable the button to prevent redundancy
             $(this).prop('disabled', true);
-
+        
             // Send the AJAX request
             $.ajax({
-                url: 'ajax/login.php?op=admin_resend',
+                url: 'ajax/admin.php?op=user_resend',
                 method: 'POST', // or 'GET' depending on your server-side implementation
                 data: { id: dataId },
                 success: function (response) {
                     var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">')
                         .text(response.message)
                         .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
-
+        
                     $('#response').empty().append(alertDiv);
                 },
                 error: function (xhr, status, error) {
@@ -69,17 +85,24 @@
                     var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">')
                         .text(response.message)
                         .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
-
+        
                     $('#response').empty().append(alertDiv);
                 }
             });
         });
 
-        $('.deregisterBtn').click(function () {
+        $('.deregisterBtn').on('click', function () {
+            const id = $(this).data('id');
+            const fullName = $(this).data('name');
+            $('#full-name-placeholder').text(fullName);
+            $('#confirmDeleteBtn').data('id', id);
+        });
+
+        $('.updateProfileBtn').click(function () {
             var id = $(this).data('id');
             var fullName = $(this).data('name');
             $('#full-name-placeholder').text(fullName);
-            $('#confirmDeleteBtn').attr('data-id', id);
+            $('#confirmUpdateProfileBtn').attr('data-id', id);
         });
 
         $('#addFirstPage #searchQuery').click(function () {
@@ -87,7 +110,7 @@
 
             // Send the AJAX request
             $.ajax({
-                url: 'ajax/login.php?op=admin_nameid_query',
+                url: 'ajax/admin.php?op=user_query',
                 method: 'POST',
                 data: { query: inputValue },
                 success: function (response) {
@@ -101,6 +124,8 @@
                     $('#addFirstPage #f_name').val('Cannot be found.').attr('class', 'form-control');
 
                     $('#addModal #nextBtn').prop('disabled', true);
+                    $('#addModal #nextBtn').css('display', 'block');
+                    $('#addModal #submitBtn').css('display', 'none');
                 }
             });
 
@@ -127,7 +152,7 @@
             var type = $('#addSecondPage #u_type').val();
 
             $.ajax({
-                url: 'ajax/login.php?op=admin_create',
+                url: 'ajax/admin.php?op=user_create',
                 method: 'POST',
                 data: {
                     std_id: studentID,
@@ -189,16 +214,17 @@
             $('#addModal #addSecondPage').css('display', 'none');
 
             // Buttons
+            $('#addModal #nextBtn').css('display', 'block');
             $('#addModal #cancelButton').css('display', 'block');
             $('#addModal #prevBtn').css('display', 'none');
-            $('#addModal #nextBtn').text('Next Page');
+            $('#addModal #submitBtn').css('display', 'none');
 
         });
 
         $('#confirmationModal #confirmDeleteBtn').click(function () {
             var id = $(this).data('id');
             $.ajax({
-                url: '/ajax/login.php?op=admin_delete',
+                url: '/ajax/admin.php?op=user_delete',
                 type: 'POST',
                 data: { 'user_id': id },
                 success: function (response) {
@@ -210,6 +236,36 @@
                     setTimeout(function () {
                         location.reload();
                     }, 5000); 
+                },
+                error: function (xhr, status, error) {
+                    var response = xhr.responseJSON;
+                    var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">')
+                        .text(response.message)
+                        .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                    $('#response').empty().append(alertDiv);
+                },
+                complete: function () {
+                    $('#confirmation-modal').modal('hide');
+                }
+            });
+        });
+
+        $('#confirmationModal #confirmDeleteStudentBtn').click(function () {
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/ajax/admin.php?op=student_delete',
+                type: 'POST',
+                data: { 'student_id': id },
+                success: function (response) {
+                    var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">')
+                        .text(response.message)
+                        .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                    $('#response').empty().append(alertDiv);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 5000);
                 },
                 error: function (xhr, status, error) {
                     var response = xhr.responseJSON;
@@ -260,7 +316,7 @@
 
             // Send the AJAX request to update the user
             $.ajax({
-                url: '/ajax/login.php?op=admin_edit',
+                url: '/ajax/admin.php?op=user_edit',
                 type: 'POST',
                 data: updatedData,
                 success: function (response) {
@@ -272,6 +328,138 @@
                     setTimeout(function () {
                         location.reload();
                     }, 5000); 
+                },
+                error: function (xhr, status, error) {
+                    var response = xhr.responseJSON;
+                    var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">')
+                        .text(response.message)
+                        .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                    $('#response').empty().append(alertDiv);
+                }
+            });
+        });
+
+        $('#advancedSettings').click(function () {
+            var isOpen = $('#advancedSettings').data('open');
+
+            if (isOpen === 0) {
+                $('#advancedSettings').data('open', 1);
+                $('#eventModal #simpleOption').attr('class', 'col-lg-6');
+                $('eventModal #simpleOption').css('display', 'block');
+
+                $('#eventModal #advancedOption').attr('class', 'col-lg-6');
+                $('#eventModal #advancedOption').css('display', 'block');
+
+                $('#eventModal #eventModalSize').attr('class', 'modal-dialog modal-dialog-centered modal-xl');
+
+                $('#eventModal #advancedSettings').text('Simple Settings');
+
+                $('#bsit, #bsba, #bsed, #beed, #bshm, #bstm, #bscrim').prop('checked', true);
+
+            } else {
+                $('#advancedSettings').data('open', 0);
+                $('#eventModal #simpleOption').attr('class', 'col-lg-12');
+                $('eventModal #simpleOption').css('display', 'block');
+
+                $('#eventModal #advancedOption').attr('class', 'col-lg-6');
+                $('#eventModal #advancedOption').css('display', 'none');
+
+                $('#eventModal #eventModalSize').attr('class', 'modal-dialog modal-dialog-centered');
+
+                $('#eventModal #advancedSettings').text('Advanced Settings');
+            }
+        });
+
+        $('#eventModal #eventModalSize #addEventBtn').click(function () {
+
+            // Retrieve the updated values from the form
+            var eventName = $('#titleInput').val();
+            var eventLocation = $('#locationInput').val();
+            var eventStartDate = $('#startDateInput').val();
+            var eventEndDate = $('#endDateInput').val();
+            var eventStartTime = $('#startTimeInput').val();
+            var eventEndTime = $('#endTimeInput').val();
+            var eventAllDay = $('#allDayInput').is(':checked');
+            var eventNoClass = $('#noClassInput').is(':checked');
+
+            var permBSIT = $('#bsitInput').is(':checked');
+            var permBSBA = $('#bsbaInput').is(':checked');
+            var permBSED = $('#bsedInput').is(':checked');
+            var permBEED = $('#beedInput').is(':checked');
+            var permBSHM = $('#bshmInput').is(':checked');
+            var permBSTM = $('#bstmInput').is(':checked');
+            var permBSCRIM = $('#bscrimInput').is(':checked');
+
+            var permEditMod = $('#modEdit').is(':checked');
+            var permEditTeach = $('#teachEdit').is(':checked');
+            var permEditOfficer = $('#officerEdit').is(':checked');
+
+            var permDeleteMod = $('#modDelete').is(':checked');
+            var permDeleteTeach = $('#teachDelete').is(':checked');
+            var permDeleteOfficer = $('#officerDelete').is(':checked');
+
+            // Check if title is empty
+            if (eventName === '') {
+                var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">')
+                    .text('Title cannot be empty.')
+                    .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+                $('#titleInput').focus();
+                $('#eventModal #eventModalSize #response').empty().append(alertDiv);
+                return;
+            }
+
+            // Create an object with the updated data
+            var updatedData = {
+                name: eventName,
+                start: {
+                    date: eventStartDate,
+                    time: eventStartTime
+                },
+                end: {
+                    date: eventEndDate,
+                    time: eventEndTime
+                },
+                location: eventLocation,
+                allDay: eventAllDay,
+                noClass: eventNoClass,
+                permissions: {
+                    edit: {
+                        moderator: permEditMod,
+                        teacher: permEditTeach,
+                        officer: permEditOfficer
+                    },
+                    delete: {
+                        moderator: permDeleteMod,
+                        teacher: permDeleteTeach,
+                        officer: permDeleteOfficer
+                    }
+                },
+                access: {
+                    bsit: permBSIT,
+                    bsba: permBSBA,
+                    bsed: permBSED,
+                    beed: permBEED,
+                    bshm: permBSHM,
+                    bstm: permBSTM,
+                    bscrim: permBSCRIM
+                }
+            };
+
+            // Send the AJAX request to update the event
+            $.ajax({
+                url: './../ajax/admin.php?op=add_event',
+                type: 'POST',
+                data: updatedData,
+                success: function (response) {
+                    var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">')
+                        .text(response.message)
+                        .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                    $('#response').empty().append(alertDiv);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 5000);
                 },
                 error: function (xhr, status, error) {
                     var response = xhr.responseJSON;

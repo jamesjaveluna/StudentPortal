@@ -1,5 +1,8 @@
 <?php
 
+// General configuration
+define('GEN_DEBUG', true);
+
 // Database configuration
 define('DB_HOST', '82.180.174.154');
 define('DB_NAME', 'u410000628_student_portal');
@@ -30,6 +33,7 @@ define('SITE_ICON', '../../../app-assets/images/ico/favicon.ico');
 
 // Directory
 define('TEMPLATES_DIR', __DIR__ . './../../template/email/');
+define('CLASS_DIR', __DIR__ . './../../class/');
 
 // Email Templates
 define('VERIFICATION_TEMPLATE', file_get_contents(TEMPLATES_DIR.'/verify.html'));

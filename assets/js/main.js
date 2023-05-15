@@ -41,11 +41,19 @@
   /**
    * Sidebar toggle
    */
-  if (select('.toggle-sidebar-btn')) {
-    on('click', '.toggle-sidebar-btn', function(e) {
-      select('body').classList.toggle('toggle-sidebar')
-    })
-  }
+if (select('.toggle-sidebar-btn')) {
+  on('click', '.toggle-sidebar-btn', function(e) {
+    var body = select('body');
+    body.classList.toggle('toggle-sidebar');
+    var modal = select('.cd-schedule-modal');
+    if (modal.classList.contains('cd-schedule-modal--open')) {
+      modal.style.left = '50%';
+      modal.style.top = '50%';
+        modal.style.transform = 'translateY(-200px) translateX(-450px)';
+    }
+  })
+}
+
 
   /**
    * Search bar toggle

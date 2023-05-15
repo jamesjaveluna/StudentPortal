@@ -7,8 +7,6 @@ ob_start();
 
 session_start();
 
-require_once 'class/User.php';
-$crud = new User();
 
 // Check if session token is empty
 if (empty($_SESSION['user']['token'])) {
@@ -17,9 +15,24 @@ if (empty($_SESSION['user']['token'])) {
   exit();
 }
 
-$user_type = $_SESSION['user']['type'];
+require_once 'class/Admin.php';
+$crud = new Admin();
 
-$users_data = json_decode($crud->getUsers(), true)['data'];
+$user_type = $_SESSION['user']['type'];
+$user_panel = $_SESSION['user']['panel'];
+$user_permission = isset(json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel']) ? json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel'] : null;
+
+if($user_panel !== 'admin' && in_array('user_view', $user_permission) && $user_permission === null){
+    include 'unauthorized.php';
+    exit();
+}
+
+$users_raw = json_decode($crud->getUsers(), true);
+
+if($users_raw['code'] === 10000){
+    $users_data = $users_raw['data'];
+}
+
 
 ?>
 
@@ -49,7 +62,7 @@ $users_data = json_decode($crud->getUsers(), true)['data'];
               <!-- Buttons -->
               <?php
 
-              if($user_type === 'admin'){
+              if($user_type === 'admin' && in_array('user_add', $user_permission)){
                    echo '<div class="col-lg-12 text-end mb-3">
                               <button type="button" id="addBtnExecuter" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal"><i class="bi bi-plus-lg me-1"></i> New</button>
                           </div>';
@@ -71,53 +84,78 @@ $users_data = json_decode($crud->getUsers(), true)['data'];
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody>     
                   <?php 
 
-                  foreach($users_data as $user){
+                  if($users_raw['code'] === 10000){
+                    foreach($users_data as $user){
 
-                    switch($user_type){
-                        
-                        case 'admin': // Can Edit, Resend Verification, Deregister
-                            $buttons = '<button class="btn btn-primary editBtn" data-id="'.$user['id'].'" type="button" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bx ri-edit-box-line me-1"></i> Edit</button> ';
-                            // For resend verification button
-                            if($user['type'] === 'unverified'){
-                                $buttons .= '<button class="btn btn-warning resendEmail" data-id="'.$user['id'].'" type="button"><i class="bx ri-mail-send-line me-1"></i> Resend Email</button> ';
-                            } 
+                      switch($user_type){
+                          
+                          case 'admin': // Can Edit, Resend Verification, Deregister
+                              if(in_array('user_edit', $user_permission)){
+                                $buttons = '<button class="btn btn-primary editBtn" data-id="'.$user['id'].'" type="button" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bx ri-edit-box-line"></i></button> ';
+                              } else {
+                                $buttons = '';
+                              }
 
-                            $buttons .= '<button class="btn btn-danger deregisterBtn" data-id="'.$user['id'].'" data-name="'.$user['FullName'].'" type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i class="bi bi-eraser me-1"></i> Deregister</button> ';
-                        break;
+                              // For resend verification button
+                              if($user['type'] === 'unverified' && in_array('user_verify', $user_permission)){
+                                  $buttons .= '<button class="btn btn-warning resendEmail" data-id="'.$user['id'].'" type="button"><i class="bx ri-mail-send-line me-1"></i> Verify</button> ';
+                              } 
 
-                        // 
-                        case 'moderator': // Can Edit, Resend Verification
-                            $buttons = '<button class="btn btn-primary editBtn" data-id="'.$user['id'].'" type="button" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bx ri-edit-box-line me-1"></i> Edit</button> ';
+                              if(in_array('user_delete', $user_permission)){
+                                   $buttons .= '<button class="btn btn-danger deregisterBtn" data-id="'.$user['id'].'" data-name="'.$user['FullName'].'" type="button" data-bs-toggle="modal" data-bs-target="#confirmationModal"><i class="bi bi-eraser"></i></button> ';
+                              }
+                          break;
 
-                            // For resend verification button
-                            if($user['type'] === 'unverified'){
-                                $buttons .= '<button class="btn btn-warning resendEmail" data-id="'.$user['id'].'" type="button"><i class="bx ri-mail-send-line me-1"></i> Resend Email</button> ';
-                            } 
-                            
-                        break;
+                          // 
+                          case 'moderator': // Can Edit, Resend Verification
+                              if(in_array('user_edit', $user_permission)){
+                                $buttons = '<button class="btn btn-primary editBtn" data-id="'.$user['id'].'" type="button" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bx ri-edit-box-line me-1"></i></button> ';
+                              } else {
+                                $buttons = '';
+                              }
 
-                        case 'officer': // Can Resend Verification
-                            $buttons = '';
+                              // For resend verification button
+                              if($user['type'] === 'unverified' && in_array('user_verify', $user_permission)){
+                                  $buttons .= '<button class="btn btn-warning resendEmail" data-id="'.$user['id'].'" type="button"><i class="bx ri-mail-send-line me-1"></i> Verify</button> ';
+                              } 
+                              
+                          break;
 
-                            // For resend verification button
-                            if($user['type'] === 'unverified'){
-                                $buttons = '<button class="btn btn-warning resendEmail" data-id="'.$user['id'].'" type="button"><i class="bx ri-mail-send-line me-1"></i> Resend Email</button> ';
-                            } 
-                        break;
+                          case 'officer': // Can Resend Verification
+                              $buttons = '';
+
+                              // For resend verification button
+                              if($user['type'] === 'unverified' && in_array('user_verify', $user_permission)){
+                                  $buttons = '<button class="btn btn-warning resendEmail" data-id="'.$user['id'].'" type="button"><i class="bx ri-mail-send-line me-1"></i> Verify</button> ';
+                              } else {
+                                  $buttons = '<span class="badge rounded-pill bg-secondary">No action</span>';
+                              }
+                          break;
+                      }
+
+                      echo '<tr>
+                                <td>'.$user['std_id'].'</td>
+                                <td><a href="./profile/'.$user['id'].'" class="text-danger">'.$user['FullName'].'</a></td>
+                                <td>'.$user['username'].'</td>
+                                <td>'.$user['email'].'</td>
+                                <td>'.$user['type'].'</td>
+                                <td>'.$buttons.'</td>
+                            </tr>
+                            ';
                     }
 
-                    echo '<tr>
-                            <th scope="row">'.$user['std_id'].'</th>
-                            <td>'.$user['FullName'].'</td>
-                            <td>'.$user['username'].'</td>
-                            <td>'.$user['email'].'</td>
-                            <td>'.$user['type'].'</td>
-                            <td>'.$buttons.'</td>
-                          </tr>';
+                  } else {
+                        if(GEN_DEBUG === true){
+                            echo '<tr><td class="datatable-empty" colspan="6">Not authorized to view this data.</td></tr>';
+                            echo '<tr><td class="datatable-empty" colspan="6">Not authorized to view this data.</td></tr>';
+                        } else {
+                            echo '<tr><td class="datatable-empty" colspan="6">Not authorized to view this data.</td></tr>';
+                        }
                   }
+                  
                   
                   ?>
                 </tbody>
@@ -131,31 +169,9 @@ $users_data = json_decode($crud->getUsers(), true)['data'];
       </div>
  </section>
 
- <!-- Import Modal -->
- <div class="modal fade" id="verticalycentered" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Import Student</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeButton"></button>
-      </div>
-      <div class="modal-body">
-         <form id="importForm" enctype="multipart/form-data">
-            <div class="d-grid gap-2 mt-3">
-                <input id="operator" type="hidden" value="student">
-                <input id="fileInput" type="file" class="btn btn-secondary" name="xlsFile" accept=".xls" required>
-            </div>
-         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="cancelButton" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="importButton"> Import</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- End Import Modal-->
-
+<?php
+    if(in_array('user_delete', $user_permission)) {
+?>
 <!-- Remove Modal -->
  <div class="modal fade" id="confirmationModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
@@ -180,7 +196,11 @@ $users_data = json_decode($crud->getUsers(), true)['data'];
   </div>
 </div>
 <!-- Remove Modal-->
+<?php
+ }
 
+ if(in_array('user_edit', $user_permission)) {
+?>
 <!-- Edit Modal -->
  <div class="modal fade" id="editModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
@@ -193,27 +213,33 @@ $users_data = json_decode($crud->getUsers(), true)['data'];
          <form class="row g-3">
                 <div class="col-md-12">
                   <label for="std_id" class="form-label">Student ID</label>
-                  <input type="text" class="form-control" id="std_id" value="SCC-14-0001232" disabled>
+                  <input type="text" class="form-control" id="std_id" value="" disabled>
                 </div>
 
                 <div class="col-md-12">
                   <label for="f_name" class="form-label">Full Name</label>
-                  <input type="text" class="form-control" id="f_name" value="James, Javeluna" disabled>
+                  <input type="text" class="form-control" id="f_name" value="" disabled>
                 </div>
 
                 <div class="col-md-12">
                   <label for="u_name" class="form-label">Username</label>
-                  <input type="text" class="form-control" id="u_name" value="mistisakana">
+                  <input type="text" class="form-control" id="u_name" value="">
                 </div>
 
                 <div class="col-md-12">
                   <label for="e_mail" class="form-label">Email</label>
-                  <input type="text" class="form-control" id="e_mail" value="javelunajames255@gmail.com" disabled>
+                  <?php
+                    if($user_type === 'admin'){
+                        echo '<input type="text" class="form-control" id="e_mail" value="">';
+                    } else {
+                        echo '<input type="text" class="form-control" id="e_mail" value="" disabled>';
+                    }
+                  ?>
                 </div>
 
                 <div class="col-md-12">
                   <label for="u_type" class="form-label">Type</label>
-                  <select class="form-select" id="u_type" aria-label="Default select example">
+                  <select class="form-select" id="u_type">
                 <?php
                 if($user_type === 'admin'){
                   echo '<option value="admin">Admin</option>
@@ -243,7 +269,11 @@ $users_data = json_decode($crud->getUsers(), true)['data'];
   </div>
 </div>
 <!-- Edit Modal-->
+<?php
+ }
 
+ if(in_array('user_add', $user_permission)) {
+?>
 <!-- Add Modal -->
  <div class="modal fade" id="addModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
@@ -334,10 +364,9 @@ $users_data = json_decode($crud->getUsers(), true)['data'];
   </div>
 </div>
 <!-- Add Modal-->
-
-
-
-
+<?php
+ }
+?>
 <?php
 $content = ob_get_contents();
 

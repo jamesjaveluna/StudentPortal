@@ -4,11 +4,11 @@
     // Wait for the DOM to be ready
     $(function () {
         // Check if user is already logged in
-        var token = localStorage.getItem('token');
-        if (token) {
-            // User is already logged in, redirect to home page
-            window.location.href = '/';
-        }
+        //var token = localStorage.getItem('token');
+        //if (token) {
+        //    // User is already logged in, redirect to home page
+        //    window.location.href = '/';
+        //}
 
         // Get the email and submit button elements
         var codeInput = $('#code');
@@ -86,6 +86,7 @@
                             '<i class="bi bi-exclamation-octagon me-1"></i>' + errorMessage +
                             '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
                             '</div>';
+                        grecaptcha.reset()
                         $('#response').html(alertHtml);
 
                     }

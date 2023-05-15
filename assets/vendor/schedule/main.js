@@ -145,6 +145,7 @@
 			var HeaderBgScaleY = modalHeight/eventHeight,
 				BodyBgScaleX = (modalWidth - eventWidth);
 
+			
 			//change modal height/width and translate it
 			self.modal.setAttribute('style', 'top:'+eventTop+'px;left:'+eventLeft+'px;height:'+modalHeight+'px;width:'+modalWidth+'px;transform: translateY('+modalTranslateY+'px) translateX('+modalTranslateX+'px)');
 			//set modalHeader width
@@ -155,13 +156,31 @@
 			self.modalBodyBg.setAttribute('style', 'height:'+eventHeight+'px; width: 1px; transform: scaleY('+HeaderBgScaleY+') scaleX('+BodyBgScaleX+')');
 			//change modal modalHeaderBg height/width and scale it
 			self.modalHeaderBg.setAttribute('style', 'height: '+eventHeight+'px; width: '+eventWidth+'px; transform: scaleY('+HeaderBgScaleY+')');
-			
+
+
+			if (!$('body').hasClass('toggle-sidebar')) {
+				//var modalTranslateX = parseInt((windowWidth - modalWidth) / 2 - eventLeft);
+				//modalTranslateY = parseInt((windowHeight - modalHeight) / 2 - eventTop);
+				//if (modalTranslateX < 0) {
+				//	modalTranslateX = windowWidth * 0;
+				//}
+				//var modalLeft = '0px';
+				//$('.cd-schedule-modal.cd-schedule-modal--open.cd-schedule-modal--content-loaded.cd-schedule-modal--animation-completed').css({ 'right': modalLeft });
+				//
+				//$('.cd-schedule-modal.cd-schedule-modal--open.cd-schedule-modal--content-loaded.cd-schedule-modal--animation-completed').css({
+				//	'left': '25%',
+				//	'top': '50%'
+				//});
+			}
+
+
 			self.modalHeaderBg.addEventListener('transitionend', function cb(){
 				//wait for the  end of the modalHeaderBg transformation and show the modal content
 				self.animating = false;
 				Util.addClass(self.modal, 'cd-schedule-modal--animation-completed');
 				self.modalHeaderBg.removeEventListener('transitionend', cb);
 			});
+
 		}
 
 		//if browser do not support transitions -> no need to wait for the end of it
@@ -301,7 +320,7 @@
 	      }
 	    }
 		};
-		httpRequest.open('GET', content+'.html');
+		httpRequest.open('GET', './ajax/'+content);
     httpRequest.send();
 	};
 

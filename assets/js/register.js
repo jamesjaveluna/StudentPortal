@@ -4,11 +4,11 @@
     // Wait for the DOM to be ready
     $(function () {
         // Check if user is already logged in
-        var token = localStorage.getItem('token');
-        if (token) {
-            // User is already logged in, redirect to home page
-            window.location.href = '/';
-        }
+        //var token = localStorage.getItem('token');
+        //if (token) {
+        //    // User is already logged in, redirect to home page
+        //    window.location.href = '/';
+        //}
 
         // Get the email and submit button elements
         var studentIDInput = $('#studentID');
@@ -122,7 +122,7 @@
                             break;
                     }
 
-                    
+                    grecaptcha.reset()
                     $('#response').html(alertHtml);
                 }
             });

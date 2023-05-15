@@ -13,6 +13,8 @@ if (empty($_SESSION['user']['token'])) {
   header("Location: ./account/login.php?return_url=" . urlencode($return_url));
   exit();
 }
+
+$avatar = isset($_SESSION['user']['avatar']) ? $_SESSION['user']['avatar'] : 'default-profile.png';   
 ?>
 
 <div class="pagetitle">
@@ -32,9 +34,9 @@ if (empty($_SESSION['user']['token'])) {
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <img src="../assets/img/profile/james.jpg" alt="Profile" class="rounded-circle">
+              <?php echo '<img src="../assets/img/profile/'.$avatar.'" alt="Profile" class="rounded-circle">'; ?>
               <h2><?php echo $_SESSION['user']['fname']; ?></h2>
-              <h3>BSIT 3A</h3>
+              <h3><?php echo $_SESSION['user']['Course'].' '.$_SESSION['user']['Section']; ?></h3>
               <div class="social-links mt-2">
                 <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
                 <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
@@ -65,10 +67,6 @@ if (empty($_SESSION['user']['token'])) {
                   <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Settings</button>
                 </li>
 
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
-                </li>
-
               </ul>
               <div class="tab-content pt-2">
 
@@ -77,64 +75,113 @@ if (empty($_SESSION['user']['token'])) {
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Course</div>
-                    <div class="col-lg-9 col-md-8">BSTM</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['Course']; ?></div>
                   </div>
 
-                  <div class="row">
+                  <?php 
+                  
+                  if($_SESSION['user']['Major'] === null){
+                    echo '<div class="row">
                     <div class="col-lg-3 col-md-4 label ">Major</div>
-                    <div class="col-lg-9 col-md-8">Tourism Management</div>
-                  </div>
+                    <div class="col-lg-9 col-md-8">'.$_SESSION['user']['Major'].'</div>
+                  </div>';
+                  }
+                  
+                  ?>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Section</div>
-                    <div class="col-lg-9 col-md-8">A2</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['Section']; ?></div>
+                  </div>
+
+
+                  <?php
+
+                  switch($_SESSION['user']['type']){
+                        case 'admin':
+                        $user_type_display = '<span class="badge bg-danger text-white">Admin</span>';
+                        break;
+
+                        case 'moderator':
+                        $user_type_display = '<span class="badge bg-primary text-white">Moderator</span>';
+                        break;
+
+                        case 'officer':
+                        $user_type_display = '<span class="badge bg-info text-white">Officer</span>';
+                        break;
+
+                        case 'member':
+                        $user_type_display = '<span class="badge bg-success text-white">Member</span>';
+                        break;
+
+                        case 'unverified':
+                        $user_type_display = '<span class="badge bg-secondary text-white">Unverified</span>';
+                        break;
+
+                        case 'banned':
+                        $user_type_display = '<span class="badge bg-warning text-dark">Banned</span>';
+                        break;
+                  }
+
+                  // Assigning Organizations
+                  if($_SESSION['user']['type'] === 'officer'){
+                    $user_organizations = '<span class="badge bg-warning text-dark">Supreme Student Council</span>';
+                  } else {
+                    $user_organizations = '<i>User not affiliated with any organization.</i>';
+                  }
+
+                  ?>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Account Type</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $user_type_display; ?></div>
                   </div>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">School Year</div>
-                    <div class="col-lg-9 col-md-8">2022-2023</div>
+                    <div class="col-lg-3 col-md-4 label ">Organization(s)</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $user_organizations; ?></div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">Semester</div>
-                    <div class="col-lg-9 col-md-8">2nd Semester</div>
-                  </div>
-
-                  <h5 class="card-title">School Records  <i class="bi bi-exclamation-circle fs-6" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="This data came from School Registrar."></i></h5>
+                  <h5 class="card-title">School Records  <i class="bi bi-exclamation-circle fs-6" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Data sourced from school registrar."></i></h5>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Student ID</div>
-                    <div class="col-lg-9 col-md-8">SCC-11-000378</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['StudentID']; ?></div>
                   </div>
                   
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Full Name</div>
-                    <div class="col-lg-9 col-md-8">Siarot, Laekysha M</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['fname']; ?></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Birthday</div>
-                    <div class="col-lg-9 col-md-8">January 17, 2003</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['Birthday']; ?></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Gender</div>
-                    <div class="col-lg-9 col-md-8">Female</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['Gender']; ?></div>
                   </div>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Religion</div>
-                    <div class="col-lg-9 col-md-8">Roman Catholic</div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Citizenship</div>
-                    <div class="col-lg-9 col-md-8">Filipino</div>
+                    <div class="col-lg-3 col-md-4 label">Civil Status</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['Status']; ?></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Home address</div>
-                    <div class="col-lg-9 col-md-8">W4 Tres de Mayo, Minglanilla, Cebu</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['Address']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Semester</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['Semester']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">School Year</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $_SESSION['user']['SY']; ?></div>
                   </div>
 
                 </div>
@@ -146,7 +193,7 @@ if (empty($_SESSION['user']['token'])) {
                     <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
-                        <img src="../assets/img/profile-img.jpg" alt="Profile">
+                        <?php echo '<img src="../assets/img/profile/'.$avatar.'" alt="Profile">'; ?>
                         <div class="pt-2">
                           <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
                           <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
@@ -155,91 +202,44 @@ if (empty($_SESSION['user']['token'])) {
                     </div>
 
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Username</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin Anderson">
+                        <?php echo '<input name="username" type="text" class="form-control" id="username" value="'.$_SESSION['user']['username'].'" disabled>'; ?>
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="about" class="col-md-4 col-lg-3 col-form-label">About</label>
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Email</label>
                       <div class="col-md-8 col-lg-9">
-                        <textarea name="about" class="form-control" id="about" style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
+                        <?php echo '<input name="username" type="text" class="form-control" id="username" value="'.$_SESSION['user']['email'].'" disabled>'; ?>
+                      </div>
+                    </div>
+                    
+                    <hr>
+
+                    <div class="row mb-3">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Request:</label>
+                      <div class="col-md-8 col-lg-9 d-grid">
+                        <button type="button" class="btn btn-outline-danger rounded-pill"><i class="bx bx-mail-send me-1"></i> Change Password</button>
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="company" class="col-md-4 col-lg-3 col-form-label">Company</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label"></label>
+                      <div class="col-md-8 col-lg-9 d-grid">
+                        <button type="button" class="btn btn-outline-danger rounded-pill"><i class="bx bxs-calendar-edit me-1"></i> Update Schedule</button>
                       </div>
                     </div>
 
-                    <div class="row mb-3">
-                      <label for="Job" class="col-md-4 col-lg-3 col-form-label">Job</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="job" type="text" class="form-control" id="Job" value="Web Designer">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Country" class="col-md-4 col-lg-3 col-form-label">Country</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="country" type="text" class="form-control" id="Country" value="USA">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Address" class="col-md-4 col-lg-3 col-form-label">Address</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="address" type="text" class="form-control" id="Address" value="A108 Adam Street, New York, NY 535022">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="phone" type="text" class="form-control" id="Phone" value="(436) 486-3538 x29071">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="email" type="email" class="form-control" id="Email" value="k.anderson@example.com">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Twitter" class="col-md-4 col-lg-3 col-form-label">Twitter Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="twitter" type="text" class="form-control" id="Twitter" value="https://twitter.com/#">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Facebook" class="col-md-4 col-lg-3 col-form-label">Facebook Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="facebook" type="text" class="form-control" id="Facebook" value="https://facebook.com/#">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Instagram" class="col-md-4 col-lg-3 col-form-label">Instagram Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="instagram" type="text" class="form-control" id="Instagram" value="https://instagram.com/#">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="Linkedin" class="col-md-4 col-lg-3 col-form-label">Linkedin Profile</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="linkedin" type="text" class="form-control" id="Linkedin" value="https://linkedin.com/#">
+                    <div class="row mb-5">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label"></label>
+                      <div class="col-md-8 col-lg-9 d-grid">
+                        <button type="button" class="btn btn-outline-danger rounded-pill"><i class="bx bxs-edit me-1"></i> Update Details</button>
                       </div>
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="submit" class="btn btn-danger">Save Changes</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
 
@@ -281,41 +281,9 @@ if (empty($_SESSION['user']['token'])) {
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="submit" class="btn btn-danger">Save Changes</button>
                     </div>
                   </form><!-- End settings Form -->
-
-                </div>
-
-                <div class="tab-pane fade pt-3" id="profile-change-password">
-                  <!-- Change Password Form -->
-                  <form>
-
-                    <div class="row mb-3">
-                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="password" type="password" class="form-control" id="currentPassword">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="newpassword" type="password" class="form-control" id="newPassword">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="renewpassword" type="password" class="form-control" id="renewPassword">
-                      </div>
-                    </div>
-
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Change Password</button>
-                    </div>
-                  </form><!-- End Change Password Form -->
 
                 </div>
 

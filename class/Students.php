@@ -23,7 +23,6 @@ class Students {
 
     $user_id = $_SESSION['user']['id'];
     $user_type = $_SESSION['user']['type'];
-    //$user_type = isset($_SESSSION['user']['type']) ? $_SESSSION['user']['type'] : 0;
     $user_token = $_SESSION['user']['token'];
 
     // Check if user_type is eligible with this request.

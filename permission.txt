@@ -1,0 +1,29 @@
+{
+  "user_permissions": {
+    "user_panel": [
+      "change_password",
+      "change_avatar",
+      "request_schedule_update",
+      "request_details_update"
+    ],
+    "admin_panel": [
+      "user_view",
+      "user_add",
+      "user_edit",
+      "user_delete",
+      "user_verify",
+      "students_view",
+      "students_import",
+      "students_delete",
+      "calendar_view",
+      "calendar_add",
+      "calendar_edit"
+    ],
+    "forum": [
+      "post_view",
+      "post_add",
+      "post_edit",
+      "post_delete"
+    ]
+  }
+}

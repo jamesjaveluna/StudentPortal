@@ -212,23 +212,17 @@ class Import {
                     'message' => 'File uploaded and validated successfully.',
                     'data' => $data
                 );
-
-
-                // Respond with success message
-                $response = array(
-                    'success' => true,
-                    'message' => 'File uploaded and validated successfully.',
-                    'data' => $data
-                );
             } else {
                 // Headers don't match
+                http_response_code(400);
                 $response = array(
                     'success' => false,
-                    'message' => 'Invalid file format. Sheet2 should contain the required headers.'
+                    'message' => 'Invalid file format, headers cannot be found.'
                 );
             }
         } else {
             // Invalid file type
+            http_response_code(400);
             $response = array(
                 'success' => false,
                 'message' => 'Invalid file type. Only XLS files are allowed.'
@@ -236,6 +230,7 @@ class Import {
         }
     } else {
         // No file uploaded
+        http_response_code(400);
         $response = array(
             'success' => false,
             'message' => 'No file uploaded.'

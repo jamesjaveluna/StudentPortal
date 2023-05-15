@@ -35,11 +35,11 @@
         console.log(returnUrl);
 
         // Check if user is already logged in
-        var token = localStorage.getItem('token');
-        if (token) {
-            // User is already logged in, redirect to home page
-            window.location.href = './..' + returnUrl;
-        }
+        //var token = localStorage.getItem('token');
+        //if (token) {
+        //    // User is already logged in, redirect to home page
+        //    window.location.href = './..' + returnUrl;
+        //}
 
         // Get the email and submit button elements
         var emailInput = $('#email');
@@ -91,6 +91,7 @@
 
                     // Enable the submit button again
                     //submitButton.prop('disabled', false);
+                    grecaptcha.reset()
                 }
             });
 
