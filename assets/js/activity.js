@@ -4,7 +4,7 @@
     // Wait for the DOM to be ready
     $(function () {
         var calendarEl = document.getElementById('calendar');
-        var bgColor = null;
+        var eventClass = null;
         var calendar = new FullCalendar.Calendar(calendarEl, {
             expandRows: true,
             slotMinTime: '08:00',
@@ -27,25 +27,34 @@
                 modal.find('#endDateInput').val(arg.endStr);
                 modal.modal('show');
 
-                modal.find('#saveEventBtn').off('click').on('click', function () {
-                    var title = modal.find('#titleInput').val();
-                    if (title) {
-                        calendar.addEvent({
-                            title: title,
-                            start: arg.start,
-                            end: arg.end,
-                            allDay: arg.allDay
-                        });
-                        modal.modal('hide');
-                    }
-                });
+                //modal.find('#addEventBtn').off('click').on('click', function () {
+                //    var title = modal.find('#titleInput').val();
+                //    if (title) {
+                //        calendar.addEvent({
+                //            title: title,
+                //            start: arg.start,
+                //            end: arg.end,
+                //            allDay: arg.allDay
+                //        });
+                //        modal.modal('hide');
+                //    }
+                //});
 
                 calendar.unselect();
             },
             eventClick: function (arg) {
-                if (confirm('Are you sure you want to delete this event?')) {
-                    arg.event.remove()
-                }
+                var modal = $('#eventModal');
+                modal.find('#eventModalSize #titleInput').val(arg.event.title);
+                modal.find('#eventModalSize #locationInput').val(arg.event.location);
+                modal.find('#eventModalSize #startDateInput').val(arg.event.startStr);
+                modal.find('#eventModalSize #endDateInput').val(arg.event.endStr);
+
+                // Display additional fields and data
+                modal.find('#eventModalSize #permissionInput').val(arg.event.permission);
+                modal.find('#eventModalSize #accessInput').val(arg.event.access);
+                // Add more fields as needed for other data properties
+
+                modal.modal('show');
             },
             nowIndicator: true,
             dayMaxEvents: true, // allow "more" link when too many events
@@ -60,15 +69,25 @@
                             if (Array.isArray(rawEvents)) {
                                 var events = rawEvents.map(function (event) {
                                     if (event.noClass === "true") {
-                                        bgColor = 'd-grid badge bg-danger';
+                                        eventClass = 'd-grid badge bg-danger';
                                     } else {
-                                        bgColor = 'd-grid badge bg-primary';
+                                        eventClass = 'd-grid badge bg-primary';
                                     }
                                     return {
+                                        id: event.id,
+                                        addedBy: event.addedBy,
                                         title: event.title,
                                         start: event.start,
-                                        classNames: bgColor,
-                                        end: event.end
+                                        classNames: eventClass,
+                                        end: event.end,
+                                        location: event.location,
+                                        allDay: event.allDay,
+                                        noClass: event.noClass,
+                                        isExam: event.isExam,
+                                        isHoliday: event.isHoliday,
+                                        permission: event.permission,
+                                        access: event.access
+
                                     };
                                 });
                                 successCallback(events);
@@ -81,6 +100,11 @@
                         failureCallback('Error fetching events');
                     }
                 });
+            },
+            eventContent: function (arg) {
+                return {
+                    html: '<div class="event-title">' + arg.event.title + '</div>'
+                };
             }
         });
 

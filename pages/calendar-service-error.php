@@ -1,6 +1,6 @@
 <?php
 
-$page_title = "Dashboard";
+$page_title = "Error";
 $return_url = $_SERVER['REQUEST_URI'];
 
 ob_start();
@@ -20,23 +20,19 @@ if (empty($_SESSION['user']['token'])) {
 ?>
 
 <div class="pagetitle">
-  <h1>No Record</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="./../">Home</a></li>
-      <li class="breadcrumb-item active">No Record</li>
-    </ol>
-  </nav>
+  <h1>&nbsp;</h1>
 </div>
 
 <div class="container">
 
       <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-        <h1 class="text-danger">404</h1>
-        <h2 class="">Schedule not yet available.</h2>
+        <h1 class="text-danger">503</h1>
+        <center>
+            <h2>Calendar Services Unavailable</h2>
+        </center>
         
         <a class="btn" href="blank.php">Back to home</a>
-        <img src="../assets/img/no-record.svg" class="img-fluid py-5" alt="Page Not Found">
+        <img src="../assets/img/svg/connection-cut.svg" class="img-fluid py-5" alt="Page Not Found">
       </section>
 
 </div>

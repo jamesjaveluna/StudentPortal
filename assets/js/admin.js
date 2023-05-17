@@ -3,6 +3,7 @@
 
     // Wait for the DOM to be ready
     $(function () {
+        var responseElement = document.getElementById("response");
         $('#importButton').click(function () {
             var fileInput = $('#fileInput');
             var file = fileInput.prop('files')[0];
@@ -87,6 +88,9 @@
                         .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
         
                     $('#response').empty().append(alertDiv);
+                },
+                complete: function () {
+                    responseElement.scrollIntoView({ behavior: "smooth" });
                 }
             });
         });
@@ -126,6 +130,9 @@
                     $('#addModal #nextBtn').prop('disabled', true);
                     $('#addModal #nextBtn').css('display', 'block');
                     $('#addModal #submitBtn').css('display', 'none');
+                },
+                complete: function () {
+                    responseElement.scrollIntoView({ behavior: "smooth" });
                 }
             });
 
@@ -181,6 +188,9 @@
                         .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
 
                     $('#addModal #response').empty().append(alertDiv);
+                },
+                complete: function () {
+                    responseElement.scrollIntoView({ behavior: "smooth" });
                 }
             });
         });
@@ -247,6 +257,7 @@
                 },
                 complete: function () {
                     $('#confirmation-modal').modal('hide');
+                    responseElement.scrollIntoView({ behavior: "smooth" });
                 }
             });
         });
@@ -277,6 +288,7 @@
                 },
                 complete: function () {
                     $('#confirmation-modal').modal('hide');
+                    responseElement.scrollIntoView({ behavior: "smooth" });
                 }
             });
         });
@@ -336,6 +348,9 @@
                         .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
 
                     $('#response').empty().append(alertDiv);
+                },
+                complete: function () {
+                    responseElement.scrollIntoView({ behavior: "smooth" });
                 }
             });
         });
@@ -372,6 +387,7 @@
         });
 
         $('#eventModal #eventModalSize #addEventBtn').click(function () {
+            var modal = $('#eventModal');
 
             // Retrieve the updated values from the form
             var eventName = $('#titleInput').val();
@@ -452,14 +468,17 @@
                 type: 'POST',
                 data: updatedData,
                 success: function (response) {
+                    modal.modal('hide');
+
                     var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">')
                         .text(response.message)
                         .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
 
                     $('#response').empty().append(alertDiv);
+
                     setTimeout(function () {
                         location.reload();
-                    }, 5000);
+                    }, 1000);
                 },
                 error: function (xhr, status, error) {
                     var response = xhr.responseJSON;
@@ -468,8 +487,13 @@
                         .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
 
                     $('#response').empty().append(alertDiv);
+                },
+                complete: function () {
+                    responseElement.scrollIntoView({ behavior: "smooth" });
                 }
             });
+
+            
         });
     });
 })();

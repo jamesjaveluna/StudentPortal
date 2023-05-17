@@ -1275,6 +1275,22 @@ h6 {
   }
 }
 
+@media (max-width: 767px) {
+    .error-404 {
+        padding: 0px;
+        position: relative;
+        transform: translateY(-10%);
+    }
+
+    .error-404 h1 {
+        font-size: 120px; /* Adjust the font size for mobile devices */
+    }
+
+    .error-404 h2 {
+        font-size: 20px; /* Adjust the font size for mobile devices */
+    }
+}
+
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/

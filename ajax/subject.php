@@ -9,5 +9,6 @@ $room = isset($_GET['r']) ? $_GET['r'] : null;
 	<div><h2><b><?php echo $instructor; ?></b></h2><br>
 	<?php echo $description; ?><br><br>
 	Room Name: <b><?php echo $room; ?></b><br><br>
+
+	
 	</div>
-</div>

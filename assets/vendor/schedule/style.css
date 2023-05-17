@@ -1458,6 +1458,19 @@ u,
     color: var(--color-white, #fff)
 }
 
+.btn--danger {
+    background-color: hsl(0deg 71.97% 30.78%) !important;
+    background-color: var(--color-primary, #2a6df4) !important;
+    color: hsl(0, 0%, 100%) !important;
+    color: var(--color-white, #fff) !important
+}
+
+.btn--danger:hover {
+    color: var(--bs-btn-hover-color);
+    background-color: var(--bs-btn-hover-bg);
+    border-color: var(--bs-btn-hover-border-color);
+}
+
 .btn--subtle {
     background-color: hsl(240, 1%, 83%);
     background-color: var(--color-contrast-low, #d3d3d4);
@@ -4025,6 +4038,29 @@ a {
     -moz-osx-font-smoothing: grayscale
 }
 
+.cd-schedule__time,
+.cd-schedule-modal__time {
+    font-size: calc(var(--text-xs)*1.15);
+    margin-bottom: var(--space-xxxxs);
+    opacity: .7;
+    color: var(--color-white);
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 64rem) {
+
+    .cd-schedule__time,
+    .cd-schedule-modal__time {
+        font-size: calc(var(--text-xs)*1.05);
+        margin-bottom: var(--space-xxxxs);
+        opacity: .7;
+        color: var(--color-white);
+        font-weight: bold;
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
 .cd-schedule__name,
 .cd-schedule-modal__name {
     font-size: 1.44em;
@@ -4044,7 +4080,8 @@ a {
 .cd-schedule__event a::before {
     opacity: .7;
     margin-bottom: 0.25em;
-    margin-bottom: var(--space-xxxs)
+    margin-bottom: var(--space-xxxs);
+    display: none
 }
 
 @media (min-width: 64rem) {
@@ -4054,7 +4091,8 @@ a {
         font-size: 0.72916em;
         font-size: calc(var(--text-xs)*1.05);
         margin-bottom: 0.125em;
-        margin-bottom: var(--space-xxxxs)
+        margin-bottom: var(--space-xxxxs);
+        display: none
     }
 }
 
@@ -4181,7 +4219,7 @@ a {
 .cd-schedule-modal {
     position: fixed;
     z-index: 3;
-    top: 0;
+    top: 60px;
     right: 0;
     height: 100%;
     width: 100%;

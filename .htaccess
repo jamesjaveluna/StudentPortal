@@ -1,2 +1,9 @@
 RewriteEngine On
+
+# Redirect requests for profile/123 to profile.php?id=123
 RewriteRule ^profile/([0-9]+)$ profile.php?id=$1 [NC,L]
+
+# Redirect requests for other PHP sites without .php extension
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]

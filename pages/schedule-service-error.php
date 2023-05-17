@@ -1,6 +1,6 @@
 <?php
 
-$page_title = "Profile Page";
+$page_title = "Calendar Error";
 $return_url = $_SERVER['REQUEST_URI'];
 
 ob_start();
@@ -20,22 +20,19 @@ if (empty($_SESSION['user']['token'])) {
 ?>
 
 <div class="pagetitle">
-  <h1>Profile Page</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="./../">Home</a></li>
-      <li class="breadcrumb-item active">Profile Page</li>
-    </ol>
-  </nav>
+  <h1>&nbsp;</h1>
 </div>
 
 <div class="container">
 
       <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-        <h1 class="text-danger">401</h1>
-        <h2 class="">The user profile you requested cannot be found.</h2>
-        <a class="btn" href="blank.php">Back to home</a>
-        <img src="../assets/img/maintenance.svg" class="img-fluid py-5" alt="The user profile you requested cannot be found.">
+        <h1 class="text-danger">503</h1>
+        <center>
+            <h2>Schedule Services Unavailable</h2>
+        </center>
+        
+        <a class="btn" href="blank.php">Report Problem</a>
+        <img src="../assets/img/svg/no-record.svg" class="img-fluid py-5" alt="Page Not Found">
       </section>
 
 </div>

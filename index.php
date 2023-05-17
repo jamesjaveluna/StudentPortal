@@ -21,14 +21,15 @@ if($_SESSION['user']['panel'] === 'admin'){
 }
 
 require_once 'class/Schedule.php';
-$crud = new Schedule();
+$sc_crud = new Schedule();
 
-$schedule_raw = json_decode($crud->getScheduleToday(), true);
+require_once 'class/Calendar.php';
+$ca_crud = new Calendar();
 
-// Fetch subject today.
-if($schedule_raw['code'] === 10000){
-    $schedule_data = $schedule_raw['data'];
-} 
+$schedule_raw = json_decode($sc_crud->getScheduleToday(), true);
+$calendar_raw = json_decode($ca_crud->getEventToday(), true);
+
+//var_dump($calendar_raw);
 
 ?>
 
@@ -52,7 +53,7 @@ if($schedule_raw['code'] === 10000){
        <div class="row">
         <div class="col-12">
             <div class="row">
-                <!-- Sales Card -->
+                <!-- Schedule Card -->
                 <div class="col-lg-6">
                     <div class="card info-card sales-card">
                       <div class="card-body">
@@ -95,22 +96,101 @@ if($schedule_raw['code'] === 10000){
                         
                       </div>
                     </div>
-                </div><!-- End Sales Card -->
+                </div>
+                <!-- End Schedule Card -->
 
-                <!-- Revenue Card -->
+                <!-- Event Card -->
                 <div class="col-lg-6">
                     <div class="card info-card revenue-card">
 
 
                       <div class="card-body">
                         <h5 class="card-title">Event <span>| Today</span></h5>
-                            <h6>Praise and Worship</h6>
-                            <span class="text-muted small pt-2">11:00 AM - 12:00 NN</span><br>
-                            <span class="text-danger small pt-1 fw-bold">SCC Quadrangle</span>
+                            <?php
+                            
+                                // Has event
+                                if($calendar_raw['code'] === 10000){
+                                    $start = date("g:i A", strtotime($calendar_raw['data'][0]['start']));
+                                    $end = date("g:i A", strtotime($calendar_raw['data'][0]['end']));
+
+                                    $start_date = date("M d, Y", strtotime($calendar_raw['data'][0]['start']));
+                                    $end_date = date("M d, Y", strtotime($calendar_raw['data'][0]['end']));
+
+                                    $start_date = date("M d, Y", strtotime($calendar_raw['data'][0]['start']));
+                                    $end_date = date("M d, Y", strtotime($calendar_raw['data'][0]['end']));
+
+                                    $start_date_two = date("M d", strtotime($calendar_raw['data'][0]['start']));
+                                    $end_date_two = date("d, Y", strtotime($calendar_raw['data'][0]['end']));
+                                    
+                                    $formattedTime = $start . ' - ' . $end; //Used in events with time
+                                    $formattedDateOne = $start_date; //Displays 1 date only.
+                                    $formattedDateTwo = $start_date_two. '-' .$end_date_two; //Used in dates that are not similar
+                                    
+                                    
+                                    if($calendar_raw['data'][0]['status'] === 0){
+                                        $subText = '<span class="badge bg-danger">Event Ended</span>';
+                                    } else {
+                                        $subText = '<span class="badge bg-success">Ongoing</span>';
+                                    }
+
+                                    if($calendar_raw['data'][0]['location'] !== null || !empty($calendar_raw['data'][0]['location'])){
+                                        $subText .= '<span class="text-secondary small pt-1 fw-bold"> ('.$calendar_raw['data'][0]['location'].')</span>';
+                                    }
+
+                                    if($calendar_raw['data'][0]['allDay'] !== "true"){
+                                        echo '<h6>'.$calendar_raw['data'][0]['title'].'</h6>' .
+                                         '<span class="text-muted small pt-2">'.$formattedTime.'</span><br>';
+                                        echo $subText;
+                                    } else {
+                                        //Check if the date is similar
+                                        if($start_date === $end_date){
+                                            echo '<h6>'.$calendar_raw['data'][0]['title'].'</h6>' .
+                                            '<span class="text-muted small pt-2">'.$formattedDateOne.'</span><br>';
+                                            if($calendar_raw['data'][0]['isHoliday'] === 'true'){
+                                                echo '<span class="badge bg-danger">Holiday</span>';
+                                            }
+
+                                        } else {
+                                            echo '<h6>'.$calendar_raw['data'][0]['title'].'</h6>' .
+                                            '<span class="text-muted small pt-2">'.$formattedDateTwo.'</span><br>';
+                                            if($calendar_raw['data'][0]['isExam'] === "false") {
+                                                echo $subText;
+                                            }
+                                        }
+                                    }
+                                } 
+
+                                // No Event
+                                if($calendar_raw['code'] === 10001){
+                                    echo '<h6 class="text-dark">No Event</h6>'.
+                                         '<span class="text-muted small pt-2">No event scheduled.</span><br>';
+                                } 
+
+                                // Multiple Events
+                                if($calendar_raw['code'] === 10002){
+                                    echo '<h6 class="text-success">Multiple Events</h6>'.
+                                         '<span class="text-muted small pt-2">'.$calendar_raw['message'].'</span><br>'.
+                                         '<button type="button" class="btn btn-danger btn-sm">View Calendar</button>';
+                                } 
+
+                                // Has event registered but your course is not included
+                                if($calendar_raw['code'] === 10003){
+                                    echo '<h6 class="text-dark">No Event</h6>'.
+                                         '<span class="text-muted small pt-2">No event scheduled.</span><br>';
+                                } 
+
+                                // Unable to connect
+                                if($calendar_raw['code'] === 10004){
+                                    echo '<h6 class="text-danger">'.$calendar_raw['message'].'</h6>'.
+                                         '<span class="text-muted small pt-2">Unable to connect to Calendar System.</span><br>';
+                                } 
+                            
+                            ?>
                       </div>
 
                     </div>
-                </div><!-- End Revenue Card -->
+                </div>
+                <!-- End Event Card -->
             </div>
          </div>
 

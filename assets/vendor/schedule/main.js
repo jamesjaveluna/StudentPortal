@@ -107,8 +107,8 @@
 		this.animating = true;
 
 		//update event name and time
-		this.modalEventName.textContent = target.getElementsByTagName('em')[0].textContent;
-		this.modalDate.textContent = target.getAttribute('data-start')+' - '+target.getAttribute('data-end');
+		this.modalEventName.textContent = target.getElementsByTagName('em')[1].textContent;
+		this.modalDate.textContent = target.getAttribute('data-start-civilian')+' - '+target.getAttribute('data-end-civilian');
 		this.modal.setAttribute('data-event', target.getAttribute('data-event'));
 
 		//update event content
@@ -315,7 +315,7 @@
 		httpRequest.onreadystatechange = function() {
 			if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	      if (httpRequest.status === 200) {
-	      	self.modal.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML = self.getEventContent(httpRequest.responseText); 
+			  self.modal.getElementsByClassName('cd-schedule-modal__event-info')[0].innerHTML = self.getEventContent(httpRequest.responseText); 
 	      	Util.addClass(self.modal, 'cd-schedule-modal--content-loaded');
 	      }
 	    }

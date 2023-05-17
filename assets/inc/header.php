@@ -10,13 +10,13 @@
     $panel = $_SESSION['user']['panel'];
 
     if($panel === 'admin'){
-        echo '../students.php';
+        echo '../students';
     } else {
         echo '../';
     }
     
     ?>" class="logo d-flex align-items-center">
-        <img src="assets/img/SCC.png" alt="">
+        <img src="./../assets/img/SCC.png" alt="">
         <span class="d-none d-lg-block">Cecilian Portal</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -158,7 +158,7 @@
 
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="../settings">
                 <i class="bi bi-gear"></i>
                 <span>Account Settings</span>
               </a>
