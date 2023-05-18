@@ -8,10 +8,10 @@
         $('#logout').click(function () {
             $.ajax({
                 type: 'POST',
-                url: './../ajax/login.php?op=logout',
+                url: './../ajax/login?op=logout',
                 success: function (data) {
                     localStorage.removeItem('token');
-                    window.location.href = './../account/login.php';
+                    window.location.href = './../account/login';
                 },
                 error: function (xhr, status, error) {
                     // handle error response here
@@ -25,7 +25,7 @@
                 url: './../ajax/switch.php?op=process',
                 success: function (data) {
                     //setTimeout(function () {
-                    window.location.href = './../blank.php';
+                    window.location.href = './../blank';
                     //}, 2000);
                 },
                 error: function (xhr, status, error) {

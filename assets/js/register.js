@@ -73,9 +73,9 @@
                         '</div>';
                     $('#response').html(alertHtml);
 
-                    setTimeout(function () {
-                        window.location.href = "login.php";
-                    }, 5000); 
+                    //setTimeout(function () {
+                    //    window.location.href = "login.php";
+                    //}, 5000); 
 
                 },
                 error: function (xhr) {

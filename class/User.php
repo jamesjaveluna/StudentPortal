@@ -168,7 +168,7 @@ class User {
       
       if (!$user) {
         http_response_code(401);
-        return json_encode(array('message' => 'Invalid username or password'));
+        return json_encode(array('message' => 'Invalid email and/or password'));
       }
       
       if (password_verify($password, $user['password'])) {
@@ -202,7 +202,7 @@ class User {
       }
 
         http_response_code(401);
-        return json_encode(array('message' => 'Invalid username or password'));
+        return json_encode(array('message' => 'Invalid email and/or password'));
 
     } catch (PDOException $e) {
       echo 'Error: ' . $e->getMessage();
@@ -350,7 +350,7 @@ class User {
                 // Send verification email
                 $to = $email;
                 $subject = 'Verify account - Cecilian Student Portal';
-                $verification_link = SITE_URL . '/account/verify.php?code=' . $code;
+                $verification_link = SITE_URL . '/account/verify?code=' . $code;
                 $message = sprintf(VERIFICATION_TEMPLATE, $username, $verification_link, $verification_link);
                 send_email($to, $subject, $message);
 

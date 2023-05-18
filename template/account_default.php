@@ -3,7 +3,6 @@
 
 <?php
 
-require_once('./../assets/function.php');
 require_once('./../class/config/config.php');
 
 ?>

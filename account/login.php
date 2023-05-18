@@ -34,7 +34,7 @@ require_once './../class/config/config.php';
 
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                    <p class="text-center small">Enter your username & password to login</p>
+                    <p class="text-center small">Enter your email & password to login</p>
                   </div>
 
                   <div id="response">
@@ -75,16 +75,31 @@ require_once './../class/config/config.php';
                       </div>
                     </div>
 
+                    
+                    <div class="col-12 text-center d-grid gap-2">
+                      <p class="small mb-0"><a href="#">Resend verification</a> | <a href="#">Forgot Password</a></p> 
+                    </div>
 
-
-
-
-                    <div class="col-12">
+                    <div class="col-12 mb-2">
                       <button class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
-                    <div class="col-12">
-                      <p class="small mb-0">Don't have account? <a href="register.php">Create an account</a></p>
+                    
+                    <?php 
+                    //    echo '<div class="col-12">
+                    //  <p class="small mb-0 text-center">- OR -</p>
+                    //</div>
+                    //<div class="col-12 text-center">
+                    //  <button type="button" class="btn btn-primary w-100 mb-2"><i class="bi bi-facebook me-1"></i> Sign in with Facebook</button>
+                    //  <button type="button" class="btn btn-danger w-100"><i class="bi bi-google me-1"></i> Sign in with Google</button>
+                    //</div>';
+
+                    ?>
+                    <div class="col-12 mb-2">
+                        <a href="register">
+                          <button type="button" class="btn btn-secondary w-100">Create an account</button>
+                        </a>
                     </div>
+
                   </form>
 
                 </div>
