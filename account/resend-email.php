@@ -1,6 +1,13 @@
 ﻿<?php
 
-$page_title = "Login";
+session_start();
+
+if(isset($_SESSION['user_id']) && isset($_SESSION['token'])){
+  header('Location: ../');
+}
+
+$page_title = "Resend Verification";
+$code = isset($_GET['code']) ? $_GET['code'] : 'invalid_verification_code';
 
 ob_start();
 
@@ -18,7 +25,7 @@ require_once './../class/config/config.php';
               <div class="d-flex justify-content-center py-4">
                 <a href="../" class="logo d-flex align-items-center w-auto">
                   <img src="../assets/img/SCC.png" alt="">
-                  <span class="d-none d-lg-block text-danger">Cecilian Portal</span>
+                  <span class="d-none d-lg-block text-danger">Student Portal</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -27,14 +34,15 @@ require_once './../class/config/config.php';
                 <div class="card-body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
-                    <p class="text-center small">Enter your personal details to create account</p>
+                    <h5 class="card-title text-center pb-0 fs-4">Resend Verification</h5>
+                    <p class="text-center small">Enter student ID and email to resend.</p>
                   </div>
 
                   <div id="response">
                     
                   </div>
-                  <form id="register" class="row g-3 needs-validation" novalidate>
+
+                  <form id="resend" class="row g-3 needs-validation" novalidate>
                     <div class="col-12">
                       <label for="studentID" class="form-label">Student ID</label>
                       <input type="text" name="studentID" class="form-control" id="studentID" value="SCC-" required>
@@ -42,21 +50,9 @@ require_once './../class/config/config.php';
                     </div>
 
                     <div class="col-12">
-                      <label for="username" class="form-label">Username</label>
-                      <input type="text" name="username" class="form-control" id="username" required>
-                      <div id="username-error" class="invalid-feedback">Please enter a valid username.</div>
-                    </div>
-
-                    <div class="col-12">
                       <label for="email" class="form-label">Email Address</label>
                       <input type="email" name="email" class="form-control" id="email" required>
                       <div id="email-error" class="invalid-feedback">Please enter a valid Email adddress.</div>
-                    </div>
-
-                    <div class="col-12">
-                      <label for="birthdate" class="form-label">Birthdate</label>
-                      <input type="date" name="birthdate" class="form-control" id="birthdate" required>
-                      <div id="birthdate-error" class="invalid-feedback">Please enter a valid Birthdate!</div>
                     </div>
 
                     <?php
@@ -72,24 +68,19 @@ require_once './../class/config/config.php';
                     ?>
 
                     <div class="col-12">
-                      <div class="form-check">
-                        <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
-                        <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and conditions</a></label>
-                        <div class="invalid-feedback">You must agree before submitting.</div>
-                      </div>
+                      <button class="btn btn-primary w-100" type="submit">Resend Email</button>
                     </div>
-                    <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Create Account</button>
-                    </div>
+
                     <div class="col-12 mb-2">
                         <a href="login">
-                          <button type="button" class="btn btn-secondary w-100">Already have an account</button>
+                          <button type="button" class="btn btn-secondary w-100"><i class="bi bi-arrow-left-short me-1"></i>Back to Login</button>
                         </a>
                     </div>
                   </form>
 
                 </div>
               </div>
+
 
             </div>
           </div>

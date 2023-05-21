@@ -17,6 +17,256 @@ class User {
     $database = new Database();
     $this->conn = $database->getConnection();
   }
+
+  // Requesting for request Password
+  public function forgot_password() {
+    session_start();
+
+    if (!isset($_POST['email'])) {
+        http_response_code(400);
+        return json_encode(array(
+            'message' => 'Request is missing.'
+        ));
+    }
+
+    // Fetch POST data
+    $email = $_POST['email'];
+
+    // Recaptcha System
+    if(RECAPTCHA_ENABLED === true){
+        $recaptcha_code = $_POST['recaptcha_response'];
+        $remote_ip = $_SERVER['REMOTE_ADDR'];
+
+        $url = "https://www.google.com/recaptcha/api/siteverify";
+        $data = array('secret' => RECAPTCHA_SECRET_KEY, 'response' => $recaptcha_code, 'remoteip' => $remote_ip);
+        
+        $options = array(
+            'http' => array(
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            )
+        );
+        
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        
+        $json = json_decode($result);
+        
+        if (!$json->success) {
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'RECAPTCHA error.'
+            ));
+        }
+    }
+
+    try {
+      $stmt = $this->conn->prepare('SELECT user.std_id, user.email, user.username, user.type FROM users user WHERE user.email = :email');
+      $stmt->execute(array(':email' => $email));
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+      
+      if (!$user) {
+        http_response_code(401);
+        return json_encode(array('message' => 'Unable to find user.'));
+      }
+
+        if($user['type'] !== 'unverified'){
+            $code = substr(uniqid(), 0, 15);
+
+            $username = $user['username'];
+
+            // All conditions are good, student can be registered
+            $stmt = $this->conn->prepare('UPDATE users SET token_code = :code WHERE email = :email');
+            $stmt->execute(array(':code' => $code, ':email' => $email));
+
+            // Send verification email
+            $to = $email;
+            $subject = 'Change Password - Cecilian Student Portal';
+            $verification_link = SITE_URL . '/account/changepass?code=' . $code;
+            $message = sprintf(CHANGEPASS_TEMPLATE, $username, $verification_link, $verification_link);
+            send_email($to, $subject, $message);
+
+            http_response_code(200);
+            return json_encode(array('message' => 'Success, kindly check email.'));
+        }
+
+        http_response_code(401);
+        return json_encode(array('message' => 'Verify account first.'));
+
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+      exit();
+    }  
+  }
+
+  // The process of changing password
+  public function changepass() {
+    session_start();
+
+    if (!isset($_POST['code'], $_POST['password'], $_POST['repassword'])) {
+        http_response_code(400);
+        return json_encode(array(
+            'message' => 'Request is missing.'
+        ));
+    }
+
+    // Fetch POST data
+    $code = $_POST['code'];
+    $password = $_POST['password'];
+    $repassword = $_POST['repassword'];
+
+    // Recaptcha System
+    if(RECAPTCHA_ENABLED === true){
+        $recaptcha_code = $_POST['recaptcha_response'];
+        $remote_ip = $_SERVER['REMOTE_ADDR'];
+
+        $url = "https://www.google.com/recaptcha/api/siteverify";
+        $data = array('secret' => RECAPTCHA_SECRET_KEY, 'response' => $recaptcha_code, 'remoteip' => $remote_ip);
+        
+        $options = array(
+            'http' => array(
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            )
+        );
+        
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        
+        $json = json_decode($result);
+        
+        if (!$json->success) {
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'RECAPTCHA error.'
+            ));
+        }
+    }
+
+    try {
+    //SELECT StudentData.StudentID, StudentData.FullName as fname, StudentData.Birthday, StudentData.Gender, StudentData.Address, StudentData.Status, StudentData.Semester, StudentData.YearLevel, StudentData.Section, StudentData.Major, StudentData.Course, StudentData.Scholarship, StudentData.SchoolYear as SY, users.id, users.avatar, users.username, users.email, users.password, users.type FROM StudentData LEFT JOIN users ON StudentData.StudentID = users.std_id WHERE users.email = :email
+      $stmt = $this->conn->prepare('SELECT StudentData.StudentID, StudentData.FullName as fname, StudentData.Birthday, StudentData.Gender, StudentData.Address, StudentData.Status, StudentData.Semester, StudentData.YearLevel, StudentData.Section, StudentData.Major, StudentData.Course, StudentData.Scholarship, StudentData.SchoolYear as SY, users.id, users.avatar, users.username, users.email, users.password, users.type, users.verification_code FROM StudentData LEFT JOIN users ON StudentData.StudentID = users.std_id WHERE users.token_code = :code AND users.type != "unverified"');
+      $stmt->execute(array(':code' => $code));
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+      
+      if (!$user) {
+        http_response_code(401);
+        return json_encode(array('message' => 'Invalid/expired verification code.'));
+      }
+      
+      //if (password_verify($password, $user['password'])) {
+      if ($password === $repassword) {
+
+        // TODO: Update user with the password WHERE code = $code
+        $hashed_password = password_hash($password, PASSWORD_ARGON2I);
+        
+        // Update user with the new hashed password
+        $update_stmt = $this->conn->prepare('UPDATE users SET password = :password, token_code = "resetted" WHERE token_code = :code');
+        $update_stmt->execute(array(':password' => $hashed_password, ':code' => $code));
+
+        $response = array(
+            'message' => 'Password changed successfully'
+        );
+
+        return json_encode($response);
+      }
+
+        http_response_code(401);
+        return json_encode(array('message' => 'Password do not match.'));
+
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+      exit();
+    }  
+  }
+
+  // verify account
+  public function resend_email() {
+    session_start();
+
+    if (!isset($_POST['student_id'], $_POST['email'])) {
+        http_response_code(400);
+        return json_encode(array(
+            'message' => 'Request is missing.'
+        ));
+    }
+
+    // Fetch POST data
+    $std_id = $_POST['student_id'];
+    $email = $_POST['email'];
+
+    // Recaptcha System
+    if(RECAPTCHA_ENABLED === true){
+        $recaptcha_code = $_POST['recaptcha_response'];
+        $remote_ip = $_SERVER['REMOTE_ADDR'];
+
+        $url = "https://www.google.com/recaptcha/api/siteverify";
+        $data = array('secret' => RECAPTCHA_SECRET_KEY, 'response' => $recaptcha_code, 'remoteip' => $remote_ip);
+        
+        $options = array(
+            'http' => array(
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            )
+        );
+        
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        
+        $json = json_decode($result);
+        
+        if (!$json->success) {
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'RECAPTCHA error.'
+            ));
+        }
+    }
+
+    try {
+      $stmt = $this->conn->prepare('SELECT user.std_id, user.email, user.username, user.type FROM users user WHERE user.std_id = :std_id AND user.email = :email');
+      $stmt->execute(array(':std_id' => $std_id, ':email' => $email));
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+      
+      if (!$user) {
+        http_response_code(401);
+        return json_encode(array('message' => 'Unable to find user.'));
+      }
+
+      if($user['type'] !== 'unverified'){
+        http_response_code(401);
+        return json_encode(array('message' => 'User must be unverified.'));
+      }
+
+      if($user['type'] === 'unverified'){
+      
+        $code = substr(uniqid(), 0, 15);
+
+        $username = $user['username'];
+
+        // All conditions are good, student can be registered
+        $stmt = $this->conn->prepare('UPDATE users SET verification_code = :code WHERE std_id = :std_id AND email = :email');
+        $stmt->execute(array(':code' => $code, ':std_id' => $std_id, ':email' => $email));
+
+        // Send verification email
+        $to = $email;
+        $subject = 'Verify account - Cecilian Student Portal';
+        $verification_link = SITE_URL . '/account/verify?code=' . $code;
+        $message = sprintf(VERIFICATION_TEMPLATE, $username, $verification_link, $verification_link);
+        send_email($to, $subject, $message);
+
+        http_response_code(200);
+        return json_encode(array('message' => 'Verification sent successfully.'));
+      }
+
+    } catch (PDOException $e) {
+      echo 'Error: ' . $e->getMessage();
+      exit();
+    }  
+  }
   
   // verify account
   public function verify() {
@@ -81,7 +331,7 @@ class User {
         $hashed_password = password_hash($password, PASSWORD_ARGON2I);
         
         // Update user with the new hashed password
-        $update_stmt = $this->conn->prepare('UPDATE users SET password = :password, type = "member" WHERE verification_code = :code');
+        $update_stmt = $this->conn->prepare('UPDATE users SET password = :password, type = "member", verification_code = "resetted" WHERE verification_code = :code');
         $update_stmt->execute(array(':password' => $hashed_password, ':code' => $code));
 
 

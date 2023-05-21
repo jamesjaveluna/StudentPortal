@@ -3,6 +3,13 @@
 $page_title = "Calendar of Activity";
 $return_url = $_SERVER['REQUEST_URI'];
 
+require_once('./class/config/config.php');
+
+if(GEN_MAINTENANCE === true){
+  include('./pages/maintenance.php');
+  exit();
+}
+
 ob_start();
 
 session_start();

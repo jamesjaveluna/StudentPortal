@@ -77,7 +77,7 @@ require_once './../class/config/config.php';
 
                     
                     <div class="col-12 text-center d-grid gap-2">
-                      <p class="small mb-0"><a href="#">Resend verification</a> | <a href="#">Forgot Password</a></p> 
+                      <p class="small mb-0"><a href="resend-email">Resend verification</a> | <a href="reset-password">Forgot Password</a></p> 
                     </div>
 
                     <div class="col-12 mb-2">

@@ -86,14 +86,15 @@
           </ul><!-- End Notification Dropdown Items -->
 
         </li><!-- End Notification Nav -->
-
+        <?php
+        /*
         <li class="nav-item dropdown">
 
           <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
             <i class="bi bi-chat-left-text"></i>
             <span class="badge bg-success badge-number">1</span>
           </a><!-- End Messages Icon -->
-
+          
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
             <li class="dropdown-header">
               You have 1 new messages
@@ -120,10 +121,12 @@
             <li class="dropdown-footer">
               <a href="#">Show all messages</a>
             </li>
-
+          
           </ul><!-- End Messages Dropdown Items -->
-
+          
         </li><!-- End Messages Nav -->
+        */
+        ?>
 
         <li class="nav-item dropdown pe-3">
 

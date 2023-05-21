@@ -3,6 +3,18 @@ RewriteEngine On
 # Redirect requests for profile/123 to profile.php?id=123
 RewriteRule ^profile/([0-9]+)$ profile.php?id=$1 [NC,L]
 
+# Redirect requests for courses/123 to courses_preview.php?id=123
+RewriteRule ^courses/([0-9]+)$ courses_preview.php?id=$1 [NC,L]
+
+# Redirect requests for courses to courses.php
+RewriteRule ^courses$ courses.php [NC,L]
+
+# Redirect requests for support/123 to support_preview.php?id=123
+RewriteRule ^support/([0-9]+)$ support_preview.php?id=$1 [NC,L]
+
+# Redirect requests for support to support.php
+RewriteRule ^support$ support.php [NC,L]
+
 # Redirect requests for other PHP sites without .php extension
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f

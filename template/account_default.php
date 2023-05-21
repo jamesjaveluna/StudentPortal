@@ -73,8 +73,20 @@ require_once('./../class/config/config.php');
     echo '<script src="../assets/js/register.js"></script>';
   }
 
-   if($page == "verify.php" || $page == "changepass.php"){
+  if($page == "verify.php" || $page == "changepass.php"){
     echo '<script src="../assets/js/verify.js"></script>';
+  }
+
+  if($page == "resend-email.php"){
+    echo '<script src="../assets/js/resend-email.js"></script>';
+  }
+
+  if($page == "reset-password.php"){
+    echo '<script src="../assets/js/reset-password.js"></script>';
+  }
+
+  if($page == "changepass.php"){
+    echo '<script src="../assets/js/changepass.js"></script>';
   }
 
   ?>

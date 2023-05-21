@@ -21,6 +21,26 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
 			echo $response;
 	}
 
+	if($action == 'resend-email'){
+		$response = $crud->resend_email();
+		if($response)
+			echo $response;
+	}
+
+	// Request
+	if($action == 'forgot-password'){
+		$response = $crud->forgot_password();
+		if($response)
+			echo $response;
+	}
+
+	// Process of changing
+	if($action == 'reset-password'){
+		$response = $crud->changepass();
+		if($response)
+			echo $response;
+	}
+
 	if($action == 'register'){
 		$register = $crud->register();
 		if($register)

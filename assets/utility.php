@@ -152,6 +152,7 @@ class Utility {
           'MWF' => 'MONDAY,WEDNESDAY,FRIDAY',
           'TTH' => 'TUESDAY,THURSDAY',
           'TTH,F' => 'TUESDAY, THURSDAY, FRIDAY',
+          'TTH, FRI' => 'TUESDAY, THURSDAY, FRIDAY',
           'TTHF' => 'TUESDAY, THURSDAY, FRIDAY',
           'MON,WED' => 'MONDAY,WEDNESDAY',
           'WED,THURS' => 'WEDNESDAY,THURSDAY',
@@ -237,6 +238,142 @@ class Utility {
       }
 
   }
+
+ public function addMeridiem($time) {
+        // Separate the start time and end time
+        $times = explode('-', $time);
+        $start_time = trim($times[0]);
+        $end_time = trim($times[1]);
+
+        // Extract meridian from the end time
+        $end_meridiem = strtoupper(substr($end_time, -2));
+
+        // Determine meridian for the start time
+        $start_hour = intval(substr($start_time, 0, 2));
+        $start_minute = intval(substr($start_time, 3, 2));
+
+        echo 'Start Hour: '.$start_hour.'<br>';
+        echo 'Start Hour: '.$start_minute.'<br>';
+
+        // If end meridian is AM or PM, use the same meridian for the start time
+        if ($end_meridiem === 'AM' || $end_meridiem === 'PM') {
+            $start_meridiem = $end_meridiem;
+        } elseif ($end_meridiem === 'NN') { // If end meridian is NN, set start meridian as AM
+            $start_meridiem = 'AM';
+        } else { // Handle cases when meridian is not provided
+            if ($start_hour >= 1 && $start_hour <= 6) {
+                $start_meridiem = 'PM';
+            } elseif (($start_hour >= 7 && $start_hour <= 11) || ($start_hour === 12 && $start_minute === 0)) {
+                $start_meridiem = 'AM';
+            } else {
+                $start_meridiem = 'PM';
+            }
+        }
+
+        // Format start time with meridian
+        $start_hour %= 12;
+        if ($start_hour === 0) {
+            $start_hour = 12;
+        }
+        $start_time_with_meridiem = sprintf('%d:%02d %s', $start_hour, $start_minute, $start_meridiem);
+
+        // Format end time with meridian
+        $end_hour = intval(substr($end_time, 0, 2));
+        $end_minute = intval(substr($end_time, 3, 2));
+        $end_hour %= 12;
+        if ($end_hour === 0) {
+            $end_hour = 12;
+        }
+        $end_time_with_meridiem = sprintf('%d:%02d %s', $end_hour, $end_minute, $end_meridiem);
+
+        // Return the updated time range
+        return $start_time_with_meridiem . ' - ' . $end_time_with_meridiem;
+ }
+
+ public function addMeridiem2($times){
+       echo 'Given: '.$times.'<br><br>';
+       $time = explode('-', $times);
+       $start_time = trim($time[0]);
+       $end_time = trim($time[1]);
+ 
+       echo 'Start_time: '.$start_time.'<br>';
+       $start_time_parts = explode(' ', $start_time);
+       $start_hour = str_pad((int)explode(':', $start_time_parts[0])[0], 2, '0', STR_PAD_LEFT);
+       $start_minute = (int)explode(':', $start_time_parts[0])[1];
+       $start_meridiem = $start_time_parts[1];
+       echo 'Start_hour: '.$start_hour.'<br>';
+       echo 'Start_minute: '.$start_minute.'<br>';
+       echo 'Start_meridiem: '.$start_meridiem.'<br><br>';
+ 
+       echo 'End_time: '.$end_time.'<br>';
+       $end_time_parts = explode(' ', $end_time);
+       $end_hour = str_pad((int)explode(':', $end_time_parts[0])[0], 2, '0', STR_PAD_LEFT);
+       $end_minute = (int)explode(':', $end_time_parts[0])[1];
+       $end_meridiem = $end_time_parts[1];
+       echo 'End_hour: '.$end_hour.'<br>';
+       echo 'End_minute: '.$end_minute.'<br>';
+       echo 'End_meridiem: '.$end_meridiem.'<br><br>';
+ 
+       // Extract meridian from the end time
+       $end_meridiem = strtoupper(substr($end_time, -2));
+ 
+       // If end meridian is AM or PM, use the same meridian for the start time
+       if ($end_meridiem === 'AM' || $end_meridiem === 'PM') {
+           $start_meridiem = $end_meridiem;
+       } elseif ($end_meridiem === 'NN') { // If end meridian is NN, set start meridian as AM
+           $start_meridiem = 'AM';
+       } else { // Handle cases when meridian is not provided
+           if ($start_hour >= 1 && $start_hour <= 6) {
+               $start_meridiem = 'PM';
+           } elseif (($start_hour >= 7 && $start_hour <= 11) || ($start_hour === 12 && $start_minute === 0)) {
+               $start_meridiem = 'AM';
+           } else {
+               $start_meridiem = 'PM';
+           }
+       }
+ 
+       // Format start time with meridian
+       $start_hour %= 12;
+       if ($start_hour === 0) {
+           $start_hour = 12;
+       }
+       $start_time_with_meridiem = sprintf('%d:%02d %s', $start_hour, $start_minute, $start_meridiem);
+ 
+       // Format end time with meridian
+       $end_hour = intval(substr($end_time, 0, 2));
+       $end_minute = intval(substr($end_time, 3, 2));
+       $end_hour %= 12;
+       if ($end_hour === 0) {
+           $end_hour = 12;
+       }
+       $end_time_with_meridiem = sprintf('%d:%02d %s', $end_hour, $end_minute, $end_meridiem);
+ 
+       // Return the updated time range
+       echo $start_time_with_meridiem . ' - ' . $end_time_with_meridiem;
+ }
+
+ public function getAgo($createdAt){
+    $currentTime = time();
+    $messageTime = strtotime($createdAt);
+    $timeDifference = $currentTime - $messageTime;
+
+    if ($timeDifference < 60) {
+        return $timeDifference . ' seconds ago';
+    } elseif ($timeDifference < 3600) {
+        return round($timeDifference / 60) . ' minutes ago';
+    } elseif ($timeDifference < 86400) {
+        return round($timeDifference / 3600) . ' hours ago';
+    } elseif ($timeDifference < 604800) {
+        return round($timeDifference / 86400) . ' days ago';
+    } elseif ($timeDifference < 2419200) {
+        return round($timeDifference / 604800) . ' weeks ago';
+    } else {
+        return round($timeDifference / 2419200) . ' months ago';
+    }
+ }
+
+
+
 }
 
 ?>

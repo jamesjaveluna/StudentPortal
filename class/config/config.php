@@ -2,6 +2,8 @@
 
 // General configuration
 define('GEN_DEBUG', true);
+define('GEN_MAINTENANCE', true);
+define('MESSAGE_COOLDOWN', 5); //Time difference (in minutes) before a user can send another message
 
 // Database configuration
 define('DB_HOST', '82.180.174.154');
@@ -37,6 +39,7 @@ define('CLASS_DIR', __DIR__ . './../../class/');
 
 // Email Templates
 define('VERIFICATION_TEMPLATE', file_get_contents(TEMPLATES_DIR.'/verify.html'));
+define('CHANGEPASS_TEMPLATE', file_get_contents(TEMPLATES_DIR.'/password-change.html'));
 
 // API Security
 define('API_SECRET_KEY', 'my-secret-key'); // your secret key

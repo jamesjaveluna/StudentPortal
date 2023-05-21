@@ -24,6 +24,13 @@
       </li>
 
       <li class="nav-item">
+        <a class="nav-link <?php if($page != 'courses.php' && $page != 'courses_preview.php') echo 'collapsed'; ?>" href="./../courses">
+          <i class="ri-book-2-line"></i>
+          <span>Courses</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
         <a class="nav-link <?php if($page != 'activity.php') echo 'collapsed'; ?>" href="./../activity">
           <i class="bx bxs-user-detail"></i>
           <span>Calendar of Activity</span>
@@ -32,15 +39,8 @@
 
       <li class="nav-item">
         <a class="nav-link <?php if($page != 'working.php') echo 'collapsed'; ?>" href="./../working">
-          <i class="bx ri-facebook-fill"></i>
-          <span>Facebook Pages</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link <?php if($page != 'newsfeed.php') echo 'collapsed'; ?>" href="./../newsfeed">
-          <i class="bx bx-news"></i>
-          <span>Content Posts</span>
+          <i class="bi bi-life-preserver"></i>
+          <span>Support</span>
         </a>
       </li>
 

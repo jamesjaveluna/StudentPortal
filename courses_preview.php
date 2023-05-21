@@ -1,6 +1,6 @@
 <?php
 
-$page_title = "Profile";
+$page_title = "Courses Preview";
 $return_url = $_SERVER['REQUEST_URI'];
 $target_id = isset($_GET['id']) ? $_GET['id'] : null;
 
@@ -20,61 +20,28 @@ if($target_id === null){
     exit();
 }
 
-require_once 'class/User.php';
-$crud = new User();
+require_once 'class/Admin.php';
+$crud = new Admin();
 
-$target_user_raw = json_decode($crud->getUser($target_id), true);
+$target_subject_raw = json_decode($crud->getCoursesByID($target_id), true);
 
-if($target_user_raw['code'] === 10000){
-    $target_user_data = $target_user_raw['data'];
-    $target_user_permission = json_decode($target_user_raw['data']['permission'], true)['user_permissions'];
-    if(in_array('profile_private', $target_user_permission['user_panel'])){
-        include 'private.php';
-        exit();
-    } 
-    $page_title = $target_user_data['FullName']; //Override page title
+if($target_subject_raw['code'] === 10000){
+    $target_subject_data = $target_subject_raw['data'];
+    $page_title = $target_subject_data['code']; //Override page title
 } else {
     include './pages/profile-not-found.php';
     exit();
 } 
 
-//var_dump($target_user_permission);
-
-$avatar = isset($target_user_data['avatar']) ? $target_user_data['avatar'] : 'default-profile.png';   
-
-switch($target_user_data['type']){
-      case 'admin':
-      $user_type_display = '<span class="badge bg-danger text-white">Administrator</span>';
-      break;
-
-      case 'moderator':
-      $user_type_display = '<span class="badge bg-primary text-white">Moderator</span>';
-      break;
-
-      case 'officer':
-      $user_type_display = '<span class="badge bg-info text-white">Officer</span>';
-      break;
-
-      case 'member':
-      $user_type_display = '<span class="badge bg-success text-white">Member</span>';
-      break;
-
-      case 'unverified':
-      $user_type_display = '<span class="badge bg-secondary text-white">Unverified</span>';
-      break;
-
-      case 'banned':
-      $user_type_display = '<span class="badge bg-warning text-dark">Banned</span>';
-      break;
-}
+    //var_dump($target_subject_data);
 ?>
 
 <div class="pagetitle">
-      <h1>User Profile</h1>
+      <h1>Course Details</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="../">Home</a></li>
-          <li class="breadcrumb-item active">My Profile</li>
+          <li class="breadcrumb-item"><a href="../courses">Courses</a></li>
+          <li class="breadcrumb-item active">Course Details</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -86,21 +53,18 @@ switch($target_user_data['type']){
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <?php echo '<img src="../assets/img/profile/'.$avatar.'" alt="Profile" class="rounded-circle">'; ?>
-              <h2><?php echo $target_user_data['FullName']; ?></h2>
-              <h3><?php echo $target_user_data['Course'].' '.$target_user_data['Section']; ?></h3>
+              <?php echo '<img src="../assets/img/SCC.png" alt="Profile" class="rounded-circle">'; ?>
+              <h2><?php echo $target_subject_data['code']; ?></h2>
+              <h3><?php echo $target_subject_data['description']; ?></h3>
               <div class="social-links mt-2">
-                <?php echo $user_type_display; ?>
+                <?php// echo $user_type_display; ?>
               </div>
             </div>
           </div>
 
           <div class="card">
             <ul class="list-group">
-                    <li class="list-group-item"><i class="bi bi-heart-fill me-1 text-danger"></i> Hearts Received: 0</li>
-                    <li class="list-group-item"><i class="ri-hand-heart-fill me-1 text-danger"></i> Hearts Given: 0</li>
-                    <li class="list-group-item"><i class="bi bi-chat-text-fill me-1 text-primary"></i> Topics Started: 0</li>
-                    <li class="list-group-item"><i class="bi bi-chat-left-text-fill me-1 text-primary"></i> Posts Made: 0</li>
+                    <li class="list-group-item"><i class="ri-user-shared-fill me-1 text-danger"></i> Students Enrolled: 0</li>
                   </ul>
           </div>
 
@@ -140,43 +104,31 @@ switch($target_user_data['type']){
                   <h5 class="card-title">Details</h5>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">Degree Program</div>
-                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['Course']; ?></div>
+                    <div class="col-lg-3 col-md-4 label ">Instructor Name</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_subject_data['instructor_name']; ?></div>
                   </div>
-
-                  <?php 
-                  
-                  if($target_user_data['Major'] === null){
-                    echo '<div class="row">
-                    <div class="col-lg-3 col-md-4 label ">Major</div>
-                    <div class="col-lg-9 col-md-8">'.$target_user_data['Major'].'</div>
-                  </div>';
-                  }
-                  
-                  ?>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">Section</div>
-                    <div class="col-lg-9 col-md-8"><?php echo isset($target_user_data['Section']) ? $target_user_data['Section'] : 'No Section'; ?></div>
+                    <div class="col-lg-3 col-md-4 label ">Room Name</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_subject_data['room_name']; ?></div>
                   </div>
-
-
-                  <?php
-
-                  // Assigning Organizations
-                  if($target_user_data['type'] === 'officer'){
-                    $user_organizations = '<span class="badge bg-warning text-dark">Supreme Student Council</span>';
-                  } else {
-                    $user_organizations = '<i>User not affiliated with any organization.</i>';
-                  }
-
-                  ?>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label ">Organization(s)</div>
-                    <div class="col-lg-9 col-md-8"><?php echo $user_organizations; ?></div>
+                    <div class="col-lg-3 col-md-4 label ">Class Days</div>
+                    <div class="col-lg-9 col-md-8"><?php echo isset($target_subject_data['AI_days']) ? $target_subject_data['AI_days'] : 'Wrong Format'; ?></div>
                   </div>
 
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Class Time</div>
+                    <div class="col-lg-9 col-md-8"><?php echo isset($target_subject_data['AI_civilian_time']) ? $target_subject_data['AI_civilian_time'] : 'Wrong Format'; ?></div>
+                  </div>
+
+                   <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Updated Date</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_subject_data['updatedDate']; ?></div>
+                  </div>
+
+                  
                 </div>
 
 

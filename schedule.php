@@ -3,6 +3,13 @@
 $page_title = "Schedule";
 $return_url = $_SERVER['REQUEST_URI'];
 
+require_once('./class/config/config.php');
+
+if(GEN_MAINTENANCE === true){
+  include('./pages/maintenance.php');
+  exit();
+}
+
 ob_start();
 
 session_start();
@@ -18,6 +25,8 @@ require_once 'class/Schedule.php';
 $crud = new Schedule();
 
 $schedule_raw = json_decode($crud->getSchedule(), true);
+
+var_dump($schedule_raw);
 
 if($schedule_raw['code'] === 10000){
     $schedule_data = $schedule_raw['data'];

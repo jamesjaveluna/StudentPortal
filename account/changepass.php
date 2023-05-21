@@ -6,7 +6,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['token'])){
   header('Location: ../');
 }
 
-$page_title = "Verify";
+$page_title = "Change Password";
 $code = isset($_GET['code']) ? $_GET['code'] : 'invalid_token_code';
 
 ob_start();
@@ -34,7 +34,7 @@ require_once './../class/config/config.php';
                 <div class="card-body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Change Password</h5>
+                    <h5 class="card-title text-center pb-0 fs-4">Create a Password</h5>
                     <p class="text-center small">Enter a secure password to your account.</p>
                   </div>
 
@@ -42,7 +42,7 @@ require_once './../class/config/config.php';
                     
                   </div>
 
-                  <form id="verify" class="row g-3 needs-validation" novalidate>
+                  <form id="changepass" class="row g-3 needs-validation" novalidate>
                     <div class="col-12">
                         <label for="code" class="form-label">Token Code</label>
                         <input type="text" name="code" class="form-control" id="code" value="<?php echo $code; ?>" disabled>
@@ -73,6 +73,11 @@ require_once './../class/config/config.php';
 
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Change Password</button>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <a href="login">
+                          <button type="button" class="btn btn-secondary w-100"><i class="bi bi-arrow-left-short me-1"></i>Back to Login</button>
+                        </a>
                     </div>
                   </form>
 

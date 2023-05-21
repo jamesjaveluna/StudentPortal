@@ -735,6 +735,140 @@ class Admin {
       }
   }
   
+  /* COURSES SECTION */
+  public function getCourses() {
+    $allowedUserType = array('admin', 'moderator', 'officer');
+    $allowedPermission = 'subject_view';
+    $section = 'admin_panel';
+
+    $utility = new Utility();
+    switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+          case 10001:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Your session is already expired, kindly logout or refresh.',
+                  'code' => 10001,
+                  'debug' => 'Token already expired.'
+              ));
+              break;
+
+          case 10002:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>'.$allowedPermission.'</code>'
+              ));
+              break;
+    }
+
+    try {
+      $stmt = $this->conn->prepare('SELECT * FROM `SubjectData` WHERE 1');
+      $stmt->execute();
+      $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      
+      if (!$subjects) {
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch Students Data.',
+            'code' => 10003,
+            'debug' => "test"
+        ));
+      } else {
+        return json_encode(array(
+            'message' => 'data fetched successfully.', 
+            'code' => 10000, 
+            'data' => $subjects
+        ));
+      }
+
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch Students Data.',
+            'code' => 10003
+        ));
+
+    } catch (PDOException $e) {
+      http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch Students Data.',
+            'code' => 10003,
+            'debug' => $e->getMessage()
+        ));
+      exit();
+    }  
+  }
+
+  public function getCoursesByID($target_id) {
+    $allowedUserType = array('admin', 'moderator', 'officer');
+    $allowedPermission = 'subject_view';
+    $section = 'admin_panel';
+
+    $utility = new Utility();
+    switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+          case 10001:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Your session is already expired, kindly logout or refresh.',
+                  'code' => 10001,
+                  'debug' => 'Token already expired.'
+              ));
+              break;
+
+          case 10002:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>'.$allowedPermission.'</code>'
+              ));
+              break;
+    }
+
+    if(!isset($target_id) || $target_id === null || empty($target_id)) {
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'ID should not be empty',
+            'code' => 10003
+        ));
+    }
+
+    try {
+      $stmt = $this->conn->prepare("SELECT *, DATE_FORMAT(updatedDate, '%M %e, %Y') AS updatedDate FROM `SubjectData` WHERE id = :target_id");
+      $stmt->execute(array(':target_id' => $target_id));
+      $subjects = $stmt->fetch(PDO::FETCH_ASSOC);
+      
+      if (!$subjects) {
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch Students Data.',
+            'code' => 10003,
+            'debug' => "test"
+        ));
+      } else {
+        return json_encode(array(
+            'message' => 'data fetched successfully.', 
+            'code' => 10000, 
+            'data' => $subjects
+        ));
+      }
+
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch Students Data.',
+            'code' => 10003
+        ));
+
+    } catch (PDOException $e) {
+      http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch Students Data.',
+            'code' => 10003,
+            'debug' => $e->getMessage()
+        ));
+      exit();
+    }  
+  }
 }
 
 ?>
