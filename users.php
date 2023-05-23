@@ -41,7 +41,7 @@ if($users_raw['code'] === 10000){
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item">Admin Panel</li>
-      <li class="breadcrumb-item active">Students</li>
+      <li class="breadcrumb-item active">Users</li>
     </ol>
   </nav>
 </div><!-- End Page Title -->
@@ -73,21 +73,25 @@ if($users_raw['code'] === 10000){
 
 
               <!-- Table with stripped rows -->
-              <table id="userTable" class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>     
+                  
                   <?php 
+                  
 
                   if($users_raw['code'] === 10000){
+
+                    echo '<table id="userTable" class="table datatable">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>';
+
                     foreach($users_data as $user){
 
                       switch($user_type){
@@ -147,19 +151,28 @@ if($users_raw['code'] === 10000){
                             ';
                     }
 
+                    echo '
+                </tbody>
+              </table>';
+
                   } else {
-                        if(GEN_DEBUG === true){
-                            echo '<tr><td class="datatable-empty" colspan="6">Not authorized to view this data.</td></tr>';
-                            echo '<tr><td class="datatable-empty" colspan="6">Not authorized to view this data.</td></tr>';
-                        } else {
-                            echo '<tr><td class="datatable-empty" colspan="6">Not authorized to view this data.</td></tr>';
-                        }
+                        if(GEN_DEBUG === true && in_array('debug_view', $user_permission)){
+                            //echo '<tr><td class="datatable-empty" colspan="6">'.$users_raw['message'].'</td></tr>';
+                            echo '<td class="datatable-empty" colspan="6">
+                                    <div class="alert alert-danger fade show text-center" role="alert">
+                                      <h4 class="alert-heading">[DEBUG IS ENABLED]</h4>
+                                      <p><i class="bi bi-exclamation-circle me-1"></i> Only users with a <code>debug_view</code> permission can view this error. You can also disable GEN_DEBUG in Portal Settings. </p>
+                                      <hr>
+                                      <p class="mb-4">'.$users_raw['debug'].'</p>
+                                      <button type="button" class="btn btn-danger mb-3">Request Permission</button>
+                                    </div></td>';
+                       } else {
+                           //echo '<tr><td class="datatable-empty" colspan="6">'.$users_raw['message'].'</td></tr>';
+                       }
                   }
                   
                   
                   ?>
-                </tbody>
-              </table>
               <!-- End Table with stripped rows -->
 
             </div>

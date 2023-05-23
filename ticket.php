@@ -14,9 +14,12 @@ if (empty($_SESSION['user']['token'])) {
   exit();
 }
 
-require_once 'class/Support.php';
-$crud = new Support();
+require_once 'class/Admin.php';
+$crud = new Admin();
 
+$user_type = $_SESSION['user']['type'];
+$user_panel = $_SESSION['user']['panel'];
+$user_permission = isset(json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel']) ? json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel'] : null;
 $support_raw = json_decode($crud->getTickets(), true);
 
 if($support_raw['code'] === 10000){
@@ -69,7 +72,7 @@ if($support_raw['code'] === 10000){
                         }
 
 
-                        echo '<a href="support/'.$ticket['id'].'" class="list-group-item list-group-item-action " aria-current="true">
+                        echo '<a href="ticket/'.$ticket['id'].'" class="list-group-item list-group-item-action " aria-current="true">
                                <div class="d-flex w-100 justify-content-between">
                                  <h5 class="mb-1 fw-bold">[#'.$ticket['id'].'] '.$ticket['title'].'</h5>
                                  <small class="text-muted">'.$status.'</small>
@@ -78,13 +81,41 @@ if($support_raw['code'] === 10000){
                                <small>'.$ticket['time_ago'].'</small>
                              </a>';
                     }
+                } elseif($support_raw['code'] === 10002){
+                      if(GEN_DEBUG === true && $user_type === 'admin' && in_array('debug_view', $user_permission)){
+                        
+                        echo '<tr><td class="datatable-empty" colspan="6">
+                                <div class="alert alert-danger fade show" role="alert">
+                                  <h4 class="alert-heading">[DEBUG IS ENABLED]</h4>
+                                  <p><i class="bi bi-exclamation-circle me-1"></i> Only admin with a <code>debug_view</code> permission can view this error. You can also disable GEN_DEBUG in Portal Settings. </p>
+                                  <hr>
+                                  <p class="mb-4">'.$support_raw['debug'].'</p>
+                                  <center><button type="button" class="btn btn-danger mb-3">Request Permission</button></center>
+                                </div></td></tr>';
+                                echo '<tr><td class="datatable-empty" colspan="6">
+                        <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+                            <center>
+                                <h2>'.$support_raw['message'].'</h2>
+                            </center>
+
+                            <img src="../assets/img/svg/no-record.svg" class="img-fluid py-5" alt="Page Not Found">
+                          </section>
+                        </td></tr>';
+                      } else {
+                        echo '<div class="alert alert-danger fade show text-center" role="alert">
+                             <h4 class="alert-heading">[DEBUG IS ENABLED]</h4>
+                             <p><i class="bi bi-exclamation-circle me-1"></i> Only users with a <code>debug_view</code> permission can view this error. You can also disable GEN_DEBUG in Portal Settings. </p>
+                             <hr>
+                             <p class="mb-4">'.$support_raw['debug'].'</p>
+                             <button type="button" class="btn btn-danger mb-3">Request Permission</button>
+                           </div>';
+                      }
                 } else {
                     echo '<section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
                             <center>
-                                <h2>No support tickets created yet.</h2>
+                                <h2>No users created a ticket yet.</h2>
                             </center>
 
-                            <button type="button" id="addBtnExecuter" class="btn" data-bs-toggle="modal" data-bs-target="#addReport"> Create Ticket</button>
                             <img src="../assets/img/svg/no-message.svg" class="img-fluid py-5" alt="Page Not Found">
                           </section>';
 

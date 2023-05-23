@@ -15,6 +15,12 @@ RewriteRule ^support/([0-9]+)$ support_preview.php?id=$1 [NC,L]
 # Redirect requests for support to support.php
 RewriteRule ^support$ support.php [NC,L]
 
+# Redirect requests for support/123 to support_preview.php?id=123
+RewriteRule ^ticket/([0-9]+)$ ticket_view.php?id=$1 [NC,L]
+
+# Redirect requests for support to support.php
+RewriteRule ^ticket$ ticket.php [NC,L]
+
 # Redirect requests for other PHP sites without .php extension
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f

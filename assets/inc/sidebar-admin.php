@@ -38,9 +38,24 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'working.php') echo 'collapsed'; ?>" href="./../working">
+        <a class="nav-link <?php if($page != 'ticket.php' && $page != 'ticket_view.php') echo 'collapsed'; ?>" href="./../ticket">
           <i class="bi bi-life-preserver"></i>
-          <span>Support</span>
+          <span>Support
+          
+          <?php
+
+          require_once 'class/Admin.php';
+          $admin = new Admin();
+
+          $openCount_raw = json_decode($admin->getOpenCount(), true);
+          $openCount = $openCount_raw['data']['OpenCount'];
+
+
+         if($openCount > 0) {
+           echo '<span class="badge bg-danger badge-number">'.$openCount.'</span>';
+         }
+         ?>
+          </span>
         </a>
       </li>
 

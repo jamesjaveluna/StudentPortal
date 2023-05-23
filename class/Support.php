@@ -60,7 +60,7 @@ class Support {
                     GROUP BY ticket_id
                 )
             ) AS SC ON SC.ticket_id = ST.id
-            WHERE ST.sender_id = :sender_id;
+            WHERE ST.sender_id = :sender_id ORDER BY ST.updatedAt DESC;
         ");
         $stmt->execute(array(':sender_id' => $user_id));
         $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -98,7 +98,7 @@ class Support {
         echo 'Error: ' . $e->getMessage();
         exit();
     }
-}
+ }
 
   public function createTicket() {
    $allowedUserType = array('admin', 'moderator', 'officer', 'member');
@@ -150,6 +150,22 @@ class Support {
    try {
        // Get the current datetime in PHP
        $createdAt = date('Y-m-d H:i:s');
+
+       //AUTOMATED REPLY
+       $fname = $utility->abbreviateName(mb_convert_case($_SESSION['user']['fname'], MB_CASE_TITLE));
+$ai_message = "Hello ".$fname.",
+
+Thank you for reaching out to our support team. We appreciate your message and would like to assure you that we will respond as soon as possible. Your satisfaction is our top priority.
+
+Please note that our support team will never ask you for your password or any other sensitive information. We take the security and privacy of our users very seriously. If anyone claiming to be from our support team asks for such information, please do not provide it and report the incident to us immediately.
+
+Once again, thank you for contacting us. We look forward to assisting you shortly.
+
+Best regards,
+
+Support System | Automated Reply";
+
+
    
        // Create a new support ticket
        $stmt = $this->conn->prepare('INSERT INTO SupportTicket (issue_type, title, sender_id, createdAt, updatedAt) VALUES (:issueType, :title, :sender_id, :createdAt, :createdAt)');
@@ -159,7 +175,11 @@ class Support {
        // Create the initial conversation/message for the ticket
        $stmt = $this->conn->prepare('INSERT INTO SupportConversation (ticket_id, sender_id, message, createdAt) VALUES (:ticket_id, :sender_id, :message, :createdAt)');
        $stmt->execute(array(':ticket_id' => $ticketId, ':sender_id' => $user_id, ':message' => $message, ':createdAt' => $createdAt));
-   
+        
+       // Insert the automated reply.
+       $stmt2 = $this->conn->prepare('INSERT INTO SupportConversation (ticket_id, sender_id, message, createdAt) VALUES (:ticket_id, :sender_id, :message, :createdAt)');
+       $stmt2->execute(array(':ticket_id' => $ticketId, ':sender_id' => 1, ':message' => $ai_message, ':createdAt' => $createdAt));
+
        http_response_code(200);
        return json_encode(array(
            'message' => 'Ticket created successfully.',
@@ -300,7 +320,7 @@ class Support {
       }
       
       try {
-          // Inquire if the ticket_id exist
+          // Inquire if the ticket_id exist or the ticket is already closed.
           $stmt1 = $this->conn->prepare('SELECT * FROM `SupportTicket` WHERE id = :std_id AND sender_id = :sender_id');
           $stmt1->execute(array(':std_id' => $ticketID, ':sender_id' => $user_id));
           $result1 = $stmt1->fetch(PDO::FETCH_ASSOC);
@@ -321,14 +341,23 @@ class Support {
                   // Get the current datetime in PHP
                   $createdAt = date('Y-m-d H:i:s');
 
-                  // Sufficient time has passed, user can send a new message
-                  $stmt3 = $this->conn->prepare('INSERT INTO `SupportConversation`(`ticket_id`, `sender_id`, `message`, `createdAt`) VALUES (:ticket_id,:sender_id,:message,:createdAt)');
-                  $stmt3->execute(array(':ticket_id' => $ticketID, ':sender_id' => $user_id, ':message' => $content, ':createdAt' => $createdAt));
-          
-                  http_response_code(200);
-                  return json_encode(array(
-                      'message' => 'Message sent successfully.'
-                  ));
+                  if($result1['status'] === 'open' || $result1['status'] === 'pending'){
+                    // Sufficient time has passed, user can send a new message
+                    $stmt3 = $this->conn->prepare('INSERT INTO `SupportConversation`(`ticket_id`, `sender_id`, `message`, `createdAt`) VALUES (:ticket_id,:sender_id,:message,:createdAt)');
+                    $stmt3->execute(array(':ticket_id' => $ticketID, ':sender_id' => $user_id, ':message' => $content, ':createdAt' => $createdAt));
+            
+                    // Set the status of the ticket to pending so he/she will be informed.
+                    $stmt4 = $this->conn->prepare('UPDATE SupportTicket SET status = \'open\', updatedAt = :updatedAt  WHERE id = :ticketID');
+                    $stmt4->bindParam(':ticketID', $ticketID);
+                    $stmt4->bindParam(':updatedAt', $createdAt);
+                    $stmt4->execute();
+
+                    http_response_code(200);
+                    return json_encode(array(
+                        'message' => 'Message sent successfully.'
+                    ));
+                  }
+                  
               } else {
                   // Not enough time has passed, user cannot send a new message yet
           
@@ -341,7 +370,7 @@ class Support {
           
           http_response_code(401);
           return json_encode(array(
-              'message' => 'Cannot send message.'
+              'message' => 'Unable to send message, please try again.'
           ));
       
       } catch (PDOException $e) {
@@ -350,6 +379,64 @@ class Support {
               'message' => 'Database error: ' . $e->getMessage()
           ));
       }
+  }
+
+  public function getPendingCount(){
+    $allowedUserType = array('admin', 'moderator', 'officer', 'member');
+    $allowedPermission = null;
+    $section = 'bypass';
+    
+    $utility = new Utility();
+    switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+        case 10001:
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'Session already expired.',
+                'code' => 10001
+            ));
+            break;
+    
+        case 10002:
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'Unauthorized access',
+                'code' => 10002,
+                'debug' => 'Permission required: '.$allowedPermission
+            ));
+            break;
+    }
+    
+    $user_id = $_SESSION['user']['id'];
+    
+    try {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS PendingCount FROM `SupportTicket` WHERE `status` = 'pending' AND sender_id =:sender_id");
+        $stmt->execute(array(':sender_id' => $user_id));
+        $totalCount = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if (!$totalCount) {
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'Unable to count pending.',
+                'code' => 10003
+            ));
+        } else {
+            return json_encode(array(
+                'message' => 'Pending count fetched successfully.',
+                'code' => 10000,
+                'data' => $totalCount
+            ));
+        }
+    
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch count of pending.',
+            'code' => 10003
+        ));
+    
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+        exit();
+    }
   }
 
 

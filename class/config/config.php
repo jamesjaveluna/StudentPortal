@@ -3,7 +3,10 @@
 // General configuration
 define('GEN_DEBUG', true);
 define('GEN_MAINTENANCE', true);
-define('MESSAGE_COOLDOWN', 5); //Time difference (in minutes) before a user can send another message
+
+// Support Channel
+define('MESSAGE_COOLDOWN', 0); //(Minutes) - You may write 0 for unlimited.
+define('SUPPORT_STATUS', array('open', 'closed', 'solved', 'pending')); 
 
 // Database configuration
 define('DB_HOST', '82.180.174.154');
@@ -23,7 +26,7 @@ define('MAILER_AUTH', true);
 define('MAILER_DEBUG', 0);
 
 // Recaptcha System
-define('RECAPTCHA_ENABLED', true);
+define('RECAPTCHA_ENABLED', false);
 define('RECAPTCHA_SECRET_KEY_HTML', '6Ld9ILglAAAAAPLbeclOEH61bvkBxMYymGkjAR04'); // Site key
 define('RECAPTCHA_SECRET_KEY', '6Ld9ILglAAAAAFUKePvnO8m6hYWIxQQ7XlcxZOnA'); // Secret Key
 

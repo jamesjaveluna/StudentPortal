@@ -102,7 +102,11 @@ $page = basename($_SERVER['PHP_SELF']);
         echo '<script src="../assets/js/schedule.js"></script>';
     }
 
-    if($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['type'] === 'moderator' || $_SESSION['user']['type'] === 'officer'){
+    //if($_SESSION['user']['type'] === 'admin' || $_SESSION['user']['type'] === 'moderator' || $_SESSION['user']['type'] === 'officer'){
+    //    echo '<script src="../assets/js/admin.js"></script>';
+    //}
+
+    if($_SESSION['user']['panel'] === 'admin'){
         echo '<script src="../assets/js/admin.js"></script>';
     }
 

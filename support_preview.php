@@ -23,21 +23,28 @@ $conversation_raw = json_decode($crud->getConversation($target_id), true);
 
 if($conversation_raw['code'] === 10000){
     $conversation_data = $conversation_raw['data'];
+} else {
+  include './pages/profile-not-found.php';
+  exit();
 } 
 
 $user_id = $_SESSION['user']['id'];
 
 switch($conversation_data['ticket']['status']){
-    case 'Open':
+    case 'open':
         $status = '<span class="badge bg-primary">OPEN</span>';
     break;
 
-    case 'Solved':
+    case 'solved':
         $status = '<span class="badge bg-success">SOLVED</span>';
     break;
 
-    case 'Closed':
+    case 'closed':
         $status = '<span class="badge bg-danger">CLOSED</span>';
+    break;
+
+    case 'pending':
+        $status = '<span class="badge bg-warning">PENDING</span>';
     break;
 }
 
@@ -53,7 +60,7 @@ switch($conversation_data['ticket']['status']){
   </nav>
 </div><!-- End Page Title -->
 
-<section class="section">
+<section class="section support">
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -79,7 +86,7 @@ switch($conversation_data['ticket']['status']){
                             echo '<div class="row">
                                   <div class="col-lg-8 col-sm-12">
                                     <div class="alert alert-secondary alert-dismissible fade show text-dark" role="alert">
-                                      '.$message['message'].'
+                                      <div style="white-space: pre-wrap;">'.$message['message'].'</div>
                                       <small><p class="mb-0 text-end text-secondary">'.$message['time_ago'].'</p></small>
                                     </div>
                                   </div>
@@ -90,7 +97,7 @@ switch($conversation_data['ticket']['status']){
                                       <div class="col-lg-4"></div>
                                       <div class="col-lg-8 col-sm-12">
                                         <div class="alert alert-info alert-dismissible fade show text-dark" role="alert">
-                                          '.$message['message'].'
+                                          <div style="white-space: pre-wrap;">'.$message['message'].'</div>
                                           <small><p class="mb-0 text-end text-secondary">'.$message['time_ago'].'</p></small>
                                         </div>
                                       </div>
@@ -105,8 +112,9 @@ switch($conversation_data['ticket']['status']){
               <div class="card-footer">  
                 <div class="input-group p-1">
                         <input id="ticket_id" type="hidden" value="<?php echo $conversation_data['ticket']['id']; ?>"/>
-                        <textarea class="form-control" placeholder="Type message here" id="messageContent" style="height:50px;" spellcheck="false"></textarea>
-                        <button type="button" id="sendMessageBtn" class="btn btn-danger btn-lg"><i class="ri-send-plane-fill me-1"></i> Send</button>
+                        <textarea <?php if($conversation_data['ticket']['status'] !== 'open' && $conversation_data['ticket']['status'] !== 'pending') { echo 'disabled'; } ?> class="form-control" placeholder="<?php if($conversation_data['ticket']['status'] !== 'open' && $conversation_data['ticket']['status'] !== 'pending') { echo 'Unable to send message.'; } else { echo 'Type message here'; } ?>" id="messageContent" style="height:50px;" spellcheck="false"></textarea>
+                        <button <?php if($conversation_data['ticket']['status'] !== 'open' && $conversation_data['ticket']['status'] !== 'pending') { echo 'disabled'; } ?> type="button" id="sendMessageBtn" class="btn btn-danger btn-lg"><i class="ri-send-plane-fill me-1"></i> Send</button>
+
                 </div>
             </div>
         </div>

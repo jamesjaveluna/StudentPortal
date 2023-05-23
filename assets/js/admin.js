@@ -493,7 +493,189 @@
                 }
             });
 
-            
         });
+
+        // Support/Ticket Page
+        function sendMessage() {
+            var message = $('#messageContent').val();
+            var ticketID = $('#ticket_id').val();
+            var HTMLSender = $('#HTMLSender').val();
+            var timestamp = new Date().toLocaleString();
+
+            
+            // Send AJAX request to support.php
+            $.ajax({
+                url: './../ajax/admin.php?op=send_reply',
+                method: 'POST',
+                data: {
+                    ticket_id: ticketID,
+                    message: message
+                },
+                success: function (response) {
+                    // Create the message HTML
+                    var messageHtml = '<div class="row mt-2">' +
+                        '<div class="col-lg-4"></div>' +
+                        '<div class="col-lg-8 col-sm-12">' +
+                        '<div class="alert alert-info alert-dismissible fade show text-dark" role="alert">' +
+                        '<small><p class="mb-0 text-secondary">' + HTMLSender + '</p></small>' +
+                        '<hr>' +
+                        message +
+                        '<small><p class="mb-0 text-end text-secondary">Just now</p></small>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                    // Append the message to the messages container
+                    $('#messages').append(messageHtml);
+
+                    var messagesContainer = $('#messages');
+                    var scrollTo = messagesContainer.prop('scrollHeight') - messagesContainer.height();
+                    messagesContainer.scrollTop(scrollTo);
+                },
+                error: function (xhr, status, error) {
+                    // Create the message HTML
+                    var messageHtml = '<div class="row mt-2">' +
+                        '<div class="col-lg-4"></div>' +
+                        '<div class="col-lg-8 col-sm-12">' +
+                        '<div class="alert alert-danger alert-dismissible fade show text-secondary" role="alert">' +
+                        '<small><p class="mb-0 text-secondary">' + HTMLSender + '</p></small>' +
+                        '<hr>' +
+                        xhr.responseJSON.message +
+                        '<small><p class="mb-0 text-end text-secondary">Just now</p></small>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                    // Append the message to the messages container
+                    $('#messages').append(messageHtml);
+
+                    var messagesContainer = $('#messages');
+                    var scrollTo = messagesContainer.prop('scrollHeight') - messagesContainer.height();
+                    messagesContainer.scrollTop(scrollTo);
+                }
+            });
+
+            $('#messageContent').val('');
+            $('#messageContent').focus();
+        }
+
+        // Call the sendMessage function when the send button is clicked
+        $('#ticketReply #sendMessageBtn').click(function () {
+            sendMessage();
+        });
+
+        // Call the sendMessage function when Enter key is pressed
+        $('#messageContent').keypress(function (event) {
+            if (event.which === 13) { // 13 is the keycode for Enter
+                event.preventDefault(); // Prevent the default Enter key behavior
+                sendMessage();
+            }
+        });
+
+        if ($('section.ticket_view').length > 0) {
+            // Scroll down to the element with the ID "messages"
+            var messagesContainer = $('#messages');
+            var scrollTo = messagesContainer.prop('scrollHeight') - messagesContainer.height();
+            messagesContainer.scrollTop(scrollTo);
+        }
+
+        // Adding note
+        $('#addNote').click(function () {
+            // Get the note text from the textarea
+            var note = $('#floatingTextarea').val();
+            var ticketID = $('#ticket_id').val();
+
+            // Create the data object to send via AJAX
+            var data = {
+                note: note,
+                ticketID: ticketID
+            };
+
+            // Send the AJAX request
+            $.ajax({
+                url: '../ajax/admin.php?op=support_add_note',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">')
+                        .text(response.message)
+                        .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                    $('#response').empty().append(alertDiv);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 5000); 
+                },
+                error: function (xhr, status, error) {
+                    var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">')
+                        .text(xhr.responseJSON.message)
+                        .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                    $('#response').empty().append(alertDiv);
+                }
+            });
+        });
+
+        $('.remove-note').click(function () {
+            // Get the data-id attribute value of the clicked button
+            var noteId = $(this).data('id');
+            var noteDiv = $(this).closest('.mb-2');
+
+            // Create the data object to send via AJAX
+            var data = {
+                noteId: noteId
+            };
+
+            // Send the AJAX request
+            $.ajax({
+                url: '../ajax/admin.php?op=support_delete_note',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (response) {
+                    // Handle the success response here
+                    console.log(response); // You can log the response or perform any other action
+
+                    noteDiv.remove();
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response here
+                    console.error(error);
+                }
+            });
+        });
+
+        $('#status-saveBtn').click(function () {
+            var selectedStatus = $('#u_type').val();
+            var ticketID = $('#ticket_id').val();
+
+            $.ajax({
+                url: '../ajax/admin.php?op=support_update_status',
+                type: 'POST',
+                data: {
+                    ticketID: ticketID,
+                    status: selectedStatus
+                },
+                success: function (response) {
+                    var alertDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">')
+                        .text(response.message)
+                        .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                    $('#response').empty().append(alertDiv);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 5000); 
+                },
+                error: function (xhr, status, error) {
+                    var alertDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">')
+                        .text(xhr.responseJSON.message)
+                        .append('<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                    $('#response').empty().append(alertDiv);
+                }
+            });
+        });
+
     });
 })();

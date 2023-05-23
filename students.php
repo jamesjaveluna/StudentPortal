@@ -69,10 +69,13 @@ if($students_raw['code'] === 10000){
 
 
               <!-- Table with stripped rows -->
-              <table class="table datatable">
+             
                 
                   <?php 
 
+                  
+                  if($students_raw['code'] === 10000){
+                  echo '<table class="table datatable">';
                   if($user_type === 'admin' && in_array('student_view', $user_permission) && in_array('student_delete', $user_permission)) {
                         echo '<thead>
                           <tr>
@@ -98,8 +101,6 @@ if($students_raw['code'] === 10000){
                         <tbody>';
                     }
 
-                  if($students_raw['code'] === 10000){
-
                     foreach($students_data as $student){
                         echo '<tr class="test">';
                         echo '<td>'.$student['StudentID'].'</td>
@@ -120,18 +121,26 @@ if($students_raw['code'] === 10000){
                         echo '</tr>';
                     }
 
+                    echo '
+                </tbody>
+              </table>';
+
                   } else {
-                       if(GEN_DEBUG === true && $user_type === 'admin'){
-                            echo '<tr><td class="datatable-empty" colspan="6">'.$students_raw['message'].'</td></tr>';
-                            echo '<tr><td class="datatable-empty bg-danger text-white" colspan="6"><b>[DEBUG IS ENABLED] </b><br><i class="bi bi-exclamation-circle me-1"></i> Only admin can view this error. You can also disable GEN_DEBUG in config.php </td></tr>';
-                            echo '<tr><td class="datatable-empty bg-danger text-white" colspan="6">'.$students_raw['debug'].'</td></tr>';
+                       if(GEN_DEBUG === true && in_array('debug_view', $user_permission)){
+                            //echo '<tr><td class="datatable-empty" colspan="6">'.$students_raw['message'].'</td></tr>';
+                            echo '<tr><td class="datatable-empty" colspan="6">
+                                    <div class="alert alert-danger fade show text-center" role="alert">
+                                      <h4 class="alert-heading">[DEBUG IS ENABLED]</h4>
+                                      <p><i class="bi bi-exclamation-circle me-1"></i> Only users with a <code>debug_view</code> permission can view this error. You can also disable GEN_DEBUG in Portal Settings. </p>
+                                      <hr>
+                                      <p class="mb-4">'.$students_raw['debug'].'</p>
+                                      <button type="button" class="btn btn-danger mb-3">Request Permission</button>
+                                    </div></td></tr>';
                        } else {
-                           echo '<tr><td class="datatable-empty" colspan="6">'.$students_raw['message'].'</td></tr>';
+                           //echo '<tr><td class="datatable-empty" colspan="6">'.$students_raw['message'].'</td></tr>';
                        }
                   }
                   ?>
-                </tbody>
-              </table>
               <!-- End Table with stripped rows -->
 
             </div>

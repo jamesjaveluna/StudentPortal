@@ -80,7 +80,22 @@
     <li class="nav-item">
         <a class="nav-link <?php if($page != 'support.php' && $page != 'support_preview.php') { echo 'collapsed'; } ?>" href="./../support">
           <i class="bi bi-life-preserver"></i>
-          <span>Support</span>
+          <span>Support  
+          
+          <?php
+
+          require_once 'class/Support.php';
+          $support = new Support();
+
+          $pendingCount_raw = json_decode($support->getPendingCount(), true);
+          $pendingCount = $pendingCount_raw['data']['PendingCount'];
+
+
+         if($pendingCount > 0) {
+           echo '<span class="badge bg-danger badge-number">'.$pendingCount.'</span>';
+         }
+         ?>
+          </span>
         </a>
       </li>
     </ul>

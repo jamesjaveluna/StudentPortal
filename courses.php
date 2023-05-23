@@ -63,7 +63,11 @@ if($subjects_raw['code'] === 10000){
 
 
               <!-- Table with stripped rows -->
-              <table id="userTable" class="table datatable">
+               
+                  <?php 
+
+                  if($subjects_raw['code'] === 10000){
+                  echo '<table id="userTable" class="table datatable">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -74,10 +78,8 @@ if($subjects_raw['code'] === 10000){
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
-                <tbody>     
-                  <?php 
+                <tbody>    ';
 
-                  if($subjects_raw['code'] === 10000){
                     foreach($subjects_data as $subject){
 
                       switch($user_type){
@@ -108,26 +110,28 @@ if($subjects_raw['code'] === 10000){
                             ';
                     }
 
+                    echo '
+                </tbody>
+              </table>';
+
                   } else {
-                        if(GEN_DEBUG === true && $user_type === 'admin' && in_array('debug_view', $user_permission)){
-                            echo '<tr><td class="datatable-empty" colspan="6">'.$subjects_raw['message'].'</td></tr>';
+                        if(GEN_DEBUG === true && in_array('debug_view', $user_permission)){
+                            //echo '<tr><td class="datatable-empty" colspan="6">'.$subjects_raw['message'].'</td></tr>';
                             echo '<tr><td class="datatable-empty" colspan="6">
-                                    <div class="alert alert-danger fade show" role="alert">
+                                    <div class="alert alert-danger fade show text-center" role="alert">
                                       <h4 class="alert-heading">[DEBUG IS ENABLED]</h4>
-                                      <p><i class="bi bi-exclamation-circle me-1"></i> Only admin with a <code>debug_view</code> permission can view this error. You can also disable GEN_DEBUG in Portal Settings. </p>
+                                      <p><i class="bi bi-exclamation-circle me-1"></i> Only users with a <code>debug_view</code> permission can view this error. You can also disable GEN_DEBUG in Portal Settings. </p>
                                       <hr>
                                       <p class="mb-4">'.$subjects_raw['debug'].'</p>
                                       <button type="button" class="btn btn-danger mb-3">Request Permission</button>
                                     </div></td></tr>';
                        } else {
-                           echo '<tr><td class="datatable-empty" colspan="6">'.$subjects_raw['message'].'</td></tr>';
+                           //echo '<tr><td class="datatable-empty" colspan="6">'.$subjects_raw['message'].'</td></tr>';
                        }
                   }
                   
                   
                   ?>
-                </tbody>
-              </table>
               <!-- End Table with stripped rows -->
 
             </div>
