@@ -907,40 +907,38 @@ class Admin {
         switch($_SESSION['user']['type']){
             case 'admin': case 'moderator':
                 $stmt = $this->conn->prepare("
-                    SELECT ST.*,
-                        SC.message AS latest_message,
-                        SC.createdAt AS messageCreatedAt
+                    SELECT ST.*, SC.message AS latest_message
                     FROM SupportTicket ST
                     LEFT JOIN (
-                        SELECT ticket_id, message, createdAt
+                        SELECT ticket_id, message
                         FROM SupportConversation SC
                         WHERE (ticket_id, createdAt) IN (
                             SELECT ticket_id, MAX(createdAt)
                             FROM SupportConversation
+                            WHERE SC.sender_id <> 1  -- Exclude messages from ID 1
                             GROUP BY ticket_id
                         )
                     ) AS SC ON SC.ticket_id = ST.id
-                    WHERE 1 ORDER BY ST.updatedAt DESC;
-                ");
+                    ORDER BY ST.updatedAt DESC;
+                    ;");
                 $stmt->execute();
                 break;
 
             case 'officer':
                 $stmt = $this->conn->prepare("
-                    SELECT ST.*,
-                        SC.message AS latest_message,
-                        SC.createdAt AS messageCreatedAt
+                    SELECT ST.*, SC.message AS latest_message
                     FROM SupportTicket ST
                     LEFT JOIN (
-                        SELECT ticket_id, message, createdAt
+                        SELECT ticket_id, message
                         FROM SupportConversation SC
                         WHERE (ticket_id, createdAt) IN (
                             SELECT ticket_id, MAX(createdAt)
                             FROM SupportConversation
+                            WHERE SC.sender_id <> 1  -- Exclude messages from ID 1
                             GROUP BY ticket_id
                         )
                     ) AS SC ON SC.ticket_id = ST.id
-                    WHERE ST.issue_type IN ('account', 'schedule', 'calendar')
+                    WHERE ST.issue_type IN ('account', 'schedule', 'calendar')  -- Limit by issue types
                     ORDER BY ST.updatedAt DESC;
                 ");
                 $stmt->execute();
@@ -959,7 +957,7 @@ class Admin {
             // Calculate time ago for each ticket
             $data = array();
             foreach ($tickets as $ticket) {
-                $createdAt = $ticket['messageCreatedAt'];
+                $createdAt = $ticket['createdAt'];
                 $timeAgo = $utility->getAgo($createdAt); // Call the function to calculate time ago
                 $ticket['time_ago'] = $timeAgo;
                 $data[] = $ticket;

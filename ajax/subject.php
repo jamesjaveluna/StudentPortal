@@ -1,6 +1,8 @@
 <?php
 
-$instructor = isset($_GET['i']) ? $_GET['i'] : null;
+header('Content-Type: text/html; charset=utf-8');
+
+$instructor = isset($_GET['i']) ? urldecode($_GET['i']) : null;
 $description = isset($_GET['d']) ? $_GET['d'] : null;
 $room = isset($_GET['r']) ? $_GET['r'] : null;
 ?>

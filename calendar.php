@@ -17,18 +17,18 @@ if (empty($_SESSION['user']['token'])) {
 
 require_once 'class/Admin.php';
 $crud = new Admin();
-
-$user_type = $_SESSION['user']['type'];
-$user_panel = $_SESSION['user']['panel'];
-
-$users_raw = json_decode($crud->getUsers(), true);
-
-if($users_raw['code'] === 10000){
-    $users_data = $users_raw['data'];
-} else {
-    include './pages/calendar-service-error.php';
-    exit();
-}
+//
+//$user_type = $_SESSION['user']['type'];
+//$user_panel = $_SESSION['user']['panel'];
+//
+//$users_raw = json_decode($crud->getUsers(), true);
+//
+//if($users_raw['code'] === 10000){
+//    $users_data = $users_raw['data'];
+//} else {
+//    include './pages/calendar-service-error.php';
+//    exit();
+//}
 
 ?>
 <div class="pagetitle">
@@ -53,9 +53,29 @@ if($users_raw['code'] === 10000){
               <div id="response"></div>
               <!-- End Responses -->
 
-              <!-- Calendar -->
-                <div id='calendar'></div>
-              <!-- End Calendar -->
+              <?php
+                // Check if the request is from a PC (desktop) device
+                $isDesktop = false;
+                $userAgent = $_SERVER['HTTP_USER_AGENT'];
+                $desktopAgents = array('Windows', 'Macintosh', 'Linux');
+                foreach ($desktopAgents as $agent) {
+                    if (stripos($userAgent, $agent) !== false) {
+                        $isDesktop = true;
+                        break;
+                    }
+                }
+                
+                if ($isDesktop) {
+                    ?>
+                    <!-- Calendar -->
+                    <div id='calendar'></div>
+                    <!-- End Calendar -->
+                    <?php
+                } else {
+                    echo '<b>NOTE:</b> You are using mobile app. Unfortunately, we haven\'t designed the mobile version of calendar yet. However, you may visit this page using PC.';
+                }
+              ?>
+
 
             </div>
           </div>

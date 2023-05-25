@@ -120,11 +120,11 @@ switch($user_type){
                             break;
 
                             default:
-                                $badge = null;
+                                $badge = '';
                             break;
                         }
 
-                            if($message['sender_id'] !== $user_id){
+                            if($message['sender_id'] !== $user_id && $message['user_type'] != 'admin' && $message['user_type'] != 'moderator' && $message['user_type'] != 'officer' && $message['sender_id'] != 1){
                                 echo '<div class="row">
                                       <div class="col-lg-8 col-sm-12">
                                         <div class="alert alert-secondary alert-dismissible fade show text-dark" role="alert">
@@ -135,6 +135,7 @@ switch($user_type){
                                       <div class="col-lg-4"></div>
                                   </div>';
                             } else {
+                                //reply
                                 echo '<div class="row mt-2">
                                           <div class="col-lg-4"></div>
                                           <div class="col-lg-8 col-sm-12">
@@ -146,6 +147,7 @@ switch($user_type){
                                             </div>
                                           </div>
                                       </div>';
+                                
                             }
                             
                         }
@@ -157,8 +159,8 @@ switch($user_type){
                   <div id="ticketReply" class="input-group p-1">
                   <input id="ticket_id" type="hidden" value="<?php echo $conversation_data['ticket']['id']; ?>"/>
                   <input id="HTMLSender" type="hidden" value='Replied by: <b><?php echo $utility->abbreviateName($_SESSION['user']['fname']).' '.$user_badge; ?></b>' />
-                        <textarea <?php if($conversation_data['ticket']['status'] !== 'open') { echo 'disabled'; } ?> class="form-control" placeholder="<?php if($conversation_data['ticket']['status'] !== 'open') { echo 'Check support ticket status.'; } else { echo 'Type message here'; } ?>" id="messageContent" style="height:50px;" spellcheck="false"></textarea>
-                        <button <?php if($conversation_data['ticket']['status'] !== 'open') { echo 'disabled'; } ?>  type="button" id="sendMessageBtn" class="btn btn-danger btn-lg"><i class="ri-send-plane-fill me-1"></i> Send</button>
+                        <textarea <?php if($conversation_data['ticket']['status'] !== 'open' && $conversation_data['ticket']['status'] !== 'pending') { echo 'disabled'; } ?> class="form-control" placeholder="<?php if($conversation_data['ticket']['status'] !== 'open' && $conversation_data['ticket']['status'] !== 'open') { echo 'Check support ticket status.'; } else { echo 'Type message here'; } ?>" id="messageContent" style="height:50px;" spellcheck="false"></textarea>
+                        <button <?php if($conversation_data['ticket']['status'] !== 'open' && $conversation_data['ticket']['status'] !== 'pending') { echo 'disabled'; } ?>  type="button" id="sendMessageBtn" class="btn btn-danger btn-lg"><i class="ri-send-plane-fill me-1"></i> Send</button>
                   </div>
                 </div>
               </div>

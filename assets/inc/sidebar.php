@@ -42,13 +42,6 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="./../working">
-          <i class="bx bx-clinic"></i>
-          <span>Clinic</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="./../working">
           <i class="bx bx-library"></i>
           <span>Library</span>
         </a>
@@ -58,13 +51,6 @@
         <a class="nav-link collapsed" href="./../working">
           <i class="bi bi-card-list"></i>
           <span>Registrar</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="./../working">
-          <i class="bx bxs-donate-heart"></i>
-          <span>Scholarship</span>
         </a>
       </li>
 

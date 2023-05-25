@@ -39,9 +39,9 @@ if($support_raw['code'] === 10000){
               <?php
 
               if($support_raw['code'] === 10000){
-                  echo '<div class="col-lg-12 text-end mb-3">
-                    <button type="button" id="addBtnExecuter" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addReport"><i class="bi bi-plus-lg me-1"></i> New</button>
-                </div>';
+                //  echo '<div class="col-lg-12 text-end mb-3">
+                //    <button type="button" id="addBtnExecuter" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addReport"><i class="bi bi-plus-lg me-1"></i> New</button>
+                //</div>';
 
                   echo '<hr>';
               }

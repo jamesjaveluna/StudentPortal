@@ -44,7 +44,7 @@ class Schedule {
     $target_id = $_SESSION['user']['StudentID'];
 
     try {
-      $stmt = $this->conn->prepare('SELECT SD.*, SS.createdDate FROM `StudentSubject` SS LEFT JOIN SubjectData SD ON SD.id = SS.SubjectData_id WHERE SS.StudentData_id = :std_id');
+      $stmt = $this->conn->prepare('SELECT * FROM `SubjectData` WHERE student_id = :std_id');
       $stmt->execute(array('std_id' => $target_id));
       $schedule = $stmt->fetchAll(PDO::FETCH_ASSOC);
       $updatedDate = date('Y-m-d');
@@ -61,41 +61,31 @@ class Schedule {
         foreach ($schedule as &$item) {
           
           // Fix Day
-          //$item['day'] = $utility->fixDay($item['day']);
-        
+          $item['day'] = $utility->fixDay($item['day']);
+
           //Fix time
-          if ($item['time'] !== 'TBA' || $item['time'] !== 'n/a') {
-            $civilian_time = explode(" - ", $item['AI_civilian_time']);
-            $military_time = explode(" - ", $item['AI_military_time']);
+          if ($item['time'] !== 'TBA') {
+            $fixTime = $utility->fix_time_format($item['time']);
+            $item['civilian_time']['start_time'] = $fixTime['start_time'];
+            $item['civilian_time']['end_time'] = $fixTime['end_time'];
 
-            $item['civilian_time']['start_time'] = $civilian_time[0];
-            $item['civilian_time']['end_time'] = $civilian_time[1];
-
-            $item['military_time']['start_time'] = $military_time[0];
-            $item['military_time']['end_time'] = $military_time[1];
-
-
-            //$fixTime = $utility->fix_time_format($item['time']);
-            //$item['civilian_time']['start_time'] = $fixTime['start_time'];
-            //$item['civilian_time']['end_time'] = $fixTime['end_time'];
-            //
-            //$item['military_time']['start_time'] = $utility->convertToMilitaryTime($fixTime['start_time']);
-            //$item['military_time']['end_time'] = $utility->convertToMilitaryTime($fixTime['end_time']);
+            $item['military_time']['start_time'] = $utility->convertToMilitaryTime($fixTime['start_time']);
+            $item['military_time']['end_time'] = $utility->convertToMilitaryTime($fixTime['end_time']);
           }
-        
+
           //$item['COURSES'] = $item;
-        
+
         }
 
         // Sort the schedule based on start_time
         usort($schedule, function($a, $b) {
-          if (isset($a['AI_military_time']) && isset($b['AI_military_time'])) {
-            return strtotime($a['AI_military_time']) - strtotime($b['AI_military_time']);
+          if (isset($a['military_time']['start_time']) && isset($b['military_time']['start_time'])) {
+            return strtotime($a['military_time']['start_time']) - strtotime($b['military_time']['start_time']);
           }
           return 0;
         });
 
-        //// Assign event to course by code
+        // Assign event to course by code
         $event_counter = 1;
         $event_map = array();
         foreach ($schedule as &$item) {
@@ -107,10 +97,10 @@ class Schedule {
           $item["data-event"] = $event_map[$code];
         }
 
-        //// Group courses by day
+        // Group courses by day
         $grouped_courses = [];
         foreach ($schedule as $course) {
-            $days = explode(",", $course["AI_days"]);
+            $days = explode(",", $course["day"]);
             foreach ($days as $day) {
                 $day = trim($day); // remove leading/trailing whitespace
                 if (!array_key_exists($day, $grouped_courses)) {
@@ -119,7 +109,7 @@ class Schedule {
                 $grouped_courses[$day][] = $course; // add the course to the day's array
             }
         }
-        
+
         return json_encode(array(
             'message' => 'schedule fetched successfully.', 
             'code' => 10000, 
@@ -141,12 +131,6 @@ class Schedule {
   }
 
   public function getScheduleToday(){
-        require_once __DIR__.'./../class/Calendar.php';
-
-        $calendar = new Calendar();
-
-        $calendar_raw = json_decode($calendar->getEventToday(), true);
-
         $schedule_raw =  json_decode($this->getSchedule(), true);
 
         $current_day = strtoupper(date('l'));
@@ -159,17 +143,6 @@ class Schedule {
                 'message' => 'Unavailable',
                 'code' => 10004
             ));
-        }
-
-        // Check if there is no class event today.
-        if($calendar_raw['code'] === 10000){
-            if($calendar_raw['data'][0]['noClass'] == true && $calendar_raw['data'][0]['allDay'] == true){
-                return json_encode(array(
-                    'message' => 'No Class',
-                    'event_name' => $calendar_raw['data'][0]['title'],
-                    'code' => 10005
-                ));
-            }
         }
 
         // 1. Count the number of subjects of the day

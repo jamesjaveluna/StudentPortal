@@ -26,7 +26,7 @@ $crud = new Schedule();
 
 $schedule_raw = json_decode($crud->getSchedule(), true);
 
-var_dump($schedule_raw);
+//var_dump($schedule_raw);
 
 if($schedule_raw['code'] === 10000){
     $schedule_data = $schedule_raw['data'];
@@ -98,14 +98,25 @@ if($schedule_raw['code'] === 10000){
                            <?php
 
                            if(isset($schedule_data['MONDAY'])){
-                                foreach($schedule_data['MONDAY'] as $schedule){
-                                      echo ' <li class="cd-schedule__event">
-                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-start-civilian="'.$schedule['civilian_time']['start_time'].'" data-end-civilian="'.$schedule['civilian_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
-                                            <em class="cd-schedule__time">'.$schedule['civilian_time']['start_time'].' - '.$schedule['civilian_time']['end_time'].'</em>
-                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
-                                          </a>
-                                        </li>';
-                                }
+                                foreach ($schedule_data['MONDAY'] as $schedule) {
+                                            $instructor = urlencode($schedule['instructor_name']);
+                                            $description = urlencode($schedule['description']);
+                                            $room = urlencode($schedule['room_name']);
+                           
+                                            echo ' <li class="cd-schedule__event">
+                                                <a 
+                                                data-start="' . $schedule['military_time']['start_time'] . '" 
+                                                data-end="' . $schedule['military_time']['end_time'] . '" 
+                                                data-start-civilian="' . $schedule['civilian_time']['start_time'] . '" 
+                                                data-end-civilian="' . $schedule['civilian_time']['end_time'] . '" 
+                                                data-content="subject.php?i=' . $instructor . '&d=' . $description . '&r=' . $room . '" 
+                                                data-event="' . $schedule['data-event'] . '" 
+                                                href="#0">
+                                                    <em class="cd-schedule__time">' . $schedule['civilian_time']['start_time'] . ' - ' . $schedule['civilian_time']['end_time'] . '</em>
+                                                    <em class="cd-schedule__name">' . $schedule['code'] . '</em>
+                                                </a>
+                                            </li>';
+                                        }
                            }
 
                            ?>
@@ -119,14 +130,25 @@ if($schedule_raw['code'] === 10000){
                              <?php
                                 
                                 if(isset($schedule_data['TUESDAY'])){
-                                    foreach($schedule_data['TUESDAY'] as $schedule){
-                                         echo ' <li class="cd-schedule__event">
-                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-start-civilian="'.$schedule['civilian_time']['start_time'].'" data-end-civilian="'.$schedule['civilian_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
-                                            <em class="cd-schedule__time">'.$schedule['civilian_time']['start_time'].' - '.$schedule['civilian_time']['end_time'].'</em>
-                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
-                                          </a>
-                                        </li>';
-                                    }
+                                   foreach ($schedule_data['TUESDAY'] as $schedule) {
+                                            $instructor = urlencode($schedule['instructor_name']);
+                                            $description = urlencode($schedule['description']);
+                                            $room = urlencode($schedule['room_name']);
+                           
+                                            echo ' <li class="cd-schedule__event">
+                                                <a 
+                                                data-start="' . $schedule['military_time']['start_time'] . '" 
+                                                data-end="' . $schedule['military_time']['end_time'] . '" 
+                                                data-start-civilian="' . $schedule['civilian_time']['start_time'] . '" 
+                                                data-end-civilian="' . $schedule['civilian_time']['end_time'] . '" 
+                                                data-content="subject.php?i=' . $instructor . '&d=' . $description . '&r=' . $room . '" 
+                                                data-event="' . $schedule['data-event'] . '" 
+                                                href="#0">
+                                                    <em class="cd-schedule__time">' . $schedule['civilian_time']['start_time'] . ' - ' . $schedule['civilian_time']['end_time'] . '</em>
+                                                    <em class="cd-schedule__name">' . $schedule['code'] . '</em>
+                                                </a>
+                                            </li>';
+                                        }
                                 }
 
                              ?>
@@ -140,14 +162,25 @@ if($schedule_raw['code'] === 10000){
                            <ul>
                            <?php
                                 if(isset($schedule_data['WEDNESDAY'])){
-                                    foreach($schedule_data['WEDNESDAY'] as $schedule){
-                                         echo ' <li class="cd-schedule__event">
-                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-start-civilian="'.$schedule['civilian_time']['start_time'].'" data-end-civilian="'.$schedule['civilian_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
-                                            <em class="cd-schedule__time">'.$schedule['civilian_time']['start_time'].' - '.$schedule['civilian_time']['end_time'].'</em>
-                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
-                                          </a>
-                                        </li>';
-                                    }
+                                    foreach ($schedule_data['WEDNESDAY'] as $schedule) {
+                                            $instructor = urlencode($schedule['instructor_name']);
+                                            $description = urlencode($schedule['description']);
+                                            $room = urlencode($schedule['room_name']);
+                           
+                                            echo ' <li class="cd-schedule__event">
+                                                <a 
+                                                data-start="' . $schedule['military_time']['start_time'] . '" 
+                                                data-end="' . $schedule['military_time']['end_time'] . '" 
+                                                data-start-civilian="' . $schedule['civilian_time']['start_time'] . '" 
+                                                data-end-civilian="' . $schedule['civilian_time']['end_time'] . '" 
+                                                data-content="subject.php?i=' . $instructor . '&d=' . $description . '&r=' . $room . '" 
+                                                data-event="' . $schedule['data-event'] . '" 
+                                                href="#0">
+                                                    <em class="cd-schedule__time">' . $schedule['civilian_time']['start_time'] . ' - ' . $schedule['civilian_time']['end_time'] . '</em>
+                                                    <em class="cd-schedule__name">' . $schedule['code'] . '</em>
+                                                </a>
+                                            </li>';
+                                        }
                                 }
                            ?>
                            </ul>
@@ -159,14 +192,25 @@ if($schedule_raw['code'] === 10000){
                            <ul>
                            <?php
                                 if(isset($schedule_data['THURSDAY'])){
-                                    foreach($schedule_data['THURSDAY'] as $schedule){
-                                         echo ' <li class="cd-schedule__event">
-                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-start-civilian="'.$schedule['civilian_time']['start_time'].'" data-end-civilian="'.$schedule['civilian_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
-                                            <em class="cd-schedule__time">'.$schedule['civilian_time']['start_time'].' - '.$schedule['civilian_time']['end_time'].'</em>
-                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
-                                          </a>
-                                        </li>';
-                                    }
+                                      foreach ($schedule_data['THURSDAY'] as $schedule) {
+                                            $instructor = urlencode($schedule['instructor_name']);
+                                            $description = urlencode($schedule['description']);
+                                            $room = urlencode($schedule['room_name']);
+                           
+                                            echo ' <li class="cd-schedule__event">
+                                                <a 
+                                                data-start="' . $schedule['military_time']['start_time'] . '" 
+                                                data-end="' . $schedule['military_time']['end_time'] . '" 
+                                                data-start-civilian="' . $schedule['civilian_time']['start_time'] . '" 
+                                                data-end-civilian="' . $schedule['civilian_time']['end_time'] . '" 
+                                                data-content="subject.php?i=' . $instructor . '&d=' . $description . '&r=' . $room . '" 
+                                                data-event="' . $schedule['data-event'] . '" 
+                                                href="#0">
+                                                    <em class="cd-schedule__time">' . $schedule['civilian_time']['start_time'] . ' - ' . $schedule['civilian_time']['end_time'] . '</em>
+                                                    <em class="cd-schedule__name">' . $schedule['code'] . '</em>
+                                                </a>
+                                            </li>';
+                                        }
                                 }
                            ?>
                            </ul>
@@ -178,14 +222,25 @@ if($schedule_raw['code'] === 10000){
                            <ul>
                            <?php
                                 if(isset($schedule_data['FRIDAY'])){
-                                    foreach($schedule_data['FRIDAY'] as $schedule){
-                                         echo ' <li class="cd-schedule__event">
-                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-start-civilian="'.$schedule['civilian_time']['start_time'].'" data-end-civilian="'.$schedule['civilian_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
-                                            <em class="cd-schedule__time">'.$schedule['civilian_time']['start_time'].' - '.$schedule['civilian_time']['end_time'].'</em>
-                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
-                                          </a>
-                                        </li>';
-                                    }
+                                foreach ($schedule_data['FRIDAY'] as $schedule) {
+                                            $instructor = urlencode($schedule['instructor_name']);
+                                            $description = urlencode($schedule['description']);
+                                            $room = urlencode($schedule['room_name']);
+                           
+                                            echo ' <li class="cd-schedule__event">
+                                                <a 
+                                                data-start="' . $schedule['military_time']['start_time'] . '" 
+                                                data-end="' . $schedule['military_time']['end_time'] . '" 
+                                                data-start-civilian="' . $schedule['civilian_time']['start_time'] . '" 
+                                                data-end-civilian="' . $schedule['civilian_time']['end_time'] . '" 
+                                                data-content="subject.php?i=' . $instructor . '&d=' . $description . '&r=' . $room . '" 
+                                                data-event="' . $schedule['data-event'] . '" 
+                                                href="#0">
+                                                    <em class="cd-schedule__time">' . $schedule['civilian_time']['start_time'] . ' - ' . $schedule['civilian_time']['end_time'] . '</em>
+                                                    <em class="cd-schedule__name">' . $schedule['code'] . '</em>
+                                                </a>
+                                            </li>';
+                                        }
                                 }
                            ?>
                            </ul>
@@ -198,14 +253,25 @@ if($schedule_raw['code'] === 10000){
                                     <div class="cd-schedule__top-info"><span>Saturday</span></div>
                    
                                     <ul>';
-                                    foreach($schedule_data['SATURDAY'] as $schedule){
-                                         echo ' <li class="cd-schedule__event">
-                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-start-civilian="'.$schedule['civilian_time']['start_time'].'" data-end-civilian="'.$schedule['civilian_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
-                                            <em class="cd-schedule__time">'.$schedule['civilian_time']['start_time'].' - '.$schedule['civilian_time']['end_time'].'</em>
-                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
-                                          </a>
-                                        </li>';
-                                    }
+                                    foreach ($schedule_data['SATURDAY'] as $schedule) {
+                                            $instructor = urlencode($schedule['instructor_name']);
+                                            $description = urlencode($schedule['description']);
+                                            $room = urlencode($schedule['room_name']);
+                           
+                                            echo ' <li class="cd-schedule__event">
+                                                <a 
+                                                data-start="' . $schedule['military_time']['start_time'] . '" 
+                                                data-end="' . $schedule['military_time']['end_time'] . '" 
+                                                data-start-civilian="' . $schedule['civilian_time']['start_time'] . '" 
+                                                data-end-civilian="' . $schedule['civilian_time']['end_time'] . '" 
+                                                data-content="subject.php?i=' . $instructor . '&d=' . $description . '&r=' . $room . '" 
+                                                data-event="' . $schedule['data-event'] . '" 
+                                                href="#0">
+                                                    <em class="cd-schedule__time">' . $schedule['civilian_time']['start_time'] . ' - ' . $schedule['civilian_time']['end_time'] . '</em>
+                                                    <em class="cd-schedule__name">' . $schedule['code'] . '</em>
+                                                </a>
+                                            </li>';
+                                        }
                                 echo '
                                    </ul>
                                  </li>';
@@ -220,14 +286,25 @@ if($schedule_raw['code'] === 10000){
                                       <div class="cd-schedule__top-info"><span>Sunday</span></div>
                                       
                                       <ul>';
-                                        foreach($schedule_data['SUNDAY'] as $schedule){
-                                        echo ' <li class="cd-schedule__event">
-                                          <a data-start="'.$schedule['military_time']['start_time'].'" data-end="'.$schedule['military_time']['end_time'].'" data-start-civilian="'.$schedule['civilian_time']['start_time'].'" data-end-civilian="'.$schedule['civilian_time']['end_time'].'" data-content="subject.php?i='.$schedule['instructor_name'].'&d='.$schedule['description'].'&r='.$schedule['room_name'].'" data-event="'.$schedule['data-event'].'" href="#0">
-                                            <em class="cd-schedule__time">'.$schedule['civilian_time']['start_time'].' - '.$schedule['civilian_time']['end_time'].'</em>
-                                            <em class="cd-schedule__name">'.$schedule['code'].'</em>
-                                          </a>
-                                        </li>';
-                                        }
+                                      foreach ($schedule_data['SUNDAY'] as $schedule) {
+                                            $instructor = urlencode($schedule['instructor_name']);
+                                            $description = urlencode($schedule['description']);
+                                            $room = urlencode($schedule['room_name']);
+                           
+                                            echo ' <li class="cd-schedule__event">
+                                                <a 
+                                                data-start="' . $schedule['military_time']['start_time'] . '" 
+                                                data-end="' . $schedule['military_time']['end_time'] . '" 
+                                                data-start-civilian="' . $schedule['civilian_time']['start_time'] . '" 
+                                                data-end-civilian="' . $schedule['civilian_time']['end_time'] . '" 
+                                                data-content="subject.php?i=' . $instructor . '&d=' . $description . '&r=' . $room . '" 
+                                                data-event="' . $schedule['data-event'] . '" 
+                                                href="#0">
+                                                    <em class="cd-schedule__time">' . $schedule['civilian_time']['start_time'] . ' - ' . $schedule['civilian_time']['end_time'] . '</em>
+                                                    <em class="cd-schedule__name">' . $schedule['code'] . '</em>
+                                                </a>
+                                            </li>';
+                                      }
                                 echo '</ul>
                                     </li>';
                                 }

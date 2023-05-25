@@ -57,6 +57,7 @@ class Support {
                 WHERE (ticket_id, createdAt) IN (
                     SELECT ticket_id, MAX(createdAt)
                     FROM SupportConversation
+                    WHERE SC.sender_id <> 1  -- Exclude messages from ID 1
                     GROUP BY ticket_id
                 )
             ) AS SC ON SC.ticket_id = ST.id

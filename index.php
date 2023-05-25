@@ -98,6 +98,12 @@ $calendar_raw = json_decode($ca_crud->getEventToday(), true);
                             echo '<h6 class="text-warning">'.$schedule_raw['message'].'</h6>'.
                                  '<span class="text-muted small pt-2">No schedule found.</span><br>';
                         } 
+
+                        // No Class (Due to event)
+                        if($schedule_raw['code'] === 10005){
+                            echo '<h6 class="text-danger">'.$schedule_raw['message'].'</h6>'.
+                                 '<span class="text-muted small pt-2">Due to: <b>'.$schedule_raw['event_name'].'</b></span><br>';
+                        } 
                         
                         ?>
                         
@@ -133,11 +139,14 @@ $calendar_raw = json_decode($ca_crud->getEventToday(), true);
                                     $formattedDateOne = $start_date; //Displays 1 date only.
                                     $formattedDateTwo = $start_date_two. '-' .$end_date_two; //Used in dates that are not similar
                                     
-                                    
-                                    if($calendar_raw['data'][0]['status'] === 0){
-                                        $subText = '<span class="badge bg-danger">Event Ended</span>';
+                                    if($calendar_raw['data'][0]['allDay'] != true && $calendar_raw['data'][0]['noClass'] != true){
+                                        if($calendar_raw['data'][0]['status'] === 0){
+                                            $subText = '<span class="badge bg-danger">Event Ended</span>';
+                                        } else {
+                                            $subText = '<span class="badge bg-success">Ongoing</span>';
+                                        }
                                     } else {
-                                        $subText = '<span class="badge bg-success">Ongoing</span>';
+                                        $subText = '<span class="badge bg-danger">No Class</span>';
                                     }
 
                                     if($calendar_raw['data'][0]['location'] !== null || !empty($calendar_raw['data'][0]['location'])){

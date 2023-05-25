@@ -115,6 +115,11 @@ $page = basename($_SERVER['PHP_SELF']);
         echo '<script src="../assets/vendor/fullcalendar/index.global.js"></script>';
     }
 
+    if($page == "calendar.php"){
+        echo '<script src="../assets/js/calendar.js"></script>';
+        echo '<script src="../assets/vendor/fullcalendar/index.global.js"></script>';
+    }
+
     if($page == "support_preview.php" || $page == "support.php"){
         echo '<script src="../assets/js/support.js"></script>';
     }

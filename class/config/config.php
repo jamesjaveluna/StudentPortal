@@ -2,7 +2,7 @@
 
 // General configuration
 define('GEN_DEBUG', true);
-define('GEN_MAINTENANCE', true);
+define('GEN_MAINTENANCE', false);
 
 // Support Channel
 define('MESSAGE_COOLDOWN', 0); //(Minutes) - You may write 0 for unlimited.
