@@ -172,7 +172,7 @@ switch($user_type){
             <div class="card-body">
               <h5 class="card-title">Admin Tools</h5>
               <div class="task-container">
-                  <img src="../assets/img/profile/<?php echo $conversation_data['author']['avatar']; ?>" alt="Profile" class="rounded-circle" style="width: 50px">
+                  <img src="./../../assets/img/profile/<?php echo $conversation_data['author']['avatar']; ?>" alt="Profile" class="rounded-circle" style="width: 50px">
                 
                 <div class="task-info ms-4">
                   <h3 class="title"><?php echo mb_convert_case($conversation_data['author']['FullName'], MB_CASE_TITLE); ?></h3>

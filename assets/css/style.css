@@ -5,6 +5,10 @@
   scroll-behavior: smooth;
 }
 
+img {
+    pointer-events: none;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   background: #f6f9ff;
@@ -1235,6 +1239,31 @@ h6 {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/*--------------------------------------------------------------
+# Members (Customized)
+--------------------------------------------------------------*/
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 0px;
+}
+
+.member {
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+.member img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.member h3,
+.member p {
+    margin: 10px 0;
 }
 
 /*--------------------------------------------------------------

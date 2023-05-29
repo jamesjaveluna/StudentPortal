@@ -10,35 +10,84 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'users.php') echo 'collapsed'; ?>" href="./../users">
+        <a class="nav-link <?php if($page != 'admin_dashboard.php') echo 'collapsed'; ?>" href="./../../../admin/dashboard">
+          <i class="bx bxs-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      <?php
+      $user_permission = isset(json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel']) ? json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel'] : null;
+
+      if(in_array('user_view', $user_permission)){
+      ?>
+      <li class="nav-item">
+        <a class="nav-link <?php if($page != 'admin_users.php' && $page != 'profile.php') echo 'collapsed'; ?>" href="./../../../admin/users">
           <i class="bi bi-people"></i>
           <span>Users</span>
         </a>
       </li>
 
+      <?php
+      }
+
+      if(in_array('student_view', $user_permission)){
+      ?>
+
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'students.php') echo 'collapsed'; ?>" href="./../students">
+        <a class="nav-link <?php if($page != 'admin_students.php') echo 'collapsed'; ?>" href="./../../../admin/students">
           <i class="bx bxs-user-detail"></i>
           <span>Students</span>
         </a>
       </li>
 
+      <?php
+      }
+
+      if(in_array('subject_view', $user_permission)){
+      ?>
+
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'courses.php' && $page != 'courses_preview.php') echo 'collapsed'; ?>" href="./../courses">
+        <a class="nav-link <?php if($page != 'admin_courses.php' && $page != 'courses_preview.php') echo 'collapsed'; ?>" href="./../../../admin/courses">
           <i class="ri-book-2-line"></i>
           <span>Courses</span>
         </a>
       </li>
 
+      <?php
+      }
+
+      if(in_array('calendar_view', $user_permission)){
+      ?>
+
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'activity.php') echo 'collapsed'; ?>" href="./../activity">
-          <i class="bx bxs-user-detail"></i>
-          <span>Calendar of Activity</span>
+        <a class="nav-link <?php if($page != 'admin_calendar.php') echo 'collapsed'; ?>" href="./../../../admin/calendar">
+          <i class="bx bxs-calendar"></i>
+          <span>Calendar</span>
         </a>
       </li>
 
+      <?php
+      }
+
+      if(in_array('organization_view', $user_permission)){
+      ?>
+
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'ticket.php' && $page != 'ticket_view.php') echo 'collapsed'; ?>" href="./../ticket">
+        <a class="nav-link <?php if($page != 'admin_organization.php' && $page != 'admin_organization_view.php') echo 'collapsed'; ?>" href="./../../../admin/organization">
+          <i class="ri-group-line"></i>
+          <span>Organizations</span>
+        </a>
+      </li>
+
+      <?php
+      }
+
+      if(in_array('support_view', $user_permission)){
+      ?>
+
+      <li class="nav-item">
+        <a class="nav-link <?php if($page != 'admin_support.php' && $page != 'admin_support_view.php') echo 'collapsed'; ?>" href="./../../../admin/support">
           <i class="bi bi-life-preserver"></i>
           <span>Support
           
@@ -58,7 +107,23 @@
           </span>
         </a>
       </li>
+      <?php
+      }
 
+      if(in_array('organization_view', $user_permission)){
+      ?>
+
+      <li class="nav-item">
+        <a class="nav-link <?php if($page != 'admin_system_settings.php') echo 'collapsed'; ?>" href="./../../../admin/system_settings">
+          <i class="ri ri-settings-3-line"></i>
+          <span>System Settings</span>
+        </a>
+      </li>
+
+      <?php
+      }
+
+      ?>
     </ul>
 
   </aside>

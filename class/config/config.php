@@ -1,49 +1,88 @@
 <?php
 
-// General configuration
-define('GEN_DEBUG', true);
-define('GEN_MAINTENANCE', false);
+// Modify here only, do not touch sa ubos.
+$dbHost = '82.180.174.154';
+$dbName = 'u410000628_student_portal';
+$dbUser = 'u410000628_student_portal';
+$dbPass = 'P@ssword123';
 
-// Support Channel
-define('MESSAGE_COOLDOWN', 0); //(Minutes) - You may write 0 for unlimited.
-define('SUPPORT_STATUS', array('open', 'closed', 'solved', 'pending')); 
+try {
+    $db = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
+    
+    $query = "SELECT config_key, config_value FROM config";
+    $stmt = $db->query($query);
+    $config = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// Database configuration
-define('DB_HOST', '82.180.174.154');
-define('DB_NAME', 'u410000628_student_portal');
-define('DB_USER', 'u410000628_student_portal');
-define('DB_PASSWORD', 'P@ssword123');
+    // General configuration
+    if($config['GEN_DEBUG'] === 'true' || $config['GEN_DEBUG'] == 'true'){
+        define('GEN_DEBUG', true);
+    } else {
+        define('GEN_DEBUG', false);
+    }
 
-// Mailer configuration
-define('MAILER_HOST', 'smtp.hostinger.com');
-define('MAILER_PORT', 465);
-define('MAILER_USERNAME', 'no-reply@proudcecilian.online');
-define('MAILER_PASSWORD', 'P@ssword123');
-define('MAILER_FROM_EMAIL', 'no-reply@proudcecilian.online');
-define('MAILER_FROM_NAME', 'Student Portal');
-define('MAILER_SECURE', 'ssl'); // Replace 'ssl' with 'tls' if needed
-define('MAILER_AUTH', true);
-define('MAILER_DEBUG', 0);
+    if($config['GEN_MAINTENANCE'] === 'true' || $config['GEN_MAINTENANCE'] == 'true'){
+        define('GEN_MAINTENANCE', true);
+    } else {
+        define('GEN_MAINTENANCE', false);
+    }
 
-// Recaptcha System
-define('RECAPTCHA_ENABLED', false);
-define('RECAPTCHA_SECRET_KEY_HTML', '6Ld9ILglAAAAAPLbeclOEH61bvkBxMYymGkjAR04'); // Site key
-define('RECAPTCHA_SECRET_KEY', '6Ld9ILglAAAAAFUKePvnO8m6hYWIxQQ7XlcxZOnA'); // Secret Key
+    define('USER_TYPE', explode(',', $config['USER_TYPE']));
+    
+    // Support Channel
+    define('MESSAGE_COOLDOWN', $config['MESSAGE_COOLDOWN']);
+    define('SUPPORT_STATUS', explode(',', $config['SUPPORT_STATUS']));
+    
+    // Database configuration
+    define('DB_HOST', $dbHost);
+    define('DB_NAME', $dbName);
+    define('DB_USER', $dbUser);
+    define('DB_PASSWORD', $dbPass);
+    
+    // Mailer configuration
+    define('MAILER_HOST', $config['MAILER_HOST']);
+    define('MAILER_PORT', $config['MAILER_PORT']);
+    define('MAILER_USERNAME', $config['MAILER_USERNAME']);
+    define('MAILER_PASSWORD', $config['MAILER_PASSWORD']);
+    define('MAILER_FROM_EMAIL', $config['MAILER_FROM_EMAIL']);
+    define('MAILER_FROM_NAME', $config['MAILER_FROM_NAME']);
+    define('MAILER_SECURE', $config['MAILER_SECURE']);
+    define('MAILER_AUTH', $config['MAILER_AUTH']);
+    define('MAILER_DEBUG', $config['MAILER_DEBUG']);
+    
+    // Recaptcha System
+    if($config['RECAPTCHA_ENABLED'] === 'true' || $config['RECAPTCHA_ENABLED'] == 'true'){
+        define('RECAPTCHA_ENABLED', true);
+    } else {
+        define('RECAPTCHA_ENABLED', false);
+    }
+    
+    define('RECAPTCHA_SECRET_KEY_HTML', $config['RECAPTCHA_SECRET_KEY_HTML']);
+    define('RECAPTCHA_SECRET_KEY', $config['RECAPTCHA_SECRET_KEY']);
+    
+    // Website configuration
+    define('SITE_URL', $config['SITE_URL']);
+    define('SITE_NAME', $config['SITE_NAME']);
+    define('SITE_AUTHOR', $config['SITE_AUTHOR']);
+    define('SITE_ICON', $config['SITE_ICON']);
+    
+    // Directory
+    define('TEMPLATES_DIR', __DIR__ . './../../template/email/');
+    define('CLASS_DIR', __DIR__ . './../../class/');
+    
+    // Email Templates
+    define('VERIFICATION_TEMPLATE', file_get_contents(TEMPLATES_DIR.'/verify.html'));
+    define('CHANGEPASS_TEMPLATE', file_get_contents(TEMPLATES_DIR.'/password-change.html'));
+        
+    // API Security
+    define('API_SECRET_KEY', $config['API_SECRET_KEY']);
+    define('API_TOKEN_DURATION', $config['API_TOKEN_DURATION']);
 
-// Website configuration
-define('SITE_URL', 'https://proudcecilian.online');
-define('SITE_NAME', 'Cecilian Student Portal');
-define('SITE_AUTHOR', 'James Javeluna');
-define('SITE_ICON', '../../../app-assets/images/ico/favicon.ico');
-
-// Directory
-define('TEMPLATES_DIR', __DIR__ . './../../template/email/');
-define('CLASS_DIR', __DIR__ . './../../class/');
-
-// Email Templates
-define('VERIFICATION_TEMPLATE', file_get_contents(TEMPLATES_DIR.'/verify.html'));
-define('CHANGEPASS_TEMPLATE', file_get_contents(TEMPLATES_DIR.'/password-change.html'));
-
-// API Security
-define('API_SECRET_KEY', 'my-secret-key'); // your secret key
-define('API_TOKEN_DURATION', 2592000); // token expiration time in seconds (1 day)
+} catch (PDOException $e) {
+   // There was an error fetching the configuration values
+   // Redirect to maintenance page
+   header('HTTP/1.1 503 Service Unavailable');
+   header('Status: 503 Service Unavailable');
+   header('Location: ./../../maintenance.php');
+   exit;
+}
+?>

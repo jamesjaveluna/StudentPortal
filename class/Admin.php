@@ -871,7 +871,7 @@ class Admin {
     }  
   }
 
-  /* SUPPORT/TICKETS SECTION */
+  /* SUPPORT SECTION */
   public function getTickets() {
     $allowedUserType = array('admin', 'moderator', 'officer');
     $allowedPermission = 'support_view';
@@ -1570,6 +1570,355 @@ class Admin {
         echo 'Error: ' . $e->getMessage();
         exit();
     }
+  }
+
+  /* ORGANIZATIONS SECTION */
+  public function getOrganizations() {
+    $allowedUserType = array('admin', 'moderator', 'officer');
+    $allowedPermission = 'organization_view';
+    $section = 'admin_panel';
+
+    $utility = new Utility();
+    switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+        case 10001:
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'Session already expired.',
+                'code' => 10001
+            ));
+            break;
+
+        case 10002:
+            http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>'.$allowedPermission.'</code>'
+              ));
+              break;
+    }
+
+    $user_id = $_SESSION['user']['id'];
+
+    try {
+        // Admin = All topics
+        // Moderator = All topics
+        // Officer = view only their department
+        
+        switch($_SESSION['user']['type']){
+            case 'admin': case 'moderator':
+                $stmt = $this->conn->prepare("SELECT *, DATE_FORMAT(createdAt, '%M %e, %Y') AS formattedCreatedAt FROM organizations ORDER BY createdAt DESC;");
+                $stmt->execute();
+                break;
+
+            case 'officer':
+                //TODO: Dapat sa ilang organization ra
+                $stmt = $this->conn->prepare("SELECT *, DATE_FORMAT(createdAt, '%M %e, %Y') AS formattedCreatedAt FROM organizations ORDER BY createdAt DESC;");
+                $stmt->execute();
+                break;
+        }
+       
+        $organizations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$organizations) {
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'No organizations yet.',
+                'code' => 10003
+            ));
+        } else {
+            // Calculate time ago for each ticket
+            $data = array();
+            foreach ($organizations as $organization) {
+                $createdAt = $organization['createdAt'];
+                $timeAgo = $utility->getAgo($createdAt); // Call the function to calculate time ago
+                //$ticket['time_ago'] = $timeAgo;
+                $data[] = $organization;
+            }
+
+            return json_encode(array(
+                'message' => 'Organizations fetched successfully.',
+                'code' => 10000,
+                'data' => $data
+            ));
+        }
+
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch Organizations Data.',
+            'code' => 10003
+        ));
+
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+        exit();
+    }
+  }
+
+  public function getOrganization($target_slug) {
+    $allowedUserType = array('admin', 'moderator', 'officer');
+    $allowedPermission = 'organization_view';
+    $section = 'admin_panel';
+
+    $utility = new Utility();
+    switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+        case 10001:
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'Session already expired.',
+                'code' => 10001
+            ));
+            break;
+
+        case 10002:
+            http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>'.$allowedPermission.'</code>'
+              ));
+              break;
+    }
+
+    $user_id = $_SESSION['user']['id'];
+
+    $sanitizedInput = htmlspecialchars($target_slug, ENT_QUOTES, 'UTF-8');
+
+    if(!isset($sanitizedInput) || $sanitizedInput === null || empty($sanitizedInput)) {
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'Slug should not be empty.',
+            'code' => 10003
+        ));
+    }
+
+    try {
+        
+        $stmt = $this->conn->prepare("SELECT *, DATE_FORMAT(createdAt, '%M %e, %Y') AS formattedCreatedAt FROM organizations WHERE slug =:slug");
+        $stmt->execute(array(':slug' => $sanitizedInput));
+        $organizations = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$organizations) {
+            http_response_code(401);
+            return json_encode(array(
+                'message' => 'No organizations yet.',
+                'code' => 10003
+            ));
+        } else {
+
+            return json_encode(array(
+                'message' => 'Organizations fetched successfully.',
+                'code' => 10000,
+                'data' => $organizations
+            ));
+        }
+
+        http_response_code(401);
+        return json_encode(array(
+            'message' => 'Failed to fetch Organizations Data.',
+            'code' => $organizations
+        ));
+
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+        exit();
+    }
+  }
+
+  /* STATISTICS SECTION */
+  public function getRegisteredUsersMonthly() {
+      $allowedUserType = array('admin', 'moderator', 'officer');
+      $allowedPermission = 'statistics_users_monthly';
+      $section = 'admin_panel';
+  
+      $utility = new Utility();
+      switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+          case 10001:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Session already expired.',
+                  'code' => 10001
+              ));
+              break;
+  
+          case 10002:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>'.$allowedPermission.'</code>'
+              ));
+              break;
+      }
+  
+  
+      try {
+          // Initialize an array to store counts for all months of the year
+          $monthlyCounts = array_fill(1, 12, 0);
+  
+          $stmt = $this->conn->prepare("SELECT MONTH(createdDate) AS Month, COUNT(*) AS UserCount FROM users WHERE YEAR(createdDate) = YEAR(CURDATE()) GROUP BY MONTH(createdDate);");
+          $stmt->execute();
+          $registered = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  
+          // Update the counts array with values from the database
+          foreach ($registered as $row) {
+              $month = (int)$row['Month'];
+              $count = (int)$row['UserCount'];
+              $monthlyCounts[$month] = $count;
+          }
+  
+          // Prepare the final result array with counts for all months
+          $data = array();
+          foreach ($monthlyCounts as $month => $count) {
+              $monthName = date('F', mktime(0, 0, 0, $month, 1));
+              $data[] = array(
+                  'Month' => $monthName,
+                  'UserCount' => $count
+              );
+          }
+  
+          return json_encode(array(
+              'message' => 'User counts fetched successfully.',
+              'code' => 10000,
+              'data' => $data
+          ));
+  
+      } catch (PDOException $e) {
+          echo 'Error: ' . $e->getMessage();
+          exit();
+      }
+  }
+
+  public function getTotalRegisteredUsers() {
+      $allowedUserType = array('admin', 'moderator', 'officer');
+      $allowedPermission = 'statistics_users_total';
+      $section = 'admin_panel';
+  
+      $utility = new Utility();
+      switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+          case 10001:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Session already expired.',
+                  'code' => 10001
+              ));
+              break;
+  
+          case 10002:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>'.$allowedPermission.'</code>'
+              ));
+              break;
+      }
+
+  
+      try {
+  
+          $stmt = $this->conn->prepare("SELECT COUNT(*) AS UserCount FROM users");
+          $stmt->execute();
+          $registered = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+          return json_encode(array(
+              'message' => 'User counts fetched successfully.',
+              'code' => 10000,
+              'data' => $registered
+          ));
+  
+      } catch (PDOException $e) {
+          echo 'Error: ' . $e->getMessage();
+          exit();
+      }
+  }
+
+  public function getTotalStudents() {
+      $allowedUserType = array('admin', 'moderator', 'officer');
+      $allowedPermission = 'statistics_students_total';
+      $section = 'admin_panel';
+  
+      $utility = new Utility();
+      switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+          case 10001:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Session already expired.',
+                  'code' => 10001
+              ));
+              break;
+  
+          case 10002:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>'.$allowedPermission.'</code>'
+              ));
+              break;
+      }
+
+  
+      try {
+  
+          $stmt = $this->conn->prepare("SELECT COUNT(*) AS UserCount FROM StudentData");
+          $stmt->execute();
+          $data = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+          return json_encode(array(
+              'message' => 'User counts fetched successfully.',
+              'code' => 10000,
+              'data' => $data
+          ));
+  
+      } catch (PDOException $e) {
+          echo 'Error: ' . $e->getMessage();
+          exit();
+      }
+  }
+
+  public function getTotalCourses() {
+      $allowedUserType = array('admin', 'moderator', 'officer');
+      $allowedPermission = 'statistics_students_total';
+      $section = 'admin_panel';
+  
+      $utility = new Utility();
+      switch($utility->checkPermission($allowedUserType, $section, $allowedPermission)){
+          case 10001:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Session already expired.',
+                  'code' => 10001
+              ));
+              break;
+  
+          case 10002:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>'.$allowedPermission.'</code>'
+              ));
+              break;
+      }
+
+  
+      try {
+  
+          $stmt = $this->conn->prepare("SELECT COUNT(*) AS UserCount FROM SubjectData");
+          $stmt->execute();
+          $data = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+          return json_encode(array(
+              'message' => 'User counts fetched successfully.',
+              'code' => 10000,
+              'data' => $data
+          ));
+  
+      } catch (PDOException $e) {
+          echo 'Error: ' . $e->getMessage();
+          exit();
+      }
   }
 
 }

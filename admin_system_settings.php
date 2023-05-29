@@ -1,6 +1,6 @@
 <?php
 
-$page_title = "Account Settings";
+$page_title = "System Settings";
 $return_url = $_SERVER['REQUEST_URI'];
 
 ob_start();
@@ -15,6 +15,23 @@ if (empty($_SESSION['user']['token'])) {
   exit();
 }
 
+require_once 'class/Admin.php';
+$crud = new Admin();
+
+$user_type = $_SESSION['user']['type'];
+$user_panel = $_SESSION['user']['panel'];
+
+if($user_panel !== 'admin'){
+    include 'unauthorized.php';
+    exit();
+}
+
+$users_raw = json_decode($crud->getUsers(), true);
+
+if($users_raw['code'] === 10000){
+    $users_data = $users_raw['data'];
+}
+
 ?>
 
  <section class="section">
@@ -23,51 +40,129 @@ if (empty($_SESSION['user']['token'])) {
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Account Settings</h5>
+              <h5 class="card-title">System Settings</h5>
 
               <!-- Default Tabs -->
               <ul class="nav nav-tabs" id="myTabjustified" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">General</button>
+                  <button class="nav-link active" id="gen-tab" data-bs-toggle="tab" data-bs-target="#gen-justified" type="button" role="tab" aria-controls="home" aria-selected="true">General</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="changepass-tab" data-bs-toggle="tab" data-bs-target="#changepass-justified" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Change Password</button>
+                  <button class="nav-link" id="mailer-tab" data-bs-toggle="tab" data-bs-target="#mailer-justified" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Mailer</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Privacy</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-justified" type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Notification</button>
+                  <button class="nav-link" id="recaptcha-tab" data-bs-toggle="tab" data-bs-target="#recaptcha-justified" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Recaptcha</button>
                 </li>
               </ul>
               <div class="tab-content pt-4" id="myTabjustifiedContent">
-                <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
-                  
+                <div class="tab-pane fade show active" id="gen-justified" role="tabpanel" aria-labelledby="gen-tab">
+                    
+                    <h5 class="card-title">Support System</h5>
+                
                   <div class="row mb-3">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Student ID</label>
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Maintenance</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputStudentID" value="<?php echo $_SESSION['user']['std_id']; ?>" disabled>
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+                          <label class="form-check-label" for="flexSwitchCheckChecked">Disable access to all users in the system.</label>
+                        </div>
+                      </div>
+                  </div>  
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Schedule</label>
+                      <div class="col-sm-10">
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+                          <label class="form-check-label" for="flexSwitchCheckChecked">Set Schedule System to maintenance.</label>
+                        </div>
+                      </div>
+                  </div>  
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Support</label>
+                      <div class="col-sm-10">
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+                          <label class="form-check-label" for="flexSwitchCheckChecked">Set Support System to maintenance.</label>
+                        </div>
+                      </div>
+                  </div>  
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Enable Debug</label>
+                      <div class="col-sm-10">
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+                          <label class="form-check-label" for="flexSwitchCheckChecked">Users with <code>debug_view</code> permission can view it.</label>
+                        </div>
+                      </div>
+                  </div>
+
+                  <h5 class="card-title">Site Configuration</h5>
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Site Name</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" value="Cecilian Student Portal">
                       </div>
                   </div>
 
                   <div class="row mb-3">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Full Name</label>
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Site URL</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputFName" value="<?php echo $_SESSION['user']['fname']; ?>" disabled>
+                        <input type="text" class="form-control" value="https://proudcecilian.online">
                       </div>
                   </div>
 
                   <div class="row mb-3">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Site Author</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputEmail" value="<?php echo $_SESSION['user']['email']; ?>" disabled>
+                        <input type="text" class="form-control" value="James Javeluna">
                       </div>
                   </div>
 
                   <div class="row mb-3">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Organizations <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Organization includes Supreme Student Council or Department Council"></i></label>
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Site Icon</label>
+                      <div class="col-md-10">
+                        <img src="./.././../../assets/img/SCO.png" style="width: auto;height: 150px;object-fit: cover;" class="card-img-top" alt="...">
+                        <div class="pt-2">
+                          <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
+                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                        </div>
+                      </div>
+                  </div>
+
+                  <h5 class="card-title">Support System</h5>
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Message Cooldown</label>
                       <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary" disabled>Join an Organization</button>
+                        <label for="customRange2" class="form-label">Value: 3 (Minutes)   <small class="text-info">Set 0 for unlimited. (Not recommended)</small></label>
+                        <input type="range" class="form-range" min="0" max="5" step="0.5" id="customRange2">
+                      </div>
+                  </div>
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Support Status</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputEmail" value="open,closed,solved,pending">
+                      </div>
+                  </div>
+
+                  <h5 class="card-title">API System</h5>
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Secret Key</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" value="my-secret-key">
+                      </div>
+                  </div>
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Duration</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" value="2592000">
                       </div>
                   </div>
 
@@ -75,34 +170,96 @@ if (empty($_SESSION['user']['token'])) {
                       <button type="submit" class="btn btn-danger">Save Changes</button>
                   </div>
                 </div>
-                <div class="tab-pane fade" id="changepass-justified" role="tabpanel" aria-labelledby="changepass-tab">
+                <div class="tab-pane fade" id="mailer-justified" role="tabpanel" aria-labelledby="mailer-tab">
                   
                   <div id="response"></div>
 
                   <form class="needs-validation" novalidate>
-                     <div class="row mb-3 position-relative">
-                         <label for="inputEmail3" class="col-sm-2 col-form-label">Old Password</label>
+                     <div class="row mb-3">
+                     <label for="inputEmail3" class="col-sm-2 col-form-label">Mailer</label>
                          <div class="col-sm-10">
-                           <input type="password" class="form-control" id="inputOldPassword">
+                           <div class="form-check form-switch mt-2">
+                             <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" disabled="">
+                             <label class="form-check-label" for="flexSwitchCheckChecked">Enable Mailer System</label>
+                           </div>
+                         </div>
+                     </div>  
+
+                     <div class="row mb-3 position-relative">
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">Host</label>
+                         <div class="col-sm-10">
+                           <input type="text" class="form-control" id="inputOldPassword" value="smtp.hostinger.com">
                            <div class="invalid-feedback"></div>
                          </div>
                      </div>
 
                      <div class="row mb-3 position-relative">
-                         <label for="inputEmail3" class="col-sm-2 col-form-label">New Password</label>
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">Port</label>
                          <div class="col-sm-10">
-                           <input type="password" class="form-control" id="inputNewPassword">
+                           <input type="text" class="form-control" id="inputOldPassword" value="465">
                            <div class="invalid-feedback"></div>
                          </div>
                      </div>
 
                      <div class="row mb-3 position-relative">
-                         <label for="inputEmail3" class="col-sm-2 col-form-label">Retype Password</label>
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
                          <div class="col-sm-10">
-                           <input type="password" class="form-control" id="inputReNewPassword">
+                           <input type="text" class="form-control" id="inputOldPassword" value="no-reply@proudcecilian.online">
                            <div class="invalid-feedback"></div>
                          </div>
                      </div>
+
+                     <div class="row mb-3 position-relative">
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">Password</label>
+                         <div class="col-sm-10">
+                           <input type="password" class="form-control" id="inputOldPassword" value="P@ssword123">
+                           <div class="invalid-feedback"></div>
+                         </div>
+                     </div>
+
+                     <div class="row mb-3 position-relative">
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">From</label>
+                         <div class="col-sm-10">
+                           <input type="text" class="form-control" id="inputOldPassword" value="no-reply@proudcecilian.online">
+                           <div class="invalid-feedback"></div>
+                         </div>
+                     </div>
+
+                     <div class="row mb-3 position-relative">
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                         <div class="col-sm-10">
+                           <input type="text" class="form-control" id="inputOldPassword" value="Student Portal">
+                           <div class="invalid-feedback"></div>
+                         </div>
+                     </div>
+
+                     <div class="row mb-3 position-relative">
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">Secure</label>
+                         <div class="col-sm-10">
+                           <input type="text" class="form-control" id="inputOldPassword" value="ssl">
+                           <div class="invalid-feedback"></div>
+                         </div>
+                     </div>
+
+                     <div class="row mb-3">
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">Auth</label>
+                         <div class="col-sm-10">
+                           <div class="form-check form-switch mt-2">
+                             <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+                             <label class="form-check-label" for="flexSwitchCheckChecked">Disable access to all users in the system.</label>
+                           </div>
+                         </div>
+                     </div>  
+
+                     <div class="row mb-3">
+                         <label for="inputEmail3" class="col-sm-2 col-form-label">Debug</label>
+                         <div class="col-sm-10">
+                           <div class="form-check form-switch mt-2">
+                             <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked="">
+                             <label class="form-check-label" for="flexSwitchCheckChecked">Disable access to all users in the system.</label>
+                           </div>
+                         </div>
+                     </div>  
 
                      <div class="text-center">
                          <button type="submit" class="btn btn-danger" id="saveChanges">Save Changes</button>
@@ -110,22 +267,28 @@ if (empty($_SESSION['user']['token'])) {
                   </form>
                   
                 </div>
-                <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
-                  
+                <div class="tab-pane fade" id="recaptcha-justified" role="tabpanel" aria-labelledby="recaptcha-tab">
                   <div class="row mb-3">
-                      <label class="col-sm-2 col-form-label">Profile Visibility</label>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Recaptcha</label>
                       <div class="col-sm-10">
-                        <select class="form-select" aria-label="Profile Visibility" disabled>
-                          <option selected="">Public</option>
-                          <option value="1">Private</option>
-                        </select>
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" disabled="">
+                          <label class="form-check-label" for="flexSwitchCheckChecked">Enable Recaptcha System</label>
+                        </div>
+                      </div>
+                  </div>  
+
+                  <div class="row mb-3">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Site Key</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" value="6Ld9ILglAAAAAPLbeclOEH61bvkBxMYymGkjAR04">
                       </div>
                   </div>
 
                   <div class="row mb-3">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Enable 2FA <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Two-Factor Authentication"></i></label>
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Secret Key</label>
                       <div class="col-sm-10">
-                        <button type="submit" class="btn btn-success" disabled>2FA Disabled</button>
+                        <input type="text" class="form-control" value="6Ld9ILglAAAAAFUKePvnO8m6hYWIxQQ7XlcxZOnA">
                       </div>
                   </div>
 
@@ -134,40 +297,7 @@ if (empty($_SESSION['user']['token'])) {
                   </div>
 
                 </div>
-                <div class="tab-pane fade" id="contact-justified" role="tabpanel" aria-labelledby="contact-tab">
-                  <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email Notifications</label>
-                      <div class="col-md-8 col-lg-9">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="changesMade" checked="">
-                          <label class="form-check-label" for="changesMade">
-                            Updates with my requests
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="newProducts" checked="">
-                          <label class="form-check-label" for="newProducts">
-                            News & Updates of Cecilian Portal
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="proOffers">
-                          <label class="form-check-label" for="proOffers">
-                            Organization/clubs invitations
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="securityNotify" checked="" disabled="">
-                          <label class="form-check-label" for="securityNotify">
-                            Security alerts
-                          </label>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="text-center">
-                      <button type="submit" class="btn btn-danger">Save Changes</button>
-                  </div>
-                </div>
+                
               </div><!-- End Default Tabs -->
 
             </div>

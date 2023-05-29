@@ -3,7 +3,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'index.php') echo 'collapsed'; ?>" href="../">
+        <a class="nav-link <?php if($page != 'dashboard.php') echo 'collapsed'; ?>" href="./../dashboard">
           <i class="bx bxs-dashboard"></i>
           <span>Dashboard</span>
         </a>
@@ -24,9 +24,9 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link <?php if($page != 'council.php' && $page != 'transparency.php') { echo 'collapsed'; } ?>" href="./../transparency">
-          <i class="bx bx-money"></i>
-          <span>Fund Transparency</span>
+        <a class="nav-link <?php if($page != 'organization_view.php' && $page != 'organization.php') { echo 'collapsed'; } ?>" href="./../organization">
+          <i class="ri ri-group-2-line"></i>
+          <span>Organizations</span>
         </a>
       </li>
       

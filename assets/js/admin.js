@@ -71,7 +71,7 @@
         
             // Send the AJAX request
             $.ajax({
-                url: 'ajax/admin.php?op=user_resend',
+                url: './../ajax/admin.php?op=user_resend',
                 method: 'POST', // or 'GET' depending on your server-side implementation
                 data: { id: dataId },
                 success: function (response) {
@@ -114,7 +114,7 @@
 
             // Send the AJAX request
             $.ajax({
-                url: 'ajax/admin.php?op=user_query',
+                url: './../ajax/admin.php?op=user_query',
                 method: 'POST',
                 data: { query: inputValue },
                 success: function (response) {
@@ -159,7 +159,7 @@
             var type = $('#addSecondPage #u_type').val();
 
             $.ajax({
-                url: 'ajax/admin.php?op=user_create',
+                url: './../ajax/admin.php?op=user_create',
                 method: 'POST',
                 data: {
                     std_id: studentID,
@@ -234,7 +234,7 @@
         $('#confirmationModal #confirmDeleteBtn').click(function () {
             var id = $(this).data('id');
             $.ajax({
-                url: '/ajax/admin.php?op=user_delete',
+                url: '/./../ajax/admin.php?op=user_delete',
                 type: 'POST',
                 data: { 'user_id': id },
                 success: function (response) {
@@ -265,7 +265,7 @@
         $('#confirmationModal #confirmDeleteStudentBtn').click(function () {
             var id = $(this).data('id');
             $.ajax({
-                url: '/ajax/admin.php?op=student_delete',
+                url: '/./../ajax/admin.php?op=student_delete',
                 type: 'POST',
                 data: { 'student_id': id },
                 success: function (response) {
@@ -328,7 +328,7 @@
 
             // Send the AJAX request to update the user
             $.ajax({
-                url: '/ajax/admin.php?op=user_edit',
+                url: '/./../ajax/admin.php?op=user_edit',
                 type: 'POST',
                 data: updatedData,
                 success: function (response) {
@@ -464,7 +464,7 @@
 
             // Send the AJAX request to update the event
             $.ajax({
-                url: './../ajax/admin.php?op=add_event',
+                url: './.././../ajax/admin.php?op=add_event',
                 type: 'POST',
                 data: updatedData,
                 success: function (response) {
@@ -505,7 +505,7 @@
             
             // Send AJAX request to support.php
             $.ajax({
-                url: './../ajax/admin.php?op=send_reply',
+                url: './.././../ajax/admin.php?op=send_reply',
                 method: 'POST',
                 data: {
                     ticket_id: ticketID,
@@ -593,7 +593,7 @@
 
             // Send the AJAX request
             $.ajax({
-                url: '../ajax/admin.php?op=support_add_note',
+                url: '.././../ajax/admin.php?op=support_add_note',
                 type: 'POST',
                 data: data,
                 dataType: 'json',
@@ -629,7 +629,7 @@
 
             // Send the AJAX request
             $.ajax({
-                url: '../ajax/admin.php?op=support_delete_note',
+                url: '.././../ajax/admin.php?op=support_delete_note',
                 type: 'POST',
                 data: data,
                 dataType: 'json',
@@ -651,7 +651,7 @@
             var ticketID = $('#ticket_id').val();
 
             $.ajax({
-                url: '../ajax/admin.php?op=support_update_status',
+                url: '.././../ajax/admin.php?op=support_update_status',
                 type: 'POST',
                 data: {
                     ticketID: ticketID,

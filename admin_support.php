@@ -72,7 +72,7 @@ if($support_raw['code'] === 10000){
                         }
 
 
-                        echo '<a href="ticket/'.$ticket['id'].'" class="list-group-item list-group-item-action " aria-current="true">
+                        echo '<a href="./../../admin/support/'.$ticket['id'].'" class="list-group-item list-group-item-action " aria-current="true">
                                <div class="d-flex w-100 justify-content-between">
                                  <h5 class="mb-1 fw-bold">[#'.$ticket['id'].'] '.$ticket['title'].'</h5>
                                  <small class="text-muted">'.$status.'</small>
@@ -98,7 +98,7 @@ if($support_raw['code'] === 10000){
                                 <h2>'.$support_raw['message'].'</h2>
                             </center>
 
-                            <img src="../assets/img/svg/no-record.svg" class="img-fluid py-5" alt="Page Not Found">
+                            <img src="./../../assets/img/svg/no-record.svg" class="img-fluid py-5" alt="Page Not Found">
                           </section>
                         </td></tr>';
                       } else {
@@ -116,7 +116,7 @@ if($support_raw['code'] === 10000){
                                 <h2>No users created a ticket yet.</h2>
                             </center>
 
-                            <img src="../assets/img/svg/no-message.svg" class="img-fluid py-5" alt="Page Not Found">
+                            <img src="./../../assets/img/svg/no-message.svg" class="img-fluid py-5" alt="Page Not Found">
                           </section>';
 
                 }

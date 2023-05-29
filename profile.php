@@ -15,6 +15,10 @@ if (empty($_SESSION['user']['token'])) {
   exit();
 }
 
+$user_type = $_SESSION['user']['type'];
+$user_panel = $_SESSION['user']['panel'];
+$user_permission = isset(json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel']) ? json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel'] : null;
+
 if($target_id === null){
     include 'unauthorized.php';
     exit();
@@ -37,6 +41,9 @@ if($target_user_raw['code'] === 10000){
     include './pages/profile-not-found.php';
     exit();
 } 
+
+$user_panel_permission = $target_user_permission['user_panel'];
+$admin_panel_permission = $target_user_permission['admin_panel'];
 
 //var_dump($target_user_permission);
 
@@ -119,11 +126,11 @@ switch($target_user_data['type']){
 
                 <?php 
 
-                //if($target_id === $_SESSION['user']['id']){
-                //    echo '<li class="nav-item">
-                //            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
-                //          </li>';
-                //}
+                if($user_panel === 'admin' && in_array('user_view', $user_permission) && $user_type === 'admin' || $user_type === 'moderator' || $user_type === 'officer'){
+                    echo '<li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#permission-edit">Permission</button>
+                          </li>';
+                }
 
                 ?>
                 
@@ -160,7 +167,7 @@ switch($target_user_data['type']){
                     <div class="col-lg-9 col-md-8"><?php echo isset($target_user_data['Section']) ? $target_user_data['Section'] : 'No Section'; ?></div>
                   </div>
 
-
+                  
                   <?php
 
                   // Assigning Organizations
@@ -177,61 +184,270 @@ switch($target_user_data['type']){
                     <div class="col-lg-9 col-md-8"><?php echo $user_organizations; ?></div>
                   </div>
 
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Created Date</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['createdDate']; ?></div>
+                  </div>
+
+                  <?php 
+                    if($user_panel === 'admin' && in_array('user_view', $user_permission) && $user_type === 'admin' || $user_type === 'moderator' || $user_type === 'officer'){
+                  ?>
+
+                  <h5 class="card-title">Admin View</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Full Name</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['FullName']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">User ID</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['id']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Student ID</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['StudentID']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Birthdate</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['Birthday']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Gender</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['Gender']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Address</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['Address']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Civil Status</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['Status']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Semester</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['Semester']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Year Level</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['YearLevel']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">School Year</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['SchoolYear']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Username</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['username']; ?></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Email</div>
+                    <div class="col-lg-9 col-md-8"><?php echo $target_user_data['email']; ?></div>
+                  </div>
+
+                  <?php
+                  }
+                  ?>
+
                 </div>
 
 
                 <?php 
                 // Edit Profile Start
-                if($target_id === $_SESSION['user']['id']){ 
+                if($user_panel === 'admin' && in_array('user_view', $user_permission) && $user_type === 'admin' || $user_type === 'moderator' || $user_type === 'officer'){
                 ?>
-                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                <div class="tab-pane fade permission-edit pt-3" id="permission-edit">
                   <!-- Profile Edit Form -->
                   <form>
-                    <div class="row mb-3">
-                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                    <div class="row mb-3 mb-4">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">User Type</label>
                       <div class="col-md-8 col-lg-9">
-                        <?php echo '<img src="../assets/img/profile/'.$avatar.'" alt="Profile">'; ?>
-                        <div class="pt-2">
-                          <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                        <?php
+                        echo '<select class="form-select" id="u_type">';
+                            foreach (USER_TYPE as $value) {
+                                $label = mb_convert_case($value, MB_CASE_TITLE);
+                                $selected = ($target_user_data['type'] === $value) ? 'selected' : '';
+                                echo '<option value="' . $value . '" ' . $selected . '>' . $label . '</option>';
+                            }
+                            echo '</select>';
+
+                        ?>
+                      </div>
+                    </div>
+
+                    <!-- User Panel -->
+                    <div class="row mb-3">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">General</label>
+                      <div class="col-md-8 col-lg-9">
+                        <div class="col-sm-10">
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('change_password', $user_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can change password.</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" disabled="" <?php if(in_array('change_avatar', $user_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckChecked">Can change avatar</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" <?php if(in_array('schedule_view', $user_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDisabled">Can view schedule.</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" <?php if(in_array('debug_view', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckCheckedDisabled">Can view debugs.</label>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                     <!-- User Panel End -->
+
+                    <?php 
+                     if (($target_user_data['type'] === 'admin' || $target_user_data['type'] === 'moderator' || $target_user_data['type'] === 'officer') && ($user_type === 'admin' || $user_type === 'moderator')) {
+                    ?>
+                     <h5 class="card-title">Admin Panel</h5>
+
+                     <!-- Admin Panel -->
+                    <div class="row mb-3">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">User</label>
+                      <div class="col-md-8 col-lg-9">
+                        <div class="col-sm-10">
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('user_view', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can access users</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" <?php if(in_array('user_add', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckChecked">Can add users</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" <?php if(in_array('user_query', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDisabled">Can search users</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" <?php if(in_array('user_edit', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDisabled">Can edit users</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" <?php if(in_array('user_verify', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDisabled">Can request verify users</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" <?php if(in_array('user_delete', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDisabled">Can delete users</label>
+                            </div>
                         </div>
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Username</label>
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Student</label>
                       <div class="col-md-8 col-lg-9">
-                        <?php echo '<input name="username" type="text" class="form-control" id="username" value="'.$_SESSION['user']['username'].'" disabled>'; ?>
+                        <div class="col-sm-10">
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('student_view', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can access students</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('student_import', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can import students</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" <?php if(in_array('student_delete', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckChecked">Can delete students</label>
+                            </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Subject</label>
                       <div class="col-md-8 col-lg-9">
-                        <?php echo '<input name="username" type="text" class="form-control" id="username" value="'.$_SESSION['user']['email'].'" disabled>'; ?>
+                        <div class="col-sm-10">
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('subject_view', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can access subjects</label>
+                            </div>
+                        </div>
                       </div>
                     </div>
-                    
+
+                    <div class="row mb-3">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Calendar</label>
+                      <div class="col-md-8 col-lg-9">
+                        <div class="col-sm-10">
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('calendar_view', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can access calendar</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('calendar_add', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can add event</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" <?php if(in_array('calendar_edit', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckChecked">Can edit event</label>
+                            </div>
+                             <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" <?php if(in_array('calendar_delete', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckChecked">Can delete event</label>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Support</label>
+                      <div class="col-md-8 col-lg-9">
+                        <div class="col-sm-10">
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('support_view', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can access support</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" <?php if(in_array('support_edit', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckDefault">Can edit ticket status</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" <?php if(in_array('support_reply', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckChecked">Can reply on tickets</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" <?php if(in_array('support_note_add', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckChecked">Can add notes on ticket</label>
+                            </div>
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" <?php if(in_array('support_note_delete', $admin_panel_permission)){ echo 'checked=""'; } ?>>
+                              <label class="form-check-label" for="flexSwitchCheckChecked">Can delete notes on ticket</label>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+
+                     <!-- Admin Panel End -->
+                    <?php 
+                     }
+                    ?>
                     <hr>
 
                     <div class="row mb-3">
-                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Request:</label>
-                      <div class="col-md-8 col-lg-9 d-grid">
-                        <button type="button" class="btn btn-outline-danger rounded-pill"><i class="bx bx-mail-send me-1"></i> Change Password</button>
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="username" class="col-md-4 col-lg-3 col-form-label"></label>
-                      <div class="col-md-8 col-lg-9 d-grid">
-                        <button type="button" class="btn btn-outline-danger rounded-pill"><i class="bx bxs-calendar-edit me-1"></i> Update Schedule</button>
-                      </div>
-                    </div>
-
-                    <div class="row mb-5">
-                      <label for="username" class="col-md-4 col-lg-3 col-form-label"></label>
-                      <div class="col-md-8 col-lg-9 d-grid">
-                        <button type="button" class="btn btn-outline-danger rounded-pill"><i class="bx bxs-edit me-1"></i> Update Details</button>
+                      <label for="username" class="col-md-4 col-lg-3 col-form-label">Action:</label>
+                      <div class="col-md-8 col-lg-9">
+                        <button type="button" class="btn btn-outline-danger rounded-pill"><i class="ri ri-spam-3-fill me-1"></i> Ban User</button>
                       </div>
                     </div>
 
@@ -241,7 +457,7 @@ switch($target_user_data['type']){
                   </form><!-- End Profile Edit Form -->
                 </div>
                 <?php 
-                } // Edit Profile end
+                } // Edit Permission End
                 ?>
 
               </div><!-- End Bordered Tabs -->

@@ -78,6 +78,9 @@ require_once './../class/config/config.php';
                         <div class="invalid-feedback">You must agree before submitting.</div>
                       </div>
                     </div>
+                    <div class="cold-12 mb-2 text-center">
+                        <p class="small mb-0">Need help? <a href="help">Contact us!</a></p>
+                    </div>
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Create Account</button>
                     </div>
@@ -86,7 +89,7 @@ require_once './../class/config/config.php';
                           <button type="button" class="btn btn-secondary w-100">Already have an account</button>
                         </a>
                     </div>
-                  </form>
+                    </form>
 
                 </div>
               </div>

@@ -22,7 +22,7 @@ $user_type = $_SESSION['user']['type'];
 $user_panel = $_SESSION['user']['panel'];
 $user_permission = isset(json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel']) ? json_decode($_SESSION['user']['permission'], true)['user_permissions']['admin_panel'] : null;
 
-if($user_panel !== 'admin' && in_array('user_view', $user_permission) && $user_permission === null){
+if($user_panel !== 'admin' || !in_array('user_view', $user_permission) || $user_permission === null){
     include 'unauthorized.php';
     exit();
 }
@@ -142,7 +142,7 @@ if($users_raw['code'] === 10000){
 
                       echo '<tr>
                                 <td>'.$user['std_id'].'</td>
-                                <td><a href="./profile/'.$user['id'].'" class="text-danger">'.$user['FullName'].'</a></td>
+                                <td><a href="./../profile/'.$user['id'].'" class="text-danger">'.$user['FullName'].'</a></td>
                                 <td>'.$user['username'].'</td>
                                 <td>'.$user['email'].'</td>
                                 <td>'.$user['type'].'</td>

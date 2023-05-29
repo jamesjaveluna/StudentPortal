@@ -33,8 +33,8 @@ require_once './../class/config/config.php';
                 <div class="card-body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                    <p class="text-center small">Enter your email & password to login</p>
+                    <h5 class="card-title text-center pb-0 fs-4">Contact Us</h5>
+                    <p class="text-center small">Technical assistance for student account issues and inquiries.</p>
                   </div>
 
                   <div id="response">
@@ -43,19 +43,39 @@ require_once './../class/config/config.php';
                   <form id="login" class="row g-3 needs-validation" novalidate>
 
                       <div class="col-12">
-                          <label for="yourUsername" class="form-label">Email</label>
-                          <input type="email" name="email" class="form-control" id="email">
+                          <label for="studentID" class="form-label">Full Name <span class="small fst-italic"></span></label>
+                          <input type="text" name="studentID" class="form-control" id="studentID" value="" required>
+                          <div id="studentID-error" class="invalid-feedback">Please enter a valid Student ID.</div>
+                      </div>
+
+                      <div class="col-12">
+                          <label for="studentID" class="form-label">Email</label>
+                          <input type="email" name="email" class="form-control" id="email" required>
                           <div class="invalid-feedback">Please enter a valid Email adddress!</div>
                       </div>
 
-                    <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="password">
-                      <div class="invalid-feedback">Please enter your password!</div>
-                    </div>
+                      <div class="col-12">
+                        <label for="studentID" class="form-label">Student ID <span class="small fst-italic">(Optional)</span></label>
+                        <div class="input-group mb-3">
+                          <span class="input-group-text" id="basic-addon1">SCC-</span>
+                          <input type="text" class="form-control">
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                          <label for="yourUsername" class="form-label">Subject</label>
+                          <input type="email" name="email" class="form-control" id="email" required>
+                          <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                      </div>
+
+                      <div class="col-12">
+                          <label for="studentID" class="form-label">Message</label>
+                          <textarea class="form-control" name="message" rows="6" required="" spellcheck="false"></textarea>
+                      </div>
+
+                      
 
                     <?php
-
                     if(RECAPTCHA_ENABLED === true){
                         echo '<div class="col-12">
                           <label for="yourPassword" class="form-label">Recaptcha</label>
@@ -67,22 +87,9 @@ require_once './../class/config/config.php';
                     }
 
                     ?>
-                    
-
-                    <div class="col-12">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">Remember me</label>
-                      </div>
-                    </div>
-
-                    
-                    <div class="col-12 text-center d-grid gap-2">
-                      <p class="small mb-0"><a href="resend-email">Resend verification</a> | <a href="reset-password">Forgot Password</a></p> 
-                    </div>
 
                     <div class="col-12 mb-2">
-                      <button class="btn btn-primary w-100" type="submit">Login</button>
+                      <button class="btn btn-primary w-100" type="submit">Send Message</button>
                     </div>
                     
                     <?php 
@@ -96,8 +103,8 @@ require_once './../class/config/config.php';
 
                     ?>
                     <div class="col-12 mb-2">
-                        <a href="register">
-                          <button type="button" class="btn btn-secondary w-100">Create an account</button>
+                        <a href="login">
+                          <button type="button" class="btn btn-secondary w-100"><i class="bi bi-arrow-left-short me-1"></i>Back to Login</button>
                         </a>
                     </div>
 

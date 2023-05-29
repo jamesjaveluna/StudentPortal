@@ -10,9 +10,9 @@
     $panel = $_SESSION['user']['panel'];
 
     if($panel === 'admin'){
-        echo '../students';
+        echo './../../admin/students';
     } else {
-        echo '../';
+        echo './../../';
     }
     
     ?>" class="logo d-flex align-items-center">
@@ -134,7 +134,7 @@
             <?php
                 $avatar = isset($_SESSION['user']['avatar']) ? $_SESSION['user']['avatar'] : 'default-profile.png';   
 
-                echo '<img src="../assets/img/profile/'.$avatar.'" alt="Profile" class="rounded-circle">';
+                echo '<img src="./../../assets/img/profile/'.$avatar.'" alt="Profile" class="rounded-circle">';
             ?>
           
             <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo $utility->abbreviateName($_SESSION['user']['fname']); ?></span>
@@ -150,7 +150,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="<?php echo '../profile/'.$_SESSION['user']['id']; ?>">
+              <a class="dropdown-item d-flex align-items-center" href="<?php echo './../../profile/'.$_SESSION['user']['id']; ?>">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -161,7 +161,7 @@
 
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="../settings">
+              <a class="dropdown-item d-flex align-items-center" href="./../../settings">
                 <i class="bi bi-gear"></i>
                 <span>Account Settings</span>
               </a>
@@ -171,7 +171,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="./../../help">
                 <i class="bi bi-question-circle"></i>
                 <span>Need Help?</span>
               </a>

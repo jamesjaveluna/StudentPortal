@@ -16,10 +16,28 @@ RewriteRule ^support/([0-9]+)$ support_preview.php?id=$1 [NC,L]
 RewriteRule ^support$ support.php [NC,L]
 
 # Redirect requests for support/123 to support_preview.php?id=123
-RewriteRule ^ticket/([0-9]+)$ ticket_view.php?id=$1 [NC,L]
+#RewriteRule ^ticket/([0-9]+)$ ticket_view.php?id=$1 [NC,L]
 
 # Redirect requests for support to support.php
-RewriteRule ^ticket$ ticket.php [NC,L]
+#RewriteRule ^ticket$ ticket.php [NC,L]
+
+# Redirect requests for organization to organization.php
+RewriteRule ^organization$ organization.php [NC,L]
+
+# Redirect requests for organization/123 to organization_view.php?id=123
+RewriteRule ^organization/([^/]+)$ organization_view.php?page=$1 [QSA,L]
+
+# Redirect admin
+RewriteRule ^admin/dashboard$ admin_dashboard.php [NC,L]
+RewriteRule ^admin/users$ admin_users.php [NC,L]
+RewriteRule ^admin/students$ admin_students.php [NC,L]
+RewriteRule ^admin/courses$ admin_courses.php [NC,L]
+RewriteRule ^admin/calendar$ admin_calendar.php [NC,L]
+RewriteRule ^admin/organization$ admin_organization.php [NC,L]
+RewriteRule ^admin/organization/([^/]+)$ admin_organization_view.php?page=$1 [QSA,L]
+RewriteRule ^admin/support$ admin_support.php [NC,L]
+RewriteRule ^admin/support/([0-9]+)$ admin_support_view.php?id=$1 [NC,L]
+RewriteRule ^admin/system_settings$ admin_system_settings.php [NC,L]
 
 # Redirect requests for other PHP sites without .php extension
 RewriteCond %{REQUEST_FILENAME} !-d

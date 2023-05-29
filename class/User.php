@@ -369,6 +369,9 @@ class User {
 
   // login user and store user data in session
   public function login() {
+    // 10001 - Recaptcha Error
+    // 10002 - Email or password is wrong
+
     session_start();
     // Check if email and password keys exist in the POST array
     if (!isset($_POST['email'], $_POST['password'])) {
@@ -406,19 +409,20 @@ class User {
         if (!$json->success) {
             http_response_code(401);
             return json_encode(array(
-                'message' => 'RECAPTCHA error.'
+                'message' => 'RECAPTCHA error.',
+                'code' => 10001
             ));
         }
     }
 
     try {
-      $stmt = $this->conn->prepare('SELECT StudentData.StudentID, StudentData.FullName as fname, StudentData.Birthday, StudentData.Gender, StudentData.Address, StudentData.Status, StudentData.Semester, StudentData.YearLevel, StudentData.Section, StudentData.Major, StudentData.Course, StudentData.Scholarship, StudentData.SchoolYear as SY, users.id, users.avatar, users.username, users.email, users.password, users.type, users.permission FROM StudentData LEFT JOIN users ON StudentData.StudentID = users.std_id WHERE users.email = :email');
+      $stmt = $this->conn->prepare('SELECT StudentData.StudentID, StudentData.FullName as fname, StudentData.Birthday, StudentData.Gender, StudentData.Address, StudentData.Status, StudentData.Semester, StudentData.YearLevel, StudentData.Section, StudentData.Major, StudentData.Course, StudentData.Scholarship, StudentData.SchoolYear as SY, users.id, users.std_id, users.avatar, users.username, users.email, users.password, users.type, users.permission FROM StudentData LEFT JOIN users ON StudentData.StudentID = users.std_id WHERE users.email = :email');
       $stmt->execute(array('email' => $email));
       $user = $stmt->fetch(PDO::FETCH_ASSOC);
       
       if (!$user) {
         http_response_code(401);
-        return json_encode(array('message' => 'Invalid email and/or password'));
+        return json_encode(array('message' => 'Invalid email and/or password', 'code' => 10002));
       }
       
       if (password_verify($password, $user['password'])) {
@@ -452,7 +456,7 @@ class User {
       }
 
         http_response_code(401);
-        return json_encode(array('message' => 'Invalid email and/or password'));
+        return json_encode(array('message' => 'Invalid email and/or password', 'code' => 10002));
 
     } catch (PDOException $e) {
       echo 'Error: ' . $e->getMessage();
@@ -670,6 +674,117 @@ class User {
       exit();
     }  
   }
+
+  /* SETTINGS SECTION */
+  public function settingsChangePass() {
+      // 10000 = Success
+      // 10001 = Session already expired
+      // 10002 = Not authorized
+      // 10003 = Password do not match
+      // 10004 = Old password is wrong.
+      $allowedUserType = array('admin', 'moderator', 'officer', 'member');
+      $allowedPermission = 'change_password';
+      $section = 'user_panel';
+  
+      $utility = new Utility();
+      switch ($utility->checkPermission($allowedUserType, $section, $allowedPermission)) {
+          case 10001:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Session already expired.',
+                  'code' => 10001
+              ));
+              break;
+  
+          case 10002:
+              http_response_code(401);
+              return json_encode(array(
+                  'message' => 'Not authorized to view this data.',
+                  'code' => 10002,
+                  'debug' => 'Permission required: <code>' . $allowedPermission . '</code>'
+              ));
+              break;
+      }
+  
+      if (!isset($_POST['oldPassword'], $_POST['newPassword'], $_POST['retypePassword'])) {
+          http_response_code(400);
+          return json_encode(array(
+              'message' => 'Request is missing.'
+          ));
+      }
+  
+      // Fetch POST data
+      $oldPassword = $_POST['oldPassword'];
+      $newPassword = $_POST['newPassword'];
+      $retypePassword = $_POST['retypePassword'];
+  
+      $user_id = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null;
+
+      if(empty($oldPassword) || empty($newPassword) || empty($retypePassword)){
+        http_response_code(400);
+          return json_encode(array(
+              'message' => 'Cannot proceed with an empty values.'
+          ));
+      }
+  
+      try {
+          // Check if the user exists and retrieve the user's password
+          $stmt = $this->conn->prepare('SELECT * FROM `users` WHERE `id` = :id');
+          $stmt->execute(array(':id' => $user_id));
+          $user = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+          if (!$user) {
+              http_response_code(401);
+              return json_encode(array('message' => 'Sorry, we can\'t find you in the system.'));
+          }
+          
+          // Check if the new password matches the retype password
+          if ($newPassword !== $retypePassword) {
+              http_response_code(401);
+              return json_encode(array('message' => 'New password and retype password do not match.', 'code' => 10003));
+          }
+
+          // Verify if the old password matches the user's current password
+          if (!password_verify($oldPassword, $user['password'])) {
+              // Increment the password attempts
+              $_SESSION['password_attempts'] = isset($_SESSION['password_attempts']) ? $_SESSION['password_attempts'] + 1 : 2;
+  
+              // Check if the password attempts have reached the limit
+              if ($_SESSION['password_attempts'] >= 3) {
+                  // Logout the user and clear session data
+                  session_unset();
+                  session_destroy();
+  
+                  http_response_code(403);
+                  return json_encode(array('message' => 'You have exceeded the maximum password attempts. You are now logged out.', 'code' => 10001));
+              }
+  
+              http_response_code(401);
+              return json_encode(array('message' => 'Old password is incorrect. (Attempt: ' . $_SESSION['password_attempts'] .'/3)', 'code' => 10004));
+          }
+  
+          // Hash the new password
+          $hashed_password = password_hash($newPassword, PASSWORD_ARGON2I);
+          
+          // Reset the password attempts upon successful password entry
+          $_SESSION['password_attempts'] = 0;
+
+          // Update user with the new hashed password
+          $update_stmt = $this->conn->prepare('UPDATE users SET password = :password WHERE id = :id');
+          $update_stmt->execute(array(':password' => $hashed_password, ':id' => $user_id));
+  
+          $response = array(
+              'message' => 'Password changed successfully',
+              'code' => 10000
+          );
+  
+          return json_encode($response);
+      } catch (PDOException $e) {
+          echo 'Error: ' . $e->getMessage();
+          exit();
+      }
+  }
+
 }
 
 ?>
