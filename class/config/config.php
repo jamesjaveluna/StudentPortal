@@ -1,10 +1,10 @@
 <?php
 
 // Modify here only, do not touch sa ubos.
-$dbHost = '82.180.174.154';
-$dbName = 'u410000628_student_portal';
-$dbUser = 'u410000628_student_portal';
-$dbPass = 'P@ssword123';
+$dbHost = '';
+$dbName = '';
+$dbUser = '';
+$dbPass = '';
 
 try {
     $db = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
